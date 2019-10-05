@@ -1,4 +1,4 @@
 import {createStateHolder} from "./state-holder";
 
-export const transCart = createStateHolder([]);
+export const userInfo = createStateHolder();
 

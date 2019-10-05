@@ -9,7 +9,7 @@ const initDb = require("./config/db");
 
 initDb().then(db => {
     app.use("/", routerConfig(db));
-    app.use(require("./utils/error-handlers"));
+    app.use(require("./utils/error/error-handlers"));
     let server = https.createServer(
         {
             key: fs.readFileSync(
