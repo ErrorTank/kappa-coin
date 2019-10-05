@@ -1,0 +1,31 @@
+.nav-bar{
+  position fixed
+  width 100%
+  z-index 3
+  background-color #1a1a1a
+  color white
+  .wrapper{
+    display flex
+    align-items center
+    justify-content space-between
+    .navs{
+      display flex
+      .each-nav{
+        padding 12px 15px
+        cursor pointer
+        transition all 0.1s ease
+        font-size 15px
+        margin-left 10px
+        border-bottom 3px solid transparent
+        &.active{
+          background-color darken(tikiblue, 20%)
+
+        }
+        &:hover{
+          border-bottom-color tikiblue
+        }
+      }
+    }
+
+  }
+}

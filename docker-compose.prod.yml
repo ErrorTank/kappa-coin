@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+
+  react:
+    command: >
+      sh -c "npm run copy-assets &&
+             npm run prod"
+    #remove this later
+    ports:
+      - "2000:2000"
+    env_file:
+      - ./env/prod.env
+    restart: on-failure

@@ -1,0 +1,178 @@
+
+html,body{
+  //background-color #f4f4f4 //Uncomment this and comment bellow pls, for checking purpose
+  //background-color: #663399
+  overflow-x hidden
+}
+
+.p-title{
+  text-align center
+  color #1a1a1a
+  font-size 30px
+  margin-bottom 20px !important
+  font-weight 550
+}
+.err-text{
+  font-size 12px
+  margin-top 5px
+  color #f4516c
+}
+.btn-disabled{
+  pointer-events none
+  opacity 0.5
+  cursor not-allowed
+}
+.text-select-disable{
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
+}
+.yellow-btn{
+  color tikiblack
+  background-color tikiyellow
+  font-size: 13px;
+  width: 220px;
+  padding: 10px 20px;
+  &:hover{
+    background-color darken(tikiyellow, 18%);
+  }
+}
+.content-container{
+  width 1200px !important
+  max-width none !important
+}
+.more-btn{
+  color tikiblue
+  width 200px
+  padding 6px 0
+  border 1px solid tikiblue
+  background-color white
+  font-size 14px
+  border-radius 4px
+  margin 20px 0
+  transition all 0.1s ease !important
+  &:hover{
+    background-color tikiblue
+    color white
+  }
+}
+.taka-section{
+  background-color white
+  border-radius 3px
+
+}
+
+.disabledEvent{
+  pointer-events none
+}
+//.content-container{
+//
+//}
+.flex-wrapper{
+  display flex
+}
+.email-display{
+  color tikiblue
+  text-decoration underline
+}
+.disable-a-behavior{
+  text-decoration none !important
+}
+.disabled{
+  opacity 0.4
+}
+.cover{
+  width 100%
+  height 100%
+
+}
+.p-relative{
+  position relative
+}
+.not-allowed {
+  cursor not-allowed
+}
+html
+  box-sizing border-box
+  font-size 62.5%
+  font-family Helvetica,Arial,sans-serif
+
+button
+  cursor pointer
+a
+  text-decoration none
+@keyframes faded{
+  from{
+    opacity 0
+  }
+  to{
+    opacity 1
+  }
+}
+body
+  margin 0
+  padding 0
+  color white
+  font-size md
+  button
+    cursor pointer
+  button:disabled
+    cursor default
+h1
+h2
+h3
+h4
+p
+button
+  margin 0
+  padding 0
+.row{
+  margin 0 !important
+}
+ul{
+  padding 0
+  margin 0
+  list-style-type none
+  li{
+    padding 0
+  }
+}
+
+scrollStyle(grey)
+@keyframes spinner{
+  from{
+    transform rotateZ(0)
+  }
+  to{
+    transform rotateZ(360deg)
+  }
+}
+.spin{
+  animation spinner 1s linear forwards infinite
+}
+@keyframes move{
+  from {
+    left 0
+
+  }
+  to {
+    left 50%
+    top 50%
+    transform translate(-50%,-50%)
+
+  }
+}
+.of-hidden{
+  overflow hidden
+}
+.long-btn{
+  outline none
+  border-radius 4px
+  text-align center
+  width 100%
+  padding 8px 20px
+}
+.no-pointer-event{
+  pointer-events none
+}
