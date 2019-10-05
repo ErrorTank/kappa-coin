@@ -4,7 +4,7 @@ const routerConfig = require("./config/routes");
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
-const app = configExpressServer({useCors: false});
+const app = configExpressServer({useCors: true});
 const initDb = require("./config/db");
 
 initDb().then(db => {
