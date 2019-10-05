@@ -2,8 +2,24 @@
   position fixed
   width 100%
   z-index 3
-  background-color #1a1a1a
-  color white
+  background-color white
+  color #1e2022
+  box-shadow:0px 1px 4px #C9C9C9
+  .brand{
+    padding 6px 0
+    cursor pointer
+    img{
+      height 50px
+      vertical-align middle
+    }
+    span{
+      font-size lg - 0.2rem
+      font-family: 'Fredoka One', cursive;
+      color tikiblue
+      display inline-block
+      vertical-align middle
+    }
+  }
   .wrapper{
     display flex
     align-items center
@@ -11,18 +27,21 @@
     .navs{
       display flex
       .each-nav{
-        padding 12px 15px
+        padding 12px 17px
         cursor pointer
         transition all 0.1s ease
-        font-size 15px
+        font-size 14px
         margin-left 10px
         border-bottom 3px solid transparent
+        .acc-icon{
+          margin-right 4px
+        }
         &.active{
-          background-color darken(tikiblue, 20%)
+          color tikiblue
 
         }
         &:hover{
-          border-bottom-color tikiblue
+          color tikiblue
         }
       }
     }
