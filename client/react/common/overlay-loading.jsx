@@ -1,3 +1,5 @@
+import React from "react"
+
 export const OverlayLoading = ({renderText = () => "Loading..."}) => (
     <div id="initial-loading">
         <div className="lds-css ng-scope">

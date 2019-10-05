@@ -6,12 +6,10 @@ export const customHistory = createBrowserHistory();
 import {WithLocationRoute} from "./route-types/with-location-route";
 import {AuthenRoute, GuestRoute} from "./route-types/authen-routes";
 import {OverlayLoading} from "../common/overlay-loading";
+import {delayLoad} from "../../common/utils";
 const HomeRoute =  lazy(delayLoad(() => import("./common-route/home-route/home-route")));
 
 
-const delayLoad = fn => () => new Promise(resolve => {
-    setTimeout(() => resolve(fn()), 300)
-});
 
 export class MainRoute extends React.Component{
     constructor(props){
