@@ -8,7 +8,7 @@ import {AuthenRoute, GuestRoute} from "./route-types/authen-routes";
 import {OverlayLoading} from "../common/overlay-loading";
 import {delayLoad} from "../../common/utils";
 const HomeRoute =  lazy(delayLoad(() => import("./common-route/home-route/home-route")));
-
+const LoginRoute =  lazy(delayLoad(() => import("./guest-route/login-route/login-route")));
 
 
 export class MainRoute extends React.Component{
@@ -26,6 +26,7 @@ export class MainRoute extends React.Component{
                         <Suspense fallback={<OverlayLoading/>}>
                         <Switch>
                             <WithLocationRoute exact path="/" render={props => (<HomeRoute {...props}/>)}/>
+                            <WithLocationRoute exact path="/login" render={props => (<LoginRoute {...props}/>)}/>
                         </Switch>
                         </Suspense>
                     </Router>

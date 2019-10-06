@@ -15,7 +15,9 @@ export default class HomeRoute extends React.Component{
             >
                 <MainLayout>
                     <div className="home-route">
+                        <div className="container">
 
+                        </div>
                     </div>
                 </MainLayout>
             </PageTitle>

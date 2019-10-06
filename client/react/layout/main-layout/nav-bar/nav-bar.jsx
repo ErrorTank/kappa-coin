@@ -2,12 +2,13 @@ import React from "react";
 import classnames from "classnames"
 import {customHistory} from "../../../routes/routes";
 import {userInfo} from "../../../../common/states/common";
+import {CSSTransition} from "react-transition-group";
+import {Dropdown} from "../../../common/dropdown/dropdown";
 
-export class Navbar extends React.Component{
-    constructor(props){
+export class Navbar extends React.Component {
+    constructor(props) {
         super(props);
-        this.state={
-        };
+        this.state = {};
     };
 
     navs = [
@@ -21,22 +22,24 @@ export class Navbar extends React.Component{
                 {
                     label: "View Transactions",
                     url: "/transactions"
-                },{
+                }, {
                     label: "View Blocks",
                     url: "/blocks"
-                },{
+                }, {
                     label: "View Pool",
                     url: "/pool"
                 },
             ]
-        },{
+        }, {
             label: "Mining",
             url: "/mining"
         },
         {
             label: "Exchange",
             url: "/exchange"
-        },{
+        }, {
+            cannotActive: true,
+            url: "/login",
             label: () => {
                 let info = userInfo.getState();
                 return (
@@ -51,10 +54,10 @@ export class Navbar extends React.Component{
                 {
                     label: "Profile",
                     url: "/profile"
-                },{
+                }, {
                     label: "Wallet",
                     url: "/wallet"
-                },{
+                }, {
                     label: () => {
                         return (
                             <div className="sign-out">
@@ -73,8 +76,8 @@ export class Navbar extends React.Component{
 
     ];
 
-    render(){
-        return(
+    render() {
+        return (
             <div className="nav-bar">
                 <div className="container">
                     <div className="wrapper">
@@ -85,12 +88,41 @@ export class Navbar extends React.Component{
                         <div className="navs">
                             {this.navs.map((each) => {
                                 return (
-                                    <div className={classnames("each-nav", {active: each.url === customHistory.location.pathname})}
-                                         onClick={() => each.url && customHistory.push(each.url)}
-                                         key={each.url}
-                                    >
-                                        {typeof each.label === "string" ? each.label : each.label()}
-                                    </div>
+                                    <Dropdown
+                                        className={classnames("each-nav", {active: !each.cannotActive ? each.url ? each.url === customHistory.location.pathname : each.dropdownItems.map(i => i.url).includes(customHistory.location.pathname) : false})}
+                                        onClick={() => each.url && customHistory.push(each.url)}
+                                        key={each.url || JSON.stringify(each.dropdownItems)}
+                                        content={(
+                                            <>
+                                                {typeof each.label === "string" ? each.label : each.label()}
+                                                {(each.dropdownItems && (each.dropdownCond ? each.dropdownCond() : true)) && (
+                                                    <i className="fas fa-angle-down" style={{marginLeft: "8px"}}></i>
+                                                )}
+                                            </>
+                                        )}
+                                        dropdownContent={(show) => (
+                                            <CSSTransition in={show} timeout={200} classNames={"lift-up"}>
+                                                {(each.dropdownItems && show && (each.dropdownCond ? each.dropdownCond() : true) ) ? (
+                                                    <div className="dropdown-panel">
+                                                        {each.dropdownItems.map((item, i) => (
+                                                            <div key={i}
+                                                                 className={classnames("dropdown-item", {active: item.url ? item.url === customHistory.location.pathname : false})}
+                                                                 onClick={() => customHistory.push(item.url)}
+                                                            >
+                                                                {typeof item.label === "string" ? item.label : item.label()}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <span style={{display: "none"}}></span>
+                                                )}
+
+
+                                            </CSSTransition>
+                                        )}
+                                    />
+
+
                                 )
                             })}
                         </div>
