@@ -4,11 +4,17 @@ import {customHistory} from "../../../routes/routes";
 import {userInfo} from "../../../../common/states/common";
 import {CSSTransition} from "react-transition-group";
 import {Dropdown} from "../../../common/dropdown/dropdown";
+import {authenCache} from "../../../../common/cache/authen-cache";
 
 export class Navbar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
+    };
+
+    handleSignout = () => {
+      userInfo.setState(null);
+      authenCache.clearAuthen();
     };
 
     navs = [
@@ -44,8 +50,11 @@ export class Navbar extends React.Component {
                 let info = userInfo.getState();
                 return (
                     <>
+                        <p className="full-name">
+                            {info ? info.fullname : "Sign in"}
+
+                        </p>
                         <i className="fas fa-user-circle acc-icon"></i>
-                        {info ? info.name : "Sign in"}
                     </>
                 )
             },
@@ -61,7 +70,9 @@ export class Navbar extends React.Component {
                     label: () => {
                         return (
                             <div className="sign-out">
-                                <button className="btn btn-sign-out">
+                                <button className="btn btn-sign-out"
+                                        onClick={this.handleSignout}
+                                >
                                     Sign Out
                                 </button>
                             </div>
@@ -90,7 +101,7 @@ export class Navbar extends React.Component {
                                 return (
                                     <Dropdown
                                         className={classnames("each-nav", {active: !each.cannotActive ? each.url ? each.url === customHistory.location.pathname : each.dropdownItems.map(i => i.url).includes(customHistory.location.pathname) : false})}
-                                        onClick={() => each.url && customHistory.push(each.url)}
+                                        onClick={() => (each.url && !each.dropdownItems) && customHistory.push(each.url)}
                                         key={each.url || JSON.stringify(each.dropdownItems)}
                                         content={(
                                             <>
@@ -102,11 +113,11 @@ export class Navbar extends React.Component {
                                         )}
                                         dropdownContent={(show) => (
                                             <CSSTransition in={show} timeout={200} classNames={"lift-up"}>
-                                                {(each.dropdownItems && show && (each.dropdownCond ? each.dropdownCond() : true) ) ? (
+                                                {(each.dropdownItems && show && (each.dropdownCond ? each.dropdownCond() : true)) ? (
                                                     <div className="dropdown-panel">
                                                         {each.dropdownItems.map((item, i) => (
                                                             <div key={i}
-                                                                 className={classnames("dropdown-item", {active: item.url ? item.url === customHistory.location.pathname : false})}
+                                                                 className={classnames("dropdownItem", {active: item.url ? item.url === customHistory.location.pathname : false})}
                                                                  onClick={() => customHistory.push(item.url)}
                                                             >
                                                                 {typeof item.label === "string" ? item.label : item.label()}

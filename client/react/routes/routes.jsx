@@ -26,7 +26,7 @@ export class MainRoute extends React.Component{
                         <Suspense fallback={<OverlayLoading/>}>
                         <Switch>
                             <WithLocationRoute exact path="/" render={props => (<HomeRoute {...props}/>)}/>
-                            <WithLocationRoute exact path="/login" render={props => (<LoginRoute {...props}/>)}/>
+                            <GuestRoute exact path="/login" render={props => (<LoginRoute {...props}/>)}/>
                         </Switch>
                         </Suspense>
                     </Router>

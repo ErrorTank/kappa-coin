@@ -1,8 +1,8 @@
 
 import {Cache} from "./cache"
 import Cookies from "js-cookie";
-import {authenApi} from "../../api/api";
 import {userInfo} from "../states/common";
+import {userApi} from "../../api/common/user-api";
 
 const cookiesEngine = {
   getItem: Cookies.get,
@@ -15,6 +15,7 @@ export const authenCache = (() => {
   const cache = new Cache(cookiesEngine);
   return {
     clearAuthen() {
+
       cache.set(null, "k-authen-token");
     },
     loadAuthen() {
@@ -23,12 +24,11 @@ export const authenCache = (() => {
         if (!authen) {
           reject();
         } else {
-          authenApi.getInfo().then(({data}) => {
-            console.log(data);
+          userApi.getInfo().then((data) => {
             if (!data)
               reject();
             else {
-              return userInfo.setState(data);
+              return resolve(userInfo.setState(data));
 
             }
 
@@ -42,6 +42,7 @@ export const authenCache = (() => {
       return cache.get("k-authen-token")
     },
     setAuthen(authen, options) {
+
       cache.set(authen, "k-authen-token", options);
     }
   }

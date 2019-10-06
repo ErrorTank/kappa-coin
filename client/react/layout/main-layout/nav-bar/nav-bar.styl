@@ -31,14 +31,34 @@
 
     .navs {
       display flex
-
+      .sign-out{
+        border-top 1px solid grey
+        padding-top 15px
+        button{
+          width 100%
+          display block
+          font-size 13px
+          padding 5px
+          color white
+          background-color #3498db
+        }
+      }
       .each-nav {
         padding 12px 17px
         cursor pointer
         transition all 0.1s ease
-
+        position relative
         font-size 14px
-
+        .full-name{
+          max-width 100px
+          white-space nowrap
+          margin-right 6px
+          display inline
+        }
+        i{
+          display inline-block
+          vertical-align baseline
+        }
         .dropdown-panel {
           position absolute
           background-color white
@@ -50,7 +70,7 @@
           box-shadow: 0px 1px 10px #B5B5B5
           border-top 2px solid tikiblue
 
-          .dropdown-item {
+          .dropdownItem {
             padding 10px 0
             padding-left 18px
             padding-right 10px

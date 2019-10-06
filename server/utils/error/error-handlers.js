@@ -11,6 +11,10 @@ const handlers = {
     message: error.message,
     extra: error.extra
   }),
+  ApplicationError: (res, error) => res.status(400).json({
+    message: error.message,
+    extra: error.extra
+  }),
   JWTError: (res, error) => res.status(400).json({
     message: error.message,
     extra: error.extra

@@ -5,6 +5,11 @@ import {PageTitle} from "../../../common/page-title/page-title";
 import * as yup from "yup"
 import {createSimpleForm} from "../../../common/form-validator/form-validator";
 import {CommonInput} from "../../../common/common-input/common-input";
+import {LoadingInline} from "../../../common/loading-inline/loading-inline";
+import {userInfo} from "../../../../common/states/common";
+import {customHistory} from "../../routes";
+import {userApi} from "../../../../api/common/user-api";
+import {authenCache} from "../../../../common/cache/authen-cache";
 
 export default class LoginRoute extends KComponent {
     constructor(props) {
@@ -14,8 +19,8 @@ export default class LoginRoute extends KComponent {
             loading: false,
         };
         const loginSchema = yup.object().shape({
-            email: yup.string().email("Email không hợp lệ").required("Email không được để trống"),
-            password: yup.string().min(6, "Mật khẩu bắt buộc từ 6 ký tự trở lên").noSpecialChar("Mật khẩu không được có kí tự đặc biệt")
+            email: yup.string().email("Invalid email").required("Email cannot be empty"),
+            password: yup.string().min(6, "Password must contains more than 6 characters").noSpecialChar("Password cannot contains special characters")
         });
         this.form = createSimpleForm(loginSchema, {
             initData: {
@@ -32,10 +37,28 @@ export default class LoginRoute extends KComponent {
     };
 
     handleLogin = () => {
+        let {email, password} = this.form.getData();
+        this.setState({loading: true});
+        userApi.login({email, password}).then(data => {
+            let {user, token} = data;
+            authenCache.setAuthen(token, {expires: 30});
+            return userInfo.setState({...user}).then(() => customHistory.push("/"));
+        }).catch(err => this.setState({loading: false, error: err.message}));
+    };
 
+    renderServerError = () => {
+        let {error} = this.state;
+        let {email} = this.form.getData();
+        let errMatcher = {
+            "not_existed": `Email address ${email} is not existed`,
+            "password_wrong": `Wrong password`,
+        };
+        return errMatcher.hasOwnProperty(error) ? errMatcher[error] : "Something went wrong! Please try again"
     };
 
     render() {
+        const canLogin = !this.form.getInvalidPaths().length && !this.state.error && !this.state.loading;
+
         return (
             <PageTitle
                 title={"Login"}
@@ -51,9 +74,14 @@ export default class LoginRoute extends KComponent {
                                     Login to your account
                                 </p>
                                 <div className="login-form">
+                                    {this.state.error && (
+                                        <div className="server-error">
+                                            {this.renderServerError()}
+                                        </div>
+                                    )}
                                     {this.form.enhanceComponent("email", ({error, onChange, onEnter, ...others}) => (
                                         <CommonInput
-                                            className="registration-input pt-0"
+                                            className="pt-0 login-input"
                                             error={error}
                                             id={"email"}
                                             onKeyDown={onEnter}
@@ -70,11 +98,11 @@ export default class LoginRoute extends KComponent {
                                     ), true)}
                                     {this.form.enhanceComponent("password", ({error, onChange, onEnter, ...others}) => (
                                         <CommonInput
-                                            className="registration-input pt-0 pb-0"
+                                            className="pt-0 login-input"
                                             error={error}
                                             id={"password"}
                                             type={"password"}
-                                            placeholder={"Mật khẩu gồm ít nhất 6 kí tự"}
+                                            placeholder={"Password contains at lease 6 characters"}
                                             onKeyDown={onEnter}
                                             onChange={e => {
                                                 this.setState({error: ""});
@@ -84,6 +112,17 @@ export default class LoginRoute extends KComponent {
                                             {...others}
                                         />
                                     ), true)}
+                                    <button className="btn btn-login"
+                                            disabled={!canLogin}
+                                            onClick={this.handleLogin}
+                                    >
+                                        Login
+                                        {this.state.loading && (
+                                            <LoadingInline
+                                                className={"login-loading"}
+                                            />
+                                        )}
+                                    </button>
                                 </div>
                             </div>
                         </div>

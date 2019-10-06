@@ -1,7 +1,7 @@
 
 import {authenApi, offlineApi} from "../api";
 
-export const authenticationApi = {
+export const userApi = {
     getInfo() {
         return authenApi.get("/auth");
     },
