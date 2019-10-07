@@ -1,0 +1,77 @@
+.info-edit-panel{
+  min-height 430px
+  .panel-header{
+
+    .last-update{
+      display inline-block
+      float right
+      font-size 13px
+    }
+    &:after{
+      content ''
+      display table
+      clear both
+    }
+  }
+  .panel-body{
+    .edit-profile-form{
+      font-size 16px
+      .email-wrap{
+        position relative
+        display inline-block
+
+
+        .check-loading{
+          i{
+            color primary
+            font-size 22px
+          }
+          position absolute
+          top 45%
+          left 102%
+
+        }
+      }
+      .server-err{
+        font-size 13px
+        color danger
+        margin-bottom 10px
+      }
+      .email-input{
+        display inline-block !important
+        width 250px
+      }
+      .server-error{
+        margin-bottom 15px
+        color danger
+        font-size 15px
+      }
+      .btn-login{
+        display block
+        text-align center
+        padding 7px
+        color white
+        background-color tikiblue
+        width 100%
+        font-size 16px !important
+        margin-top 30px !important
+      }
+      .edit-input{
+        margin-bottom 16px
+        input{
+          font-size 16px !important
+          padding 8px 15px  !important
+        }
+      }
+    }
+  }
+  .panel-footer{
+    text-align right
+    .save-btn{
+      color white
+      font-size 15px
+      background-color tikiblue
+      padding 8px 20px
+    }
+  }
+}

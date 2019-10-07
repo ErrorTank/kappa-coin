@@ -11,5 +11,11 @@ export const userApi = {
     },
     getDetailUserInfo(userID){
         return authenApi.get(`/user/${userID}/detail`)
+    },
+    checkEmailExisted(payload){
+        return authenApi.put(`/user/${payload.userID}/check-email/${payload.email}`)
+    },
+    updateUser(userID, payload){
+        return authenApi.post(`/user/${userID}/update`, payload)
     }
 };

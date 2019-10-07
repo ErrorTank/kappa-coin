@@ -7,6 +7,8 @@ import {pronounce} from "../../../../common/utils/common";
 import {userApi} from "../../../../api/common/user-api";
 import {userInfo} from "../../../../common/states/common";
 import moment from "moment"
+import {InfoEditPanel} from "./info-edit-panel/info-edit-panel";
+import {WalletEditPanel} from "./wallet-edit-panel/wallet-edit-panel";
 
 export default class ProfileRoute extends React.Component{
     constructor(props){
@@ -61,7 +63,8 @@ export default class ProfileRoute extends React.Component{
                         <div className="container">
                             <div className="big-wrapper">
                                 <p className="route-title">Profile Overview</p>
-                                <div className="statistic-panel profile-panel">
+                                <div className="statistic-panel profile-panel border-box">
+
                                     {!loading && (
                                         <>
                                             <div className="identify">
@@ -97,8 +100,19 @@ export default class ProfileRoute extends React.Component{
 
                                 </div>
                                 <div className="detail-panel profile-panel">
-                                    <div>
-                                    </div>
+                                    {!loading && (
+                                        <>
+                                            <InfoEditPanel
+                                                info={info}
+                                                onEdit={data => this.setState({info: {...data}})}
+                                            />
+                                            <WalletEditPanel
+
+                                            />
+                                        </>
+                                    )
+
+                                    }
 
                                 </div>
                             </div>

@@ -17,15 +17,20 @@
       margin-bottom 50px
     }
   }
-  .profile-panel{
+  .border-box{
     border 1px solid grey
-    vertical-align top
     border-radius 3px
-
     background-color white
+  }
+
+  .profile-panel{
+
+    vertical-align top
+
+
+
     display inline-block
     &.statistic-panel{
-      height 375px
       width 350px
       .identify{
         padding 20px
@@ -94,6 +99,32 @@
 
     &.detail-panel{
       width calc(100% - 400px)
+
+      .edit-panel{
+        color #6c757e
+
+
+        .panel-header{
+          padding 20px
+          padding-bottom 10px
+          border-bottom 1px solid grey
+          .header-title{
+            font-size 18px
+            font-weight 550
+            color #4a4f55
+            display inline-block
+            vertical-align top
+          }
+
+        }
+        .panel-body{
+          padding 15px 20px
+        }
+        .panel-footer{
+          border-top 1px solid grey
+          padding 15px 20px
+        }
+      }
     }
   }
 }

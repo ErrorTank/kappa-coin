@@ -26,9 +26,10 @@ const handlers = {
 };
 
 module.exports = (err, req, res, next) => {
+  console.log(err);
   const errorHandler = handlers[err.name] || null;
   if (errorHandler) {
-    console.error(err);
+
     errorHandler(res, err);
   } else {
     next();

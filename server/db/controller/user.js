@@ -66,7 +66,7 @@ const getDetailUserInfo = (userID) => {
     ]).then(([info, wallet]) => {
 
         return {
-            info: omit(info, "password"),
+            info,
             wallet,
             statistic: {
                 minedBlocks: 10,
@@ -77,8 +77,34 @@ const getDetailUserInfo = (userID) => {
     })
 };
 
+const  checkEmailExisted = ({userID, email}) => {
+    return User.findOne({_id: { $ne: mongoose.Types.ObjectId(userID) }, email}).lean()
+        .then(data => {
+            if (data) {
+                return Promise.reject()
+            }
+            return {};
+
+        })
+
+};
+
+const updateUserInfo = ({userID, data}) => {
+    return User.findOneAndUpdate({_id: mongoose.Types.ObjectId(userID)}, {$set: {...data, updatedAt: Date.now()}}, {
+        new: true
+    }).lean().then(data => {
+        if (!data) {
+            return Promise.reject()
+        }
+        return data;
+
+    })
+};
+
 module.exports = {
     regularLogin,
     getUserInfo,
-    getDetailUserInfo
+    getDetailUserInfo,
+    checkEmailExisted,
+    updateUserInfo
 }
