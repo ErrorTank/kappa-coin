@@ -1,0 +1,99 @@
+
+.profile-route{
+  color #6c757e
+  .separate{
+    display inline-block
+    width 50px
+  }
+  .big-wrapper{
+    overflow hidden
+    margin-top 30px
+    .route-title{
+      font-size 18px
+      font-weight 550
+      color #4a4f55
+      padding-bottom 12px
+      border-bottom 1px solid grey
+      margin-bottom 50px
+    }
+  }
+  .profile-panel{
+    border 1px solid grey
+    vertical-align top
+    border-radius 3px
+
+    background-color white
+    display inline-block
+    &.statistic-panel{
+      height 375px
+      width 350px
+      .identify{
+        padding 20px
+        .user-fullname{
+          display inline-block
+          vertical-align middle
+          font-size 16px
+
+          margin-left 13px
+          p:first-of-type{
+            font-weight 550
+          }
+          p:last-of-type{
+            font-size 13px
+          }
+
+        }
+        border-bottom 1px solid grey
+        .profile-ava{
+          vertical-align middle
+          width 50px
+          height 50px
+          .fake-ava{
+            width 50px
+            font-size 20px
+            line-height 50px
+            height 50px
+          }
+        }
+      }
+      .statistic{
+        .item{
+          padding 20px
+          .icon{
+            display inline-block
+            vertical-align middle
+            width 50px
+            i{
+              font-size 40px
+            }
+          }
+          .detail{
+            display inline-block
+            vertical-align middle
+            margin-left 16px
+            .label{
+              font-size 16px
+              font-weight 550
+              color tikiblue
+            }
+            .statistic-value{
+              .value{
+                color #1e2022
+                font-size 20px
+                margin-right 4px
+                font-weight 550
+              }
+              font-size 13px
+              color #6c757e
+
+            }
+          }
+        }
+      }
+    }
+
+    &.detail-panel{
+      width calc(100% - 400px)
+    }
+  }
+}

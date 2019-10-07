@@ -1,10 +1,13 @@
 const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 const loadDbInstances = () => {
 
 
 
-    require("../db/model/user");
+    let User = require("../db/model/user");
+    require("../db/model/wallet");
+
     console.log('\x1b[36m%s\x1b[32m', "Load all db instances successfully!");
 
 };

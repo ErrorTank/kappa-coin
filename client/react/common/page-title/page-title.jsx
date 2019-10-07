@@ -12,7 +12,7 @@ export class PageTitle extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.title != this.props.title) {
-      document.title = nextProps.title;
+      document.title = "KappaCoin | " + nextProps.title;
     }
   }
 

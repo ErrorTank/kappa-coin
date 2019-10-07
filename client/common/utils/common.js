@@ -29,9 +29,14 @@ let buildParams = (obj) => {
     return result.slice(0, result.length-1);
 };
 
+let pronounce = (word, count, tail) => {
+  return word + (count > 1 ? tail : "");
+};
+
 
 export {
     wait,
     getBase64,
-    buildParams
+    buildParams,
+    pronounce
 }

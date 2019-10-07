@@ -8,5 +8,8 @@ export const userApi = {
     login(info){
         return offlineApi.post("/login", info);
 
+    },
+    getDetailUserInfo(userID){
+        return authenApi.get(`/user/${userID}/detail`)
     }
 };

@@ -62,10 +62,12 @@ export class Navbar extends React.Component {
             dropdownItems: [
                 {
                     label: "Profile",
-                    url: "/profile"
+                    url: "/profile#info",
+                    isActive: () => customHistory.location.hash === "#info"
                 }, {
                     label: "Wallet",
-                    url: "/wallet"
+                    url: "/profile#wallet",
+                    isActive: () => customHistory.location.hash === "#wallet"
                 }, {
                     label: () => {
                         return (
@@ -78,9 +80,6 @@ export class Navbar extends React.Component {
                             </div>
                         )
                     },
-                    onClick: () => {
-
-                    }
                 },
             ]
         },
@@ -88,6 +87,7 @@ export class Navbar extends React.Component {
     ];
 
     render() {
+
         return (
             <div className="nav-bar">
                 <div className="container">
@@ -117,7 +117,7 @@ export class Navbar extends React.Component {
                                                     <div className="dropdown-panel">
                                                         {each.dropdownItems.map((item, i) => (
                                                             <div key={i}
-                                                                 className={classnames("dropdownItem", {active: item.url ? item.url === customHistory.location.pathname : false})}
+                                                                 className={classnames("dropdownItem", {active:item.isActive ? item.isActive() :  item.url ? item.url === customHistory.location.pathname : false})}
                                                                  onClick={(e) => {
                                                                      e.stopPropagation();
                                                                      customHistory.push(item.url)

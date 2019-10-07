@@ -1,5 +1,7 @@
 const User = require("../model/user");
+const Wallet = require("../model/wallet");
 const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 const {ApplicationError} = require("../../utils/error/error-types");
 const omit = require("lodash/omit");
 const pick = require("lodash/pick");
@@ -20,7 +22,7 @@ const regularLogin = ({email, password}) => {
 
         })
         .then((data) =>
-            createAuthToken(pick(data, ["_id",  "email",  "fullname"]), getPrivateKey(), {
+            createAuthToken(pick(data, ["_id", "email", "fullname"]), getPrivateKey(), {
                 expiresIn: "30d",
                 algorithm: "RS256"
             })
@@ -56,8 +58,27 @@ const getUserInfo = userID => {
         })
 };
 
+const getDetailUserInfo = (userID) => {
+    return Promise.all([
+        User.findById(ObjectId(userID)).lean(),
+        Wallet.findOne({owner: ObjectId(userID)}).lean(),
+
+    ]).then(([info, wallet]) => {
+
+        return {
+            info: omit(info, "password"),
+            wallet,
+            statistic: {
+                minedBlocks: 10,
+                proceedTransactions: 10,
+                profit: 19.2
+            }
+        }
+    })
+};
 
 module.exports = {
     regularLogin,
-    getUserInfo
+    getUserInfo,
+    getDetailUserInfo
 }
