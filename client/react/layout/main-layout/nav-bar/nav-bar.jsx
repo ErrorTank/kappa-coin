@@ -13,8 +13,8 @@ export class Navbar extends React.Component {
     };
 
     handleSignout = () => {
-      userInfo.setState(null);
-      authenCache.clearAuthen();
+        userInfo.setState(null);
+        authenCache.clearAuthen();
     };
 
     navs = [
@@ -69,6 +69,14 @@ export class Navbar extends React.Component {
                     url: "/profile#wallet",
                     isActive: () => customHistory.location.hash === "#wallet"
                 }, {
+                    label: () => (
+                        <div>
+                            My transactions
+                        </div>
+                    ),
+                    url: "/my-transactions",
+                    isActive: () => customHistory.location.hash === "#wallet"
+                }, {
                     label: () => {
                         return (
                             <div className="sign-out">
@@ -117,7 +125,7 @@ export class Navbar extends React.Component {
                                                     <div className="dropdown-panel">
                                                         {each.dropdownItems.map((item, i) => (
                                                             <div key={i}
-                                                                 className={classnames("dropdownItem", {active:item.isActive ? item.isActive() :  item.url ? item.url === customHistory.location.pathname : false})}
+                                                                 className={classnames("dropdownItem", {active: item.isActive ? item.isActive() : item.url ? item.url === customHistory.location.pathname : false})}
                                                                  onClick={(e) => {
                                                                      e.stopPropagation();
                                                                      customHistory.push(item.url)
