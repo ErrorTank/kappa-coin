@@ -1,0 +1,47 @@
+.wallet-edit-panel{
+  margin-top 50px
+  .panel-body{
+    padding 15px 20px
+    padding-bottom 0
+    .tooltip-container{
+      &.copied{
+        .tooltip-content{
+          background-color success !important
+        }
+      }
+    }
+    .wallet-detail{
+      margin-bottom 20px
+      .detail-label{
+        font-size 16px
+        i{
+          margin-right 8px
+          color tikiblue
+        }
+      }
+      .detail-content{
+        margin-top 4px
+        font-size 15px
+        color #4a4f55
+        .hex-contain{
+          background-color #e9e9e9
+          overflow hidden
+          max-width 500px
+          white-space nowrap
+          text-overflow ellipsis
+          position relative
+          i{
+            position absolute
+            top 50%
+            transform translateY(-50%)
+            right 15px
+          }
+          border-radius 4px
+          padding 6px 15px
+          display inline-block
+          padding-right 40px
+        }
+      }
+    }
+  }
+}

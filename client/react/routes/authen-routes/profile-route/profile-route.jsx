@@ -1,4 +1,4 @@
-
+import ReactDOM from "react-dom";
 import React from "react";
 import {PageTitle} from "../../../common/page-title/page-title";
 import {MainLayout} from "../../../layout/main-layout/main-layout";
@@ -9,6 +9,7 @@ import {userInfo} from "../../../../common/states/common";
 import moment from "moment"
 import {InfoEditPanel} from "./info-edit-panel/info-edit-panel";
 import {WalletEditPanel} from "./wallet-edit-panel/wallet-edit-panel";
+import {customHistory} from "../../routes";
 
 export default class ProfileRoute extends React.Component{
     constructor(props){
@@ -21,6 +22,14 @@ export default class ProfileRoute extends React.Component{
         };
         userApi.getDetailUserInfo(userInfo.getState()._id).then(data => this.setState({...data, loading: false}))
     };
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        const id = customHistory.location.hash.substring(1);
+        const yOffset = -60;
+        const element = document.getElementById(id);
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({top: y, behavior: 'smooth'});
+    }
 
     statistics = [
         {
@@ -107,7 +116,7 @@ export default class ProfileRoute extends React.Component{
                                                 onEdit={data => this.setState({info: {...data}})}
                                             />
                                             <WalletEditPanel
-
+                                                wallet={wallet}
                                             />
                                         </>
                                     )

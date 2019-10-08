@@ -75,7 +75,6 @@ export class Navbar extends React.Component {
                         </div>
                     ),
                     url: "/my-transactions",
-                    isActive: () => customHistory.location.hash === "#wallet"
                 }, {
                     label: () => {
                         return (
