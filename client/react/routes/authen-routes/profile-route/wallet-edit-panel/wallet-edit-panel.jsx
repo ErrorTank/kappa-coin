@@ -11,6 +11,21 @@ export class WalletEditPanel extends React.Component {
         {
             label: (
                 <>
+                    <i className="fas fa-money-check"></i>
+                    Balance
+                </>
+            ),
+            render: ({balance}) => {
+                return (
+                    <div className="balance">
+                        {balance} <span>KAP</span>
+                    </div>
+                )
+            }
+        },
+        {
+            label: (
+                <>
                     <i className="far fa-sticky-note"></i>
                     Address (Public key)
                 </>
@@ -44,20 +59,6 @@ export class WalletEditPanel extends React.Component {
                             <i className="fas fa-copy"></i>
                         </div>
                     </Copiable>
-                )
-            }
-        }, {
-            label: (
-                <>
-                    <i className="fas fa-money-check"></i>
-                    Balance
-                </>
-            ),
-            render: ({balance}) => {
-                return (
-                    <div className="balance">
-                        {balance}
-                    </div>
                 )
             }
         },
