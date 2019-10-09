@@ -12,7 +12,21 @@ const getBase64=(file)=>new Promise((resolve)=>{
     };
 });
 
+const formatMoney = (money, fix = 0) => {
+    let fixPath = money.toString().split(".")[1];
+    let tempFix = fix ? fix : fixPath !== undefined ? fixPath.length : 0;
+    let str = Number(money).toFixed(tempFix).toString();
 
+    let [relative, fixed] = str.includes('.') ? str.split(".") : [str, null];
+    let spliceStrPaths = (total, str) => {
+        if(str.length>3){
+            return spliceStrPaths([str.slice(str.length - 3),...total], str.slice(0, str.length - 3))
+        }
+        return [str.slice(0, str.length), ...total]
+    };
+    let paths = spliceStrPaths([],relative);
+    return paths.join(",")+ (fixed ? ("."+ fixed) : "");
+};
 
 let buildParams = (obj) => {
     let params = Object.keys(obj);
@@ -38,5 +52,6 @@ export {
     wait,
     getBase64,
     buildParams,
-    pronounce
+    pronounce,
+    formatMoney
 }

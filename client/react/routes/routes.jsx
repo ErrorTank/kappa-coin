@@ -10,6 +10,7 @@ import {delayLoad} from "../../common/utils";
 const ProfileRoute = lazy(delayLoad(() => import("./authen-routes/profile-route/profile-route")));
 const HomeRoute =  lazy(delayLoad(() => import("./common-route/home-route/home-route")));
 const LoginRoute =  lazy(delayLoad(() => import("./guest-route/login-route/login-route")));
+const ExchangeRoute =  lazy(delayLoad(() => import("./authen-routes/exchange-route/exchange-route")));
 
 export class MainRoute extends React.Component{
     constructor(props){
@@ -28,6 +29,7 @@ export class MainRoute extends React.Component{
                             <WithLocationRoute exact path="/" render={props => (<HomeRoute {...props}/>)}/>
                             <GuestRoute exact path="/login" component={LoginRoute}/>
                             <AuthenRoute exact path="/profile" component={ProfileRoute}/>
+                            <AuthenRoute exact path="/exchange" component={ExchangeRoute}/>
                         </Switch>
                         </Suspense>
                     </Router>

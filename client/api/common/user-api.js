@@ -9,6 +9,9 @@ export const userApi = {
         return offlineApi.post("/login", info);
 
     },
+    getWalletInfo(userID){
+        return authenApi.get(`/user/${userID}/wallet`);
+    },
     getDetailUserInfo(userID){
         return authenApi.get(`/user/${userID}/detail`)
     },

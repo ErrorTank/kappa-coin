@@ -14,19 +14,14 @@ const transactionSchema = new Schema({
         amount: Number,
         address: String,
         signature: String
+    },
+    outputMap:{
+        type: Object
     }
 });
 
 
-transactionSchema.pre("save", function (next) {
-    let keyPair = ec.genKeyPair();
 
-    this.keyPair.publicKey = keyPair.getPublic().encode("hex");
-    this.keyPair.privateKey = keyPair.getPrivate("hex");
-    this.address = keyPair.getPublic().encode("hex");
-    next();
-});
-
-const Wallet = mongoose.model("Wallet", transactionSchema);
+const Wallet = mongoose.model("Transaction", transactionSchema);
 
 module.exports = Wallet;

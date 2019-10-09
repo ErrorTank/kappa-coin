@@ -99,7 +99,7 @@ export class InfoEditPanel extends KComponent {
                                 id={"email"}
                                 onKeyDown={onEnter}
                                 type={"text"}
-                                label={"Email"}
+                                label={"Username"}
                                 placeholder={"abc@xyz.com"}
                                 onChange={e => {
 

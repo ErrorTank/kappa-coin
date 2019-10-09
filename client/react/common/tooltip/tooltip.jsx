@@ -11,7 +11,7 @@ export class Tooltip extends React.Component {
     };
 
     render() {
-        let {position, className, text, onShow = () => null, onHide = () => null} = this.props;
+        let {position = "bottom", className, text, onShow = () => null, onHide = () => null} = this.props;
         return (
             <div className={classnames("tooltip-container", className)}
                  onMouseEnter={() => {

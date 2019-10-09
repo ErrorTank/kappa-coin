@@ -101,10 +101,15 @@ const updateUserInfo = ({userID, data}) => {
     })
 };
 
+const getUserWallet = userID => {
+    return Wallet.findOne({owner: ObjectId(userID)}).lean();
+};
+
 module.exports = {
     regularLogin,
     getUserInfo,
     getDetailUserInfo,
     checkEmailExisted,
-    updateUserInfo
+    updateUserInfo,
+    getUserWallet
 }
