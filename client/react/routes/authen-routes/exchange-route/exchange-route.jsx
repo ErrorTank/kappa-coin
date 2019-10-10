@@ -5,20 +5,22 @@ import {userApi} from "../../../../api/common/user-api";
 import {userInfo} from "../../../../common/states/common";
 import {formatMoney} from "../../../../common/utils/common";
 import {ExchangeForm} from "./exchange-form/exchange-form";
+import {CommonInput} from "../../../common/common-input/common-input";
 
 export default class ExchangeRoute extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             wallet: null,
-            loading: true
+            loading: true,
+
         };
 
         userApi.getWalletInfo(userInfo.getState()._id).then((wallet) => this.setState({wallet, loading: false}))
     };
 
     render() {
-        let {loading, wallet} = this.state;
+        let {loading, wallet, } = this.state;
         return (
             <PageTitle
                 title={"Exchange Cryptocurrency"}
@@ -41,6 +43,7 @@ export default class ExchangeRoute extends React.Component {
                                             <ExchangeForm
                                                 wallet={wallet}
                                             />
+
                                         </div>
                                     </>
                                 )}
