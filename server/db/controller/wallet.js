@@ -19,7 +19,7 @@ const checkReceiverAddress = ({sender, address}) => {
 
             if (data.owner.toString() === sender)
                 return Promise.reject(new ApplicationError("You cannot send currencies to yourself!"));
-            return User.findById(sender).lean().then(data => pick(data, ["_id", "fullname", "email"]));
+            return User.findById(data.owner).lean().then(data => pick(data, ["_id", "fullname", "email"]));
 
         })
 

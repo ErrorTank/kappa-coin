@@ -39,7 +39,7 @@ export default class ExchangeRoute extends React.Component {
                                             <span className="separate">=</span>
                                             <span className="value">{formatMoney(wallet.balance * process.env.USD_RATE)} <span>USD</span></span>
                                         </div>
-                                        <div className="main-content border-box">
+                                        <div className="main-content ">
                                             <ExchangeForm
                                                 wallet={wallet}
                                             />

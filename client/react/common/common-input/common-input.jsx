@@ -8,12 +8,26 @@ export class CommonInput extends React.Component {
     };
 
     render() {
-        const {className, success = false, error = false, label = null, helper = null, id, icon, inputType = "input", ...others} = this.props;
+        const {className, textArea = false, success = false, extraDisplay,  error = false, label = null, displayErr = true, helper = null, id, icon, inputType = "input", ...others} = this.props;
         return (
             <div className={classnames("common-input", className)}>
                 <label htmlFor={id}>{label}</label>
-                <input className={classnames("form-control", {"is-invalid": error, "is-valid": success})} id={id} {...others}/>
-                {(error) && (
+                {textArea ? (
+                    <textarea className="form-control" id={id} {...others}></textarea>
+                )  : extraDisplay ? (
+                    <div className="input-wrapper">
+                        <input className={classnames("form-control", {"is-invalid": error, "is-valid": success})} id={id} {...others}/>
+                        {extraDisplay}
+                    </div>
+                ) : (
+                    <input className={classnames("form-control", {"is-invalid": error, "is-valid": success})} id={id} {...others}/>
+                )
+
+                }
+
+
+
+                {(error && displayErr) && (
                     <div className="invalid-feedback">{error.message}</div>
                 )}
                 {(success) && (

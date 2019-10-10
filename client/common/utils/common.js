@@ -11,7 +11,20 @@ const getBase64=(file)=>new Promise((resolve)=>{
         resolve({file, src:reader.result, fileID: file.lastModified});
     };
 });
-const getMoneyValueAsText = () => {
+
+const convertTextMoneyToNumber = (value, fixed = 0) => Number(Number(value.replace(/,/g, "")).toFixed(fixed))
+
+const getMoneyValueAsText = (value) => {
+    let returned = value.trim();
+    if(returned === ".")
+        return "";
+    let lastChar = returned[returned.length - 1];
+    if(isNaN(Number(lastChar)) && (lastChar !== ".")){
+        returned = returned.slice(0, returned.length - 1);
+    }
+    if(lastChar === "." && returned.match(/(\.)/g).length > 1)
+        returned = returned.slice(0, returned.length - 1);
+    return returned ? returned[returned.length - 1] === "." ? returned : formatMoney(Number(returned.replace(/,/g, ""))) : ""
 
 };
 const formatMoney = (money, fix = 0) => {
@@ -56,5 +69,6 @@ export {
     buildParams,
     pronounce,
     formatMoney,
-    getMoneyValueAsText
+    getMoneyValueAsText,
+    convertTextMoneyToNumber
 }

@@ -1,7 +1,26 @@
 .exchange-form{
-  width 500px
+  width 580px
+  padding 30px
   margin auto
   color #6c757e
+  .form-footer{
+    padding-top 25px
+    text-align right
+    border-top 1px solid grey
+    .proceed-btn{
+      padding 8px 30px
+      font-size 16px
+      background-color tikiblue
+      transition background-color 0.1s ease
+      color white
+      &:disabled{
+        pointer-events none
+      }
+      &:hover{
+        background-color darken(tikiblue, 25%)
+      }
+    }
+  }
   .form-header{
     color rgb(13, 53, 120);
     font-size 22px
@@ -14,9 +33,29 @@
   .form-body{
     .amount{
       overflow hidden
+      .custom-err{
+        font-size 13px
+        margin-top 5px
+
+        color danger
+      }
+      .currency-name{
+        color rgb(13, 53, 120);
+        position absolute
+        right 10px
+        top 50%
+        font-weight 550
+
+        font-size 16px
+        transform translateY(-50%)
+      }
       .amount-input{
         display inline-block
         vertical-align top
+        input{
+          padding-right 45px !important
+
+        }
         width calc(50% - 15px)
         .usd-input{
           label{
@@ -28,6 +67,7 @@
         width 30px
         display inline-block
         text-align center
+        padding-bottom 6px
         vertical-align bottom
       }
     }
@@ -59,14 +99,19 @@
         font-size 18px !important
         color #6c757e
       }
-      input{
+      input
+      textarea
+      {
         font-size 16px !important
         padding 8px 15px  !important
       }
 
     }
     .checking{
-      font-size 13px
+      font-size 20px
+      font-weight 550
+      text-align center
+      padding 60px 0
     }
     .fr{
       .usd-rate-tooltip{
