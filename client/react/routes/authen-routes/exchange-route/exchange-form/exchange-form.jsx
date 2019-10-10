@@ -6,8 +6,10 @@ import {Tooltip} from "../../../../common/tooltip/tooltip";
 import {CommonInput} from "../../../../common/common-input/common-input";
 import * as yup from "yup";
 import {createSimpleForm} from "../../../../common/form-validator/form-validator";
-import {userApi} from "../../../../../api/common/user-api";
 import debounce from "lodash/debounce";
+import {exchangeApi} from "../../../../../api/common/exchange-api";
+import {generatePair} from "../../../../../common/crypto";
+import {getMoneyValueAsText} from "../../../../../common/utils/common";
 
 export class ExchangeForm extends KComponent {
     constructor(props) {
@@ -15,12 +17,12 @@ export class ExchangeForm extends KComponent {
         this.state = {
             addressError: "",
             addressSuccess: "",
-            addressChecking: false
+            addressChecking: false,
+            receiverInfo: null
         };
         this.exchangeSchema = yup.object().shape({
             to: yup.string().required("Wallet address is required"),
-            kap: yup.string().test("validate-kap", "Amount exceeds current balance", this.validateKap),
-            usd: yup.string().test("validate-usd", "Amount exceeds current balance", this.validateUsd),
+
         });
         this.form = createSimpleForm(this.exchangeSchema, {
             initData: {
@@ -38,14 +40,16 @@ export class ExchangeForm extends KComponent {
 
     checkReceiverAddress = (address, isValid) => {
         if (isValid) {
-            userApi.checkReceiverAddress({address, sender: this.props.wallet.address}).then((data) => {
+            this.setState({addressChecking: true});
+            exchangeApi.checkReceiverAddress({address, sender: userInfo.getState()._id}).then((data) => {
+
                 this.setState({
-                    checking: false, success: {
-                        message: "Valid address"
-                    }
+                    addressChecking: false, addressSuccess: {
+                        message: "Wallet found!"
+                    }, receiverInfo: data, addressError: ""
                 })
             }).catch((err) => {
-                this.setState({checking: false, err: err.extra})
+                this.setState({addressChecking: false, addressError: err, addressSuccess: ""})
             })
         }
 
@@ -54,30 +58,19 @@ export class ExchangeForm extends KComponent {
     debounceCheckReceiverAddress = debounce(this.checkReceiverAddress, 1500);
 
     handleChangeAddress = (e) => {
-        let isValid = yup.reach(this.editSchema, "email").isValidSync(e.target.value);
-        if (isValid) {
-            this.setState({addressChecking: true});
-        } else {
-            this.setState({addressChecking: false});
-        }
-
+        let isValid = yup.reach(this.exchangeSchema, "to").isValidSync(e.target.value);
+        if (this.state.receiverInfo) this.setState({receiverInfo: null});
         this.debounceCheckReceiverAddress(e.target.value, isValid);
 
     };
 
-    validateKap = (value) => {
-        let {wallet} = this.props;
-        return wallet.balance >= Number(value);
-    };
 
-    validateUsd = (value) => {
-        let {wallet} = this.props;
-        return wallet.balance >= Number(value) / 1000;
-    };
 
     render() {
+
         let {wallet} = this.props;
-        let {addressError, addressSuccess, addressChecking} = this.state;
+        let {addressError, addressSuccess, addressChecking, receiverInfo} = this.state;
+
         return (
             <div className="exchange-form">
                 <div className="form-header">
@@ -124,7 +117,7 @@ export class ExchangeForm extends KComponent {
 
                                     this.setState({addressError: "", addressSuccess: ""});
                                     onChange(e);
-                                    this.handleChangeAddress();
+                                    this.handleChangeAddress(e);
                                 }}
                                 {...others}
                             />
@@ -133,6 +126,65 @@ export class ExchangeForm extends KComponent {
                             )}
                         </div>
                     ), true)}
+                    {receiverInfo && (
+                        <>
+                            <div className="receiver-info">
+                                <div className="section">
+                                    <p className="label">Receiver name</p>
+                                    <p className="value">{receiverInfo.fullname}</p>
+                                </div>
+                                <div className="section">
+                                    <p className="label">Receiver email</p>
+                                    <p className="value">{receiverInfo.email}</p>
+                                </div>
+                            </div>
+                            <div className="amount">
+                                <div className="amount-input">
+                                    {this.form.enhanceComponent("kap", ({error, onChange, onEnter, ...others}) => (
+
+
+                                        <CommonInput
+                                            className="pt-0 send-input"
+                                            id={"kap"}
+                                            type={"text"}
+                                            extraDisplay={<span>KAP</span>}
+                                            label={"Amount"}
+                                            placeholder={"0"}
+                                            onChange={e => {
+                                                let actualValue = getMoneyValueAsText(e.target.value);
+                                                onChange(actualValue);
+                                            }}
+                                            {...others}
+                                        />
+
+                                    ), true)}
+                                </div>
+                                <div className="amount-separate">=</div>
+                                <div className="amount-input">
+                                    {this.form.enhanceComponent("usd", ({error, onChange, onEnter, ...others}) => (
+
+
+                                        <CommonInput
+                                            className="pt-0 send-input usd-input"
+                                            id={"usd"}
+                                            type={"text"}
+                                            label={"Text"}
+                                            extraDisplay={<span>USD</span>}
+                                            placeholder={"$0.00"}
+                                            onChange={e => {
+                                                let actualValue = getMoneyValueAsText(e.target.value);
+                                                onChange(actualValue);
+                                            }}
+                                            {...others}
+                                        />
+
+                                    ), true)}
+                                </div>
+                            </div>
+                        </>
+                    )
+
+                    }
                 </div>
             </div>
         );

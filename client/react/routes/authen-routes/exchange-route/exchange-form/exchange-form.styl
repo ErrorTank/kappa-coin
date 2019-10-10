@@ -12,6 +12,62 @@
     margin-bottom 30px
   }
   .form-body{
+    .amount{
+      overflow hidden
+      .amount-input{
+        display inline-block
+        vertical-align top
+        width calc(50% - 15px)
+        .usd-input{
+          label{
+            opacity 0
+          }
+        }
+      }
+      .amount-separate{
+        width 30px
+        display inline-block
+        text-align center
+        vertical-align bottom
+      }
+    }
+    .receiver-info{
+      .section{
+        margin-top 16px
+        .label{
+          font-size 18px
+          color #6c757e
+          display inline-block
+          width 30%
+          padding-right 10px
+          vertical-align top
+        }
+        .value{
+          color #0d3578
+          font-size 17px
+          font-weight 550
+          display inline-block
+          width 70%
+          padding-left 10px
+          vertical-align top
+        }
+      }
+    }
+    .send-input{
+      margin-top 16px
+      label{
+        font-size 18px !important
+        color #6c757e
+      }
+      input{
+        font-size 16px !important
+        padding 8px 15px  !important
+      }
+
+    }
+    .checking{
+      font-size 13px
+    }
     .fr{
       .usd-rate-tooltip{
         .tooltip-content{

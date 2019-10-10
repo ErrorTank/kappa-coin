@@ -20,5 +20,6 @@ export const userApi = {
     },
     updateUser(userID, payload){
         return authenApi.post(`/user/${userID}/update`, payload)
-    }
+    },
+
 };

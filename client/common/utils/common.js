@@ -11,7 +11,9 @@ const getBase64=(file)=>new Promise((resolve)=>{
         resolve({file, src:reader.result, fileID: file.lastModified});
     };
 });
+const getMoneyValueAsText = () => {
 
+};
 const formatMoney = (money, fix = 0) => {
     let fixPath = money.toString().split(".")[1];
     let tempFix = fix ? fix : fixPath !== undefined ? fixPath.length : 0;
@@ -53,5 +55,6 @@ export {
     getBase64,
     buildParams,
     pronounce,
-    formatMoney
+    formatMoney,
+    getMoneyValueAsText
 }
