@@ -9,6 +9,7 @@ import {createSimpleForm} from "../../../../common/form-validator/form-validator
 import debounce from "lodash/debounce";
 import {exchangeApi} from "../../../../../api/common/exchange-api";
 import {convertTextMoneyToNumber, formatMoney, getMoneyValueAsText} from "../../../../../common/utils/common";
+import {LoadingInline} from "../../../../common/loading-inline/loading-inline";
 
 export class ExchangeForm extends KComponent {
     constructor(props) {
@@ -82,7 +83,7 @@ export class ExchangeForm extends KComponent {
         let {addressError, addressSuccess, addressChecking, receiverInfo, proceeding} = this.state;
         let amount = convertTextMoneyToNumber(this.form.getPathData("kap"), 2);
         let kapError = this.form.getErrorPath("kap");
-        let amountError = (kapError && kapError.hasOwnProperty("message")) ? {message: kapError.message} :  (amount > wallet.balance ? {message: "Amount exceeds current wallet balance"} : "");
+        let amountError = (kapError && kapError.hasOwnProperty("message")) ? {message: kapError.message} : (amount > wallet.balance ? {message: "Amount exceeds current wallet balance"} : "");
         // console.log(this.form.getErrorPath("usd"))
         // console.log(this.form.getInvalidPaths())
         // console.log(amountError)
@@ -236,7 +237,11 @@ export class ExchangeForm extends KComponent {
                     <div className="form-footer">
                         <button className="btn proceed-btn"
                                 disabled={!canProceed}
-                        >Proceed Transaction
+                        >{proceeding && (
+                            <LoadingInline/>
+                        )
+                        }
+                            Proceed Transaction
                         </button>
                     </div>
                 )

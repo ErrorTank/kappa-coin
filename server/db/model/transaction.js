@@ -1,27 +1,51 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const ObjectId = mongoose.Schema.Types.ObjectId;
-const {ec} = require("../../utils/crypto-utils");
+import sha256 from "crypto-js/sha256";
 
-const transactionSchema = new Schema({
-    updatedAt: {type: Date, default: Date.now},
-    createdAt: {type: Date, default: Date.now},
-    input: {
-        timestamp: {
-            type: Date,
-            default: Date.now()
-        },
-        amount: Number,
-        address: String,
-        signature: String
-    },
-    outputMap:{
-        type: Object
+const createTransaction = (data) => {
+    let {senderWallet, receiverWallet, amount, status = 'pending'} = data;
+    let timestamp = Date.now();
+    let hash = sha256(timestamp + amount + senderWallet.address + receiverWallet.address);
+    let signature = "";
+    return {
+        getData: () => ({
+            input: {
+                timestamp,
+                amount: senderWallet.balance,
+                address: senderWallet.address,
+                signature
+            },
+            outputMap: {
+                [receiverWallet.address]: amount,
+                [senderWallet.address]: senderWallet.balance - amount
+            },
+            hash,
+            status
+        })
     }
-});
+};
 
-
-
-const Wallet = mongoose.model("Transaction", transactionSchema);
-
-module.exports = Wallet;
+module.exports = {
+    TransactionModel: {
+        input: {
+            timestamp: {
+                type: Date,
+                default: Date.now()
+            },
+            amount: Number,
+            address: String,
+            signature: String
+        },
+        outputMap: {
+            type: Object
+        },
+        hash: {
+            type: String,
+            default: ""
+        },
+        status: {
+            type: String,
+            enum: ["pending", "proceed"],
+            default: "pending"
+        }
+    },
+    createTransaction
+};
