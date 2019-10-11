@@ -10,16 +10,30 @@ import debounce from "lodash/debounce";
 import {exchangeApi} from "../../../../../api/common/exchange-api";
 import {convertTextMoneyToNumber, formatMoney, getMoneyValueAsText} from "../../../../../common/utils/common";
 import {LoadingInline} from "../../../../common/loading-inline/loading-inline";
+import pick from "lodash/pick"
+import {appModal} from "../../../../common/modal/modals";
+import {customHistory} from "../../../routes";
+
+const CreatePendingTransactionSuccess = (props) => {
+    return (
+        <div className="create-pending-transaction">
+
+        </div>
+    )
+}
 
 export class ExchangeForm extends KComponent {
     constructor(props) {
         super(props);
-        this.state = {
+        this.initialState = {
             addressError: "",
             addressSuccess: "",
             addressChecking: false,
             receiverInfo: null,
             proceeding: false
+        };
+        this.state = {
+          ...this.initialState
         };
         this.exchangeSchema = yup.object().shape({
             to: yup.string().required("Wallet address is required"),
@@ -74,6 +88,34 @@ export class ExchangeForm extends KComponent {
         if (this.state.receiverInfo) this.setState({receiverInfo: null});
         this.debounceCheckReceiverAddress(e.target.value, isValid);
 
+    };
+
+    handleCreateTransaction = () => {
+        this.setState({proceeding: true});
+        let {wallet} = this.props;
+        let {receiverInfo} = this.state;
+        console.log(receiverInfo)
+        let {kap, description, to} = this.form.getData();
+        let sentPayload = {
+            senderWallet: pick(wallet, ["balance", "address", "keyPair"]),
+            receiverWallet: {
+                address: to
+            },
+            amount: convertTextMoneyToNumber(kap, 2),
+            description
+        };
+        exchangeApi.createPendingTransaction(sentPayload).then(() => {
+            this.setState({...this.initialState});
+            this.form.resetData();
+            appModal.alert({
+                title: "Notification",
+                text: (
+                    <CreatePendingTransactionSuccess/>
+                ),
+                btnText: "My transactions",
+                cancelText: "Close"
+            }).then(isNavigate => isNavigate && customHistory.push("/my-transactions"))
+        });
     };
 
 
@@ -237,6 +279,7 @@ export class ExchangeForm extends KComponent {
                     <div className="form-footer">
                         <button className="btn proceed-btn"
                                 disabled={!canProceed}
+                                onClick={this.handleCreateTransaction}
                         >{proceeding && (
                             <LoadingInline/>
                         )

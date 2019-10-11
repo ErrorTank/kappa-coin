@@ -1,9 +1,9 @@
-const {hash, sign} = require("../../utils/crypto-utils");
+const {cryptoHash, sign} = require("../../utils/crypto-utils");
 
 const createTransaction = (data) => {
-    let {senderWallet, receiverWallet, amount, status = 'pending'} = data;
+    let {senderWallet, receiverWallet, amount, status = 'pending', description = ""} = data;
     let timestamp = Date.now();
-    let hash = hash(timestamp + amount + senderWallet.address + receiverWallet.address);
+    let hash = cryptoHash(timestamp + amount + senderWallet.address + receiverWallet.address + description);
     let signature = sign(senderWallet.keyPair.privateKey, hash);
     return {
         getData: () => ({
@@ -18,7 +18,8 @@ const createTransaction = (data) => {
                 [senderWallet.address]: senderWallet.balance - amount
             },
             hash,
-            status
+            status,
+            description
         })
     }
 };
@@ -27,6 +28,8 @@ const createTransaction = (data) => {
 
 module.exports = {
     TransactionModel: {
+        updatedAt: {type: Date, default: Date.now()},
+        createdAt: {type: Date, default: Date.now()},
         input: {
             timestamp: {
                 type: Date,
@@ -47,7 +50,8 @@ module.exports = {
             type: String,
             enum: ["pending", "proceed"],
             default: "pending"
-        }
+        },
+        description: String
     },
     createTransaction
 };

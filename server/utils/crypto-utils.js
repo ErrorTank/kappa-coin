@@ -22,7 +22,7 @@ const sign = (privateKey, data) => {
     return raw.r.toString("hex") + raw.s.toString("hex")
 };
 
-const hash = data => sha256(data).toString();
+const cryptoHash = data => sha256(data).toString();
 
 //Testing
 // const test = ec.keyFromPrivate("238f831621304f30764ed0b062947468db6ff039ae1e73a50bb722147967be8d", "hex");
@@ -31,4 +31,4 @@ const hash = data => sha256(data).toString();
 // var signature = temp.r.toString("hex") + temp.s.toString("hex");
 // console.log(signature)
 // console.log(test2.verify("cac", splitSignatureToRS(signature)))
-module.exports = { ec, hash, sign, verifySignature};
+module.exports = { ec, cryptoHash, sign, verifySignature};
