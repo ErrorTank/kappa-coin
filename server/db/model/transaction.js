@@ -1,10 +1,10 @@
-import sha256 from "crypto-js/sha256";
+const {hash, sign} = require("../../utils/crypto-utils");
 
 const createTransaction = (data) => {
     let {senderWallet, receiverWallet, amount, status = 'pending'} = data;
     let timestamp = Date.now();
-    let hash = sha256(timestamp + amount + senderWallet.address + receiverWallet.address);
-    let signature = "";
+    let hash = hash(timestamp + amount + senderWallet.address + receiverWallet.address);
+    let signature = sign(senderWallet.keyPair.privateKey, hash);
     return {
         getData: () => ({
             input: {
@@ -22,6 +22,8 @@ const createTransaction = (data) => {
         })
     }
 };
+
+
 
 module.exports = {
     TransactionModel: {
