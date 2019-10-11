@@ -6,7 +6,7 @@ import * as yup from "yup"
 import {createSimpleForm} from "../../../common/form-validator/form-validator";
 import {CommonInput} from "../../../common/common-input/common-input";
 import {LoadingInline} from "../../../common/loading-inline/loading-inline";
-import {userInfo} from "../../../../common/states/common";
+import {userInfo, walletInfo} from "../../../../common/states/common";
 import {customHistory} from "../../routes";
 import {userApi} from "../../../../api/common/user-api";
 import {authenCache} from "../../../../common/cache/authen-cache";
@@ -40,9 +40,9 @@ export default class LoginRoute extends KComponent {
         let {email, password} = this.form.getData();
         this.setState({loading: true});
         userApi.login({email, password}).then(data => {
-            let {user, token} = data;
+            let {user, token, wallet} = data;
             authenCache.setAuthen(token, {expires: 30});
-            return userInfo.setState({...user}).then(() => customHistory.push("/"));
+            return Promise.all([userInfo.setState({...user}), walletInfo.setState({...wallet})]).then(() => customHistory.push("/"));
         }).catch(err => this.setState({loading: false, error: err.message}));
     };
 

@@ -22,13 +22,14 @@ const regularLogin = ({email, password}) => {
 
         })
         .then((data) =>
-            createAuthToken(pick(data, ["_id", "email", "fullname"]), getPrivateKey(), {
+            Promise.all([createAuthToken(pick(data, ["_id", "email", "fullname"]), getPrivateKey(), {
                 expiresIn: "30d",
                 algorithm: "RS256"
-            })
-                .then(token => ({
+            }), Wallet.findOne({owner: data._id})])
+                .then(([token, wallet]) => ({
                     token,
-                    user: omit(data, ["password"])
+                    user: omit(data, ["password"]),
+                    wallet
                 }))
                 .catch(err => Promise.reject(err))
         )
@@ -37,7 +38,7 @@ const regularLogin = ({email, password}) => {
             return Promise.reject(err)
         })
 };
-const getUserInfo = userID => {
+const getAuthUserInfo = userID => {
 
     return User.findOne({_id: mongoose.Types.ObjectId(userID)}).lean()
         .then(data => {
@@ -49,8 +50,17 @@ const getUserInfo = userID => {
             return data;
 
         })
-        .then((data) =>
-            omit(data, ["password"])
+        .then(data => {
+            return Wallet.findOne({owner: data._id}).then((wallet) => ({
+                wallet,
+                data
+            }))
+        })
+        .then(({wallet, data}) =>
+            ({
+                user: omit(data, ["password"]),
+                wallet
+            })
         )
         .catch(err => {
 
@@ -107,7 +117,7 @@ const getUserWallet = userID => {
 
 module.exports = {
     regularLogin,
-    getUserInfo,
+    getAuthUserInfo,
     getDetailUserInfo,
     checkEmailExisted,
     updateUserInfo,

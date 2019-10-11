@@ -1,7 +1,7 @@
 
 import {Cache} from "./cache"
 import Cookies from "js-cookie";
-import {userInfo} from "../states/common";
+import {userInfo, walletInfo} from "../states/common";
 import {userApi} from "../../api/common/user-api";
 
 const cookiesEngine = {
@@ -24,11 +24,12 @@ export const authenCache = (() => {
         if (!authen) {
           reject();
         } else {
-          userApi.getInfo().then((data) => {
-            if (!data)
+          userApi.getInfo().then(({user, wallet}) => {
+
+            if (!user)
               reject();
             else {
-              return resolve(userInfo.setState(data));
+              return resolve(Promise.all([userInfo.setState(user), walletInfo.setState(wallet)]));
 
             }
 

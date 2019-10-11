@@ -4,6 +4,31 @@ html,body{
   //background-color: #663399
   overflow-x hidden
 }
+.btn-blue{
+  color white
+  background-color tikiblue
+  transition background-color 0.1s ease
+  &:hover{
+    background-color darken(tikiblue, 25%)
+  }
+}
+.btn-confirm{
+  color white
+  background-color #0d3578
+  transition background-color 0.1s ease
+  &:hover{
+    background-color darken(#0d3578, 25%)
+  }
+}
+.btn-cancel{
+  color #0d3578
+  background-color white
+  border 1px solid grey
+  transition background-color 0.1s ease
+  &:hover{
+    background-color darken(white, 5%)
+  }
+}
 .fade-enter {
   opacity: 0;
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import classnames from "classnames"
 import {customHistory} from "../../../routes/routes";
-import {userInfo} from "../../../../common/states/common";
+import {userInfo, walletInfo} from "../../../../common/states/common";
 import {CSSTransition} from "react-transition-group";
 import {Dropdown} from "../../../common/dropdown/dropdown";
 import {authenCache} from "../../../../common/cache/authen-cache";
@@ -14,6 +14,7 @@ export class Navbar extends React.Component {
 
     handleSignout = () => {
         userInfo.setState(null);
+        walletInfo.setState(null);
         authenCache.clearAuthen();
     };
 

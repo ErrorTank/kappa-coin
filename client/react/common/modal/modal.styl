@@ -51,6 +51,7 @@
 
 .k-modal{
   display block
+  color #6c757e
   background-color rgba(black, 0.7)
   //.modal-overlay{
   //  max-width 1200px !important
@@ -63,30 +64,36 @@
   }
 
   .modal-header{
+    padding 15px 20px !important
+
     .close-modal{
+      font-size 18px
       color lighten(#3f4047, 30%)
       cursor pointer
-      font-size 14px
       &:hover{
         color #3f4047
       }
     }
     .modal-title{
-      font-size sm + 0.3rem !important
+      color #0d3578
+      font-size 25px !important
       font-weight 550 !important
     }
   }
   .modal-footer{
+    padding 15px 20px !important
     button{
-      font-size sm - 0.2rem !important
+      font-size 16px
+      padding 7px 25px
     }
   }
   .modal-body{
     color #3f4047
-    font-size 14px
+    font-size 16px
+    padding 15px 20px !important
+    text-align left
   }
 }
-
 
 //
 //

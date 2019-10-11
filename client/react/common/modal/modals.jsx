@@ -2,12 +2,13 @@ import React, {Fragment} from "react";
 import {Modal} from "./modal";
 import {CSSTransition, TransitionGroup} from "react-transition-group";
 import remove from "lodash/remove";
+import classnames from "classnames"
 
 export const appModal = {
   alert({text, title, btnText = "OK"}) {
     const modal = modals.openModal({
       content: (
-        <div className="alert-modal">
+        <div className="alert-modal common-modal">
           <div className="modal-header">
             <div className="modal-title">
               {title}
@@ -20,7 +21,7 @@ export const appModal = {
             <p>{text}</p>
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-primary" onClick={() => modal.close()}>
+            <button type="button" className="btn btn-confirm" onClick={() => modal.close()}>
               {btnText}
             </button>
           </div>
@@ -29,10 +30,10 @@ export const appModal = {
     });
     return modal.result;
   },
-  confirm({text, title, btnText = "Confirm", cancelText = "Cancel"}) {
+  confirm({text, title, btnText = "Confirm", cancelText = "Cancel", className}) {
     const modal = modals.openModal({
       content: (
-        <div className="confirm-modal">
+        <div className={classnames("confirm-modal common-modal", className)}>
           <div className="modal-header">
             <div className="modal-title">
               {title}
@@ -45,12 +46,12 @@ export const appModal = {
             {text}
           </div>
           <div className="modal-footer">
-            <button className="btn modal-btn btn-danger cancel-btn ml-3"
+            <button className="btn modal-btn btn-cancel cancel-btn ml-3"
                     onClick={() => modal.close(false)}
             >
               {cancelText}
             </button>
-            <button className="btn modal-btn btn-primary confirm-btn ml-3"
+            <button className="btn modal-btn btn-confirm confirm-btn ml-3"
                     onClick={() => modal.close(true)}
             >
               {btnText}

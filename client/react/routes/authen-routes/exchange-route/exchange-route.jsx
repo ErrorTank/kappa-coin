@@ -2,12 +2,14 @@ import React from "react";
 import {PageTitle} from "../../../common/page-title/page-title";
 import {MainLayout} from "../../../layout/main-layout/main-layout";
 import {userApi} from "../../../../api/common/user-api";
-import {userInfo} from "../../../../common/states/common";
+import {userInfo, walletInfo} from "../../../../common/states/common";
 import {formatMoney} from "../../../../common/utils/common";
 import {ExchangeForm} from "./exchange-form/exchange-form";
 import {CommonInput} from "../../../common/common-input/common-input";
+import {KComponent} from "../../../common/k-component";
+import {customHistory} from "../../routes";
 
-export default class ExchangeRoute extends React.Component {
+export default class ExchangeRoute extends KComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -15,6 +17,14 @@ export default class ExchangeRoute extends React.Component {
             loading: true,
 
         };
+
+        this.onUnmount(walletInfo.onChange((newState, oldState) => {
+            if (!newState || !oldState) {
+                this.setState({wallet: newState});
+            }
+
+
+        })) ;
 
         userApi.getWalletInfo(userInfo.getState()._id).then((wallet) => this.setState({wallet, loading: false}))
     };

@@ -13,11 +13,33 @@ import {LoadingInline} from "../../../../common/loading-inline/loading-inline";
 import pick from "lodash/pick"
 import {appModal} from "../../../../common/modal/modals";
 import {customHistory} from "../../../routes";
+import {Badge} from "../../../../common/badge/badge";
 
-const CreatePendingTransactionSuccess = (props) => {
+const CreatePendingTransactionSuccess = ({data}) => {
     return (
-        <div className="create-pending-transaction">
-
+        <div className="content">
+            <p className="icon">
+                <i className="far fa-check-circle"></i>
+            </p>
+            <p className="sub">
+             Your transaction has been successful created!
+            </p>
+            <div className="details">
+                <div className="detail">
+                    <span className="label">Transaction Hash:</span>
+                    <span className="hash">{data.hash}</span>
+                </div>
+                <div className="detail">
+                    <span className="label">Status:</span>
+                    <Badge
+                        content={"Pending"}
+                        style="danger"
+                    />
+                </div>
+            </div>
+            <div className="more-info">
+                Your transaction will be proceeded in next several minutes. You will receive notification(s) about anything relevant to this exchange.
+            </div>
         </div>
     )
 }
@@ -57,6 +79,7 @@ export class ExchangeForm extends KComponent {
             this.forceUpdate();
         }));
         this.form.validateData();
+
     };
 
     checkReceiverAddress = (address, isValid) => {
@@ -104,13 +127,16 @@ export class ExchangeForm extends KComponent {
             amount: convertTextMoneyToNumber(kap, 2),
             description
         };
-        exchangeApi.createPendingTransaction(sentPayload).then(() => {
+        exchangeApi.createPendingTransaction(sentPayload).then((data) => {
             this.setState({...this.initialState});
             this.form.resetData();
-            appModal.alert({
+            appModal.confirm({
                 title: "Notification",
+                className: "create-pending-transaction",
                 text: (
-                    <CreatePendingTransactionSuccess/>
+                    <CreatePendingTransactionSuccess
+                        data={data}
+                    />
                 ),
                 btnText: "My transactions",
                 cancelText: "Close"
@@ -154,7 +180,9 @@ export class ExchangeForm extends KComponent {
                         <div className={classnames("common-input value-present")}>
                             <label>From <i className="fas fa-wallet"></i></label>
                             <div className="value">
-                                <div className="link">
+                                <div className="link"
+                                     onClick={() => customHistory.push("/profile#wallet")}
+                                >
                                     <p>{userInfo.getState().fullname} wallet</p>
                                     <p className="address">{wallet.address}</p>
                                 </div>
@@ -284,7 +312,7 @@ export class ExchangeForm extends KComponent {
                             <LoadingInline/>
                         )
                         }
-                            Proceed Transaction
+                            Submit Transaction
                         </button>
                     </div>
                 )
