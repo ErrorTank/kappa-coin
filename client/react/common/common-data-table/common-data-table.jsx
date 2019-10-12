@@ -140,14 +140,18 @@ export class CommonDataTable extends React.Component {
                 )}
 
                 <div className="table-footer">
+                    {(list && list.length) && (
+                        <Pagination
+                            value={page + 1}
+                            totalPage={Math.ceil(total / this.pageSize())}
+                            onChange={(newPage) => {
+                                this.loadData({page: newPage - 1})
+                            }}
+                        />
+                    )
 
-                    <Pagination
-                        value={page + 1}
-                        totalPage={Math.ceil(total / this.pageSize())}
-                        onChange={(newPage) => {
-                            this.loadData({page: newPage - 1})
-                        }}
-                    />
+                    }
+
                 </div>
 
             </div>

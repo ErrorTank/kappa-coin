@@ -40,7 +40,7 @@ const getPendingTransaction = ({skip, take, keyword, sortKey, sortValue}) => {
 
         return {
             list: data[0].list,
-            total: data[0].count[0].total
+            total: data[0].list.length ? data[0].count[0].total : 0
         }
     })
 

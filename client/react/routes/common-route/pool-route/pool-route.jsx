@@ -72,11 +72,11 @@ export default class PoolRoute extends React.Component {
                                             filter={{
                                                 keyword
                                             }}
-                                            maxItem={10}
+                                            maxItem={2}
                                             columns={this.columns}
                                             rowLinkTo={(e, row) => `/transaction/${row._id}`}
                                             rowTrackBy={(row, i) => row._id}
-                                            emptyNotify={"There are no matching entries"}
+                                            emptyNotify={"There are no matching transactions"}
                                         />
                                     </div>
 
