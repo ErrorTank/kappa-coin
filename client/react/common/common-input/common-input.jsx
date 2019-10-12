@@ -11,7 +11,10 @@ export class CommonInput extends React.Component {
         const {className, textArea = false, success = false, extraDisplay,  error = false, label = null, displayErr = true, helper = null, id, icon, inputType = "input", ...others} = this.props;
         return (
             <div className={classnames("common-input", className)}>
-                <label htmlFor={id}>{label}</label>
+                {
+                    label && <label htmlFor={id}>{label}</label>
+                }
+
                 {textArea ? (
                     <textarea className="form-control" id={id} {...others}></textarea>
                 )  : extraDisplay ? (

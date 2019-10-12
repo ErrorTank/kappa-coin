@@ -1,0 +1,41 @@
+.search-input-box{
+  display inline-block
+  overflow hidden
+  font-size 13px
+  .wrapper{
+    display flex
+    .search-input{
+      margin 0
+      input{
+        font-size 15px
+        padding 6px 15px !important
+        height 40px
+        width 300px
+        border-radius 3px 0 0 3px
+        outline none !important
+        border-right none
+        &:focus{
+          border-color #ced4da
+        }
+      }
+
+    }
+    .search-btn{
+      vertical-align bottom
+      height 40px
+      background-color tikiblue
+      width 50px
+      i{
+        font-size 16px
+        color white
+      }
+      border-radius 0 3px 3px 0
+      &:hover{
+        background-color darken(tikiblue, 20%)
+      }
+      overflow hidden
+      color #333
+    }
+  }
+
+}

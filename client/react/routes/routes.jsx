@@ -33,7 +33,7 @@ export class MainRoute extends React.Component {
                             <GuestRoute exact path="/login" component={LoginRoute}/>
                             <AuthenRoute exact path="/profile" component={ProfileRoute}/>
                             <AuthenRoute exact path="/exchange" component={ExchangeRoute}/>
-                            <WithLocationRoute exact path="/pool" component={PoolRoute}/>
+                            <WithLocationRoute exact path="/pool" render={props => <PoolRoute {...props}/>}/>
                         </Switch>
                     </Suspense>
                 </Router>

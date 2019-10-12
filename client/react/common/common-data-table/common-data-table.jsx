@@ -4,6 +4,7 @@ import {Pagination} from "./pagination/pagination";
 import classnames from "classnames"
 import isEmpty from "lodash/isEmpty";
 import {customHistory} from "../../routes/routes";
+import {LoadingInline} from "../loading-inline/loading-inline";
 
 export class CommonDataTable extends React.Component {
     constructor(props) {
@@ -16,7 +17,7 @@ export class CommonDataTable extends React.Component {
             total: null
 
         };
-        this.loadData({skip: this.pageSize() * this.state.page, take: this.pageSize()});
+        this.loadData({page: 0});
     };
 
     loadData = (changes = {}) => {
@@ -31,7 +32,7 @@ export class CommonDataTable extends React.Component {
         this.props.api({
             filter: options.filter,
             sort: options.sort,
-            skip: this.pageSize() * (options.page - 1),
+            skip: this.pageSize() * (options.page),
             take: this.pageSize()
         }).then((data) => {
             if (this.isDesiredLoad(options)) {
@@ -88,39 +89,45 @@ export class CommonDataTable extends React.Component {
 
     render() {
         let {columns, className, rowTrackBy = (row, i) => i, onClickRow, rowLinkTo, rowClassName, emptyNotify = "Empty table."} = this.props;
-        let {list, page, total} = this.state;
+        let {list, page, total, loading} = this.state;
 
         return (
             <div className="common-data-table">
-                <table className={classnames("data-table", className)}>
-                    <thead>
-                    <tr>
-                        {columns.map(this.renderHeaderCell)}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {isEmpty(list) ? (
+                {list != null && (
+                    <table className={classnames("data-table", className)}>
+                        <thead>
                         <tr>
-                            <td className="no-data" colSpan={columns.length}>{emptyNotify}</td>
+                            {columns.map(this.renderHeaderCell)}
                         </tr>
-                    ) : list.map((row, rIndex) => (
-                        <tr
-                            key={rowTrackBy(row, rIndex)}
-                            onClick={(onClickRow == null && rowLinkTo == null) ? () => null : e => this.clickRow(e, row)}
-                            className={classnames({clickable: onClickRow != null || rowLinkTo != null}, rowClassName)}
-                        >
-                            {columns.map(({cellClass, cellCheckbox = false, cellDisplay, show = () => true}, index) => {
-                                return show({data: list}) ? (
-                                    <td key={index}
-                                        className={classnames(cellClass, {"checkbox-cell": cellCheckbox})}>
-                                        {cellDisplay ? cellDisplay(row, rIndex) : null}
-                                    </td>
-                                ) : null;
-                            })}
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {isEmpty(list) ? (
+                            <tr>
+                                <td className="no-data" colSpan={columns.length}>{emptyNotify}</td>
+                            </tr>
+                        ) : list.map((row, rIndex) => (
+                            <tr
+                                key={rowTrackBy(row, rIndex)}
+                                onClick={(onClickRow == null && rowLinkTo == null) ? () => null : e => this.clickRow(e, row)}
+                                className={classnames({clickable: onClickRow != null || rowLinkTo != null}, rowClassName)}
+                            >
+                                {columns.map(({cellClass, cellCheckbox = false, cellDisplay, show = () => true}, index) => {
+                                    return show({data: list}) ? (
+                                        <td key={index}
+                                            className={classnames(cellClass, {"checkbox-cell": cellCheckbox})}>
+                                            {cellDisplay ? cellDisplay(row, rIndex) : null}
+                                        </td>
+                                    ) : null;
+                                })}
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                )}
+                {loading && (
+                    <LoadingInline className={"table-loading"}/>
+                )}
+
                 <div className="table-footer">
                     {list && (
                         <div className="summary">
