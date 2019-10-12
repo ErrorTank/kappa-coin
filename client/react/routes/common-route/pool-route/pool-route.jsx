@@ -17,23 +17,23 @@ export default class PoolRoute extends React.Component {
 
     columns = [
         {
-            label: "Txns hash",
+            label: "# Txns hash",
             cellDisplay: (txns) => (
                 <p className="link-text">{txns.hash}</p>
             ),
 
         }, {
-            label: "From",
+            label: <span>From <i className="fas fa-wallet"></i></span>,
             cellDisplay: (txns) => (
                 <p className="link-text">{txns.input.address}</p>
             )
         }, {
-            label: "To",
+            label:  <span>To <i className="fas fa-wallet"></i></span>,
             cellDisplay: (txns) => (
                 <p className="link-text">{Object.keys(txns.outputMap)[0]}</p>
             )
         }, {
-            label: "Amount",
+            label:  <span className="amount-label">Amount <img src={"/assets/image/kappa.png"}/></span>,
             cellDisplay: (txns) => (
                 <p className="amount-cell">{formatMoney(Number(txns.outputMap[Object.keys(txns.outputMap)[0]]))} KAP</p>
             )
@@ -53,7 +53,7 @@ export default class PoolRoute extends React.Component {
                 title={"Pending Transactions"}
             >
                 <MainLayout>
-                    <div className="exchange-route">
+                    <div className="pool-route">
                         <div className="container">
                             <div className="big-wrapper">
                                 <p className="route-title">Pending Transactions</p>
@@ -72,6 +72,7 @@ export default class PoolRoute extends React.Component {
                                             filter={{
                                                 keyword
                                             }}
+                                            maxItem={10}
                                             columns={this.columns}
                                             rowLinkTo={(e, row) => `/transaction/${row._id}`}
                                             rowTrackBy={(row, i) => row._id}

@@ -17,8 +17,12 @@ export class CommonDataTable extends React.Component {
             total: null
 
         };
-        this.loadData({page: 0});
+
     };
+
+    componentDidMount() {
+        this.loadData({page: 0});
+    }
 
     loadData = (changes = {}) => {
         let options = {
@@ -26,6 +30,8 @@ export class CommonDataTable extends React.Component {
             sort: changes.sort === undefined ? this.state.sort : changes.sort,
             filter: changes.filter === undefined ? this.props.filter : changes.filter,
         };
+
+        console.log(options)
 
         this.setState({page: options.page, sort: options.sort, loading: true});
 
@@ -68,8 +74,8 @@ export class CommonDataTable extends React.Component {
     componentWillReceiveProps(nextProps, nextContext) {
         const {filter, maxItem} = this.props;
 
-        if (!isEqual(nextProps.filter, filter || maxItem !== nextProps.maxItem)) {
-            this.loadData({page: 0, sort: null})
+        if (!isEqual(nextProps.filter, filter) || maxItem !== nextProps.maxItem) {
+            this.loadData({page: 0, sort: null, filter: nextProps.filter})
         }
     }
 
@@ -93,6 +99,11 @@ export class CommonDataTable extends React.Component {
 
         return (
             <div className="common-data-table">
+                {list && (
+                    <div className="summary">
+                        A total of {total} pending txns found
+                    </div>
+                )}
                 {list != null && (
                     <table className={classnames("data-table", className)}>
                         <thead>
@@ -129,11 +140,7 @@ export class CommonDataTable extends React.Component {
                 )}
 
                 <div className="table-footer">
-                    {list && (
-                        <div className="summary">
-                            A total of {total} pending txns found
-                        </div>
-                    )}
+
                     <Pagination
                         value={page + 1}
                         totalPage={Math.ceil(total / this.pageSize())}

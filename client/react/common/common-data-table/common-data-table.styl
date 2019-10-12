@@ -1,7 +1,53 @@
 .common-data-table{
+  min-height 400px
+  position relative
+  .summary{
+    color #6c757e
+    font-size 16px
+    margin-bottom 15px
+  }
+  .table-footer{
+
+    margin-top 15px
+
+  }
+  .loading-inline{
+    .overlay{
+      background-color white
+      i{
+        font-size 50px
+        color #1a1a1a
+      }
+    }
+  }
   table{
     width 100%
     color #1e2022
     border-collapse collapse
+
+    tr{
+      max-width 100%
+      th
+      td{
+        padding 12px
+      }
+    }
+    thead{
+      font-size 16px
+      color #6c757e
+      background-color #f8fafd
+      border-bottom 1px solid #e7eaf3
+      border-top 1px solid #e7eaf3
+    }
+    tbody{
+      font-size 16px
+      tr{
+        border-top 1px solid #e7eaf3
+        cursor pointer
+        &:hover{
+          background-color darken(white, 5%)
+        }
+      }
+    }
   }
 }

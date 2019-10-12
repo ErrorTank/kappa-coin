@@ -28,7 +28,7 @@ const getPendingTransaction = ({skip, take, keyword, sortKey, sortValue}) => {
         })
     }
     querySteps = querySteps.concat([
-        {$sort: {"createdAt": -1}}, {
+        {$sort: {"input.timestamp": -1}}, {
             $facet: {
                 list: [{$skip: Number(skip)}, {$limit: Number(take)}],
                 count: [{$count: 'total'}]
