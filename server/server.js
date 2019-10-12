@@ -6,10 +6,10 @@ const fs = require("fs");
 const path = require("path");
 const app = configExpressServer({useCors: true});
 const initDb = require("./config/db");
+const {createNamespaceIO} = require("./config/socket/socket-io");
 
 initDb().then(db => {
-    app.use("/", routerConfig(db));
-    app.use(require("./utils/error/error-handlers"));
+
     let server = https.createServer(
         {
             key: fs.readFileSync(
@@ -27,6 +27,10 @@ initDb().then(db => {
         },
         app
     );
+    const namespacesIO = createNamespaceIO(server, {db});
+    app.use("/", routerConfig(db, namespacesIO));
+    app.use(require("./utils/error/error-handlers"));
+
     server.listen(process.env.PORT, () => {
         console.log(`Server running on port: ${process.env.PORT}`)
     });

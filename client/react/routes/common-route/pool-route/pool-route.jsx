@@ -6,14 +6,18 @@ import {formatMoney} from "../../../../common/utils/common";
 import moment from "moment"
 import {transactionApi} from "../../../../api/common/transaction-api";
 import {SearchInput} from "../../../common/search-input/search-input";
+import io from 'socket.io-client';
 
 export default class PoolRoute extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            keyword: ""
+            keyword: "",
         };
+
     };
+
+
 
     columns = [
         {
@@ -46,7 +50,10 @@ export default class PoolRoute extends React.Component {
     ];
 
     render() {
-        const api = (config) => transactionApi.getPendingTransactions(config).then((list) => list);
+        const api = (config) => transactionApi.getPendingTransactions(config).then((list) => {
+            this.setState({list});
+            return list;
+        });
         let {keyword} = this.state;
         return (
             <PageTitle
@@ -68,11 +75,23 @@ export default class PoolRoute extends React.Component {
                                     </div>
                                     <div className="data-table-wrapper">
                                         <CommonDataTable
+                                            realTimeConfig={{
+                                                uri: process.env.APP_URI + "pending-transaction",
+                                                createHandlers: (socket, utils) => [
+                                                    {
+                                                        name: "new-pending-transaction",
+                                                        handler: ({list, total}) => {
+                                                            if(!this.state.keyword)
+                                                                utils.setState({list, total});
+                                                        }
+                                                    },
+                                                ]
+                                            }}
                                             api={api}
                                             filter={{
                                                 keyword
                                             }}
-                                            maxItem={2}
+                                            maxItem={100000}
                                             columns={this.columns}
                                             rowLinkTo={(e, row) => `/transaction/${row._id}`}
                                             rowTrackBy={(row, i) => row._id}

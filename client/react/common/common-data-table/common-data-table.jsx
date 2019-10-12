@@ -5,6 +5,8 @@ import classnames from "classnames"
 import isEmpty from "lodash/isEmpty";
 import {customHistory} from "../../routes/routes";
 import {LoadingInline} from "../loading-inline/loading-inline";
+import {wait} from "../../../common/utils/common";
+import io from "socket.io-client";
 
 export class CommonDataTable extends React.Component {
     constructor(props) {
@@ -18,7 +20,27 @@ export class CommonDataTable extends React.Component {
 
         };
 
+        if(props.realTimeConfig){
+            let {uri, createHandlers} = props.realTimeConfig;
+            const utils = {
+              setState: (state) => this.setState({...state})
+            };
+            this.socket = io(uri);
+            let handlers = createHandlers(this.socket, utils);
+            this.socket.on('connect', () => {
+                console.log(this.socket.id);
+                for(let h of handlers){
+                    this.socket.on(h.name, h.handler)
+                }
+
+            });
+        }
+
     };
+
+    componentWillUnmount() {
+        this.socket && this.socket.disconnect();
+    }
 
     componentDidMount() {
         this.loadData({page: 0});
@@ -30,8 +52,6 @@ export class CommonDataTable extends React.Component {
             sort: changes.sort === undefined ? this.state.sort : changes.sort,
             filter: changes.filter === undefined ? this.props.filter : changes.filter,
         };
-
-        console.log(options)
 
         this.setState({page: options.page, sort: options.sort, loading: true});
 
@@ -70,6 +90,8 @@ export class CommonDataTable extends React.Component {
             }
         }
     }
+
+
 
     componentWillReceiveProps(nextProps, nextContext) {
         const {filter, maxItem} = this.props;

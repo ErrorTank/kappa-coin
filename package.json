@@ -82,6 +82,8 @@
     "react-transition-group": "^2.3.1",
     "react-uid": "^2.2.0",
     "redis": "2.8.0",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "uniquid": "^1.1.4",
     "url-loader": "^2.1.0",
