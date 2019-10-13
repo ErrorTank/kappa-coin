@@ -9,6 +9,7 @@ export const authenLoader = {
     });
 
     return authenCache.loadAuthen().then(result => {
+
       return Promise.resolve();
     }).catch(err => Promise.resolve())
 

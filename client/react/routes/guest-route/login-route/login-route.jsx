@@ -10,6 +10,8 @@ import {userInfo, walletInfo} from "../../../../common/states/common";
 import {customHistory} from "../../routes";
 import {userApi} from "../../../../api/common/user-api";
 import {authenCache} from "../../../../common/cache/authen-cache";
+import {appInstances} from "../../../../common/instance";
+import io from "socket.io-client";
 
 export default class LoginRoute extends KComponent {
     constructor(props) {
@@ -42,6 +44,10 @@ export default class LoginRoute extends KComponent {
         userApi.login({email, password}).then(data => {
             let {user, token, wallet} = data;
             authenCache.setAuthen(token, {expires: 30});
+            let walletSocket = appInstances.setInstance("walletSocket", io( process.env.APP_URI + "pending-transaction"));
+            walletSocket.on("update-wallet", wallet => {
+                walletInfo.setState({wallet});
+            });
             return Promise.all([userInfo.setState({...user}), walletInfo.setState({...wallet})]).then(() => customHistory.push("/"));
         }).catch(err => this.setState({loading: false, error: err.message}));
     };

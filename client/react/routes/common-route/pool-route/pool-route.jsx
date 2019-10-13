@@ -6,6 +6,7 @@ import {formatMoney} from "../../../../common/utils/common";
 import moment from "moment"
 import {transactionApi} from "../../../../api/common/transaction-api";
 import {SearchInput} from "../../../common/search-input/search-input";
+import omit from "lodash/omit"
 
 export default class PoolRoute extends React.Component {
     constructor(props) {
@@ -31,19 +32,19 @@ export default class PoolRoute extends React.Component {
                 <p className="link-text">{txns.input.address}</p>
             )
         }, {
-            label:  <span>To <i className="fas fa-wallet"></i></span>,
+            label:  <span>Total receiver(s)</span>,
             cellDisplay: (txns) => (
-                <p className="link-text">{Object.keys(txns.outputMap)[0]}</p>
+                <p>{Object.keys(txns.outputMap).length - 1}</p>
             )
         }, {
-            label:  <span className="amount-label">Amount <img src={"/assets/image/kappa.png"}/></span>,
+            label:  <span className="amount-label">Total amount <img src={"/assets/image/kappa.png"}/></span>,
             cellDisplay: (txns) => (
-                <p className="amount-cell">{formatMoney(Number(txns.outputMap[Object.keys(txns.outputMap)[0]]))} KAP</p>
+                <p className="amount-cell">{formatMoney(Number(Object.values(omit(txns.outputMap, txns.input.address)).reduce((total, cur) => total + cur,0)))} KAP</p>
             )
         }, {
-            label: "Last seen",
+            label: "Last updated",
             cellDisplay: (txns) => (
-                <p>{moment(txns.input.timestamp).fromNow()}</p>
+                <p>{moment(txns.updatedAt).fromNow()}</p>
             )
         },
     ];

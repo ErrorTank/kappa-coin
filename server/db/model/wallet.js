@@ -24,6 +24,10 @@ const walletSchema = new Schema({
         type: ObjectId,
         ref: "User"
     },
+    pendingSpent: {
+      type: Number,
+      default: 0
+    },
     updatedAt: {type: Date, default: Date.now},
     createdAt: {type: Date, default: Date.now},
 

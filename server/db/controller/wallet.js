@@ -27,6 +27,10 @@ const checkReceiverAddress = ({sender, address}) => {
 
 };
 
+const updateWallet = (address, update) => {
+    return Wallet.findOneAndUpdate({address}, {...update},{new: true}).lean()
+}
+
 
 const createPendingTransaction = (payload) => {
     let pendingTransaction = createTransaction(payload).getData();
@@ -42,6 +46,8 @@ const createPendingTransaction = (payload) => {
             let poolInstance = new Pool(pendingTransaction);
             return poolInstance.save().then(data => {
                 return data;
+
+
             });
         });
 
@@ -50,5 +56,6 @@ const createPendingTransaction = (payload) => {
 
 module.exports = {
     checkReceiverAddress,
-    createPendingTransaction
+    createPendingTransaction,
+    updateWallet
 };

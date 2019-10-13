@@ -3,6 +3,8 @@ import {Cache} from "./cache"
 import Cookies from "js-cookie";
 import {userInfo, walletInfo} from "../states/common";
 import {userApi} from "../../api/common/user-api";
+import {appInstances} from "../instance";
+import io from "socket.io-client";
 
 const cookiesEngine = {
   getItem: Cookies.get,
@@ -17,6 +19,8 @@ export const authenCache = (() => {
     clearAuthen() {
 
       cache.set(null, "k-authen-token");
+      let walletSocket = appInstances.getInstance("walletSocket");
+      walletSocket.disconnect();
     },
     loadAuthen() {
       return new Promise((resolve, reject) => {
@@ -29,6 +33,13 @@ export const authenCache = (() => {
             if (!user)
               reject();
             else {
+              let walletSocket = appInstances.setInstance("walletSocket", io( process.env.APP_URI + "pending-transaction"));
+              walletSocket.on("connect", () => {
+                walletSocket.on("update-wallet", wallet => {
+
+                  walletInfo.setState(wallet);
+                });
+              });
               return resolve(Promise.all([userInfo.setState(user), walletInfo.setState(wallet)]));
 
             }

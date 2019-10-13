@@ -5,17 +5,29 @@
       margin-top 25px
       padding 30px
     }
+    .top-overview{
+      float right
+      display inline-block
+    }
     .balance-overview{
       color rgb(152, 161, 178)
-      text-align right
+      text-align left
+      display inline-block
+      width 100%
+      .value-wrap{
+        width calc(100% - 160px)
+      }
       .label{
         font-weight 550
         font-size 20px
-        margin-right 10px
+        width 160px
+        display inline-block
       }
       .value{
         color rgb(13, 53, 120);
         font-size 24px
+        display inline-block
+        text-align right
       }
       .separate{
         margin 0 10px
