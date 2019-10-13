@@ -1,0 +1,105 @@
+.mining-route{
+  .mining-interface{
+    margin-top 50px
+
+    display flex
+    .panel{
+      padding 15px
+      flex-grow 1
+      .panel-title{
+        font-size 18px
+        font-weight 550
+        color #77838f
+        padding-bottom 10px
+        border-bottom 1px solid grey
+        margin-bottom 20px
+      }
+      &.mine-ui{
+        background-color black
+
+        .panel-title{
+          color #33ff00 !important
+          border-bottom-color #33ff00 !important
+        }
+        .mine-ui-center{
+          position: relative
+          height 450px
+          .mine-btn{
+            position absolute
+            padding 15px 30px
+            font-size 30px
+            top 50%
+            left 50%
+            background-color transparent
+            transform translate(-50%, -50%)
+            font-weight bold
+            color #33ff00
+            border 2px solid #33ff00
+
+          }
+          .mine-loading{
+            text-align center
+            position absolute
+            top 45%
+            width 100%
+            left 50%
+            transform translate(-50%, -50%)
+            color #33ff00
+            .sub{
+              font-size 16px
+              margin-top 15px
+            }
+            .counter{
+              font-size 50px
+
+            }
+            i{
+              font-size 80px
+            }
+          }
+        }
+      }
+      &.transactions{
+        .txns{
+          position relative
+          height 450px
+          overflow-y auto
+          .loading-inline{
+            .overlay{
+              background-color transparent !important
+            }
+            i{
+              color #1a1a1a
+              font-size 35px
+            }
+          }
+          .not-mine{
+            color #1a1a1a
+            font-size 14px
+          }
+        }
+      }
+      &.mine-info{
+
+        .info{
+          margin-bottom  15px
+          font-size 14px
+          .label{
+            color #0d3578
+            font-weight 550
+            display inline-block
+            width 100px
+            vertical-align top
+          }
+          .value{
+            color #1a1a1a
+            vertical-align top
+            display inline-block
+            width calc(100% - 100px)
+            word-wrap break-word
+          }
+        }
+      }
+    }
+  }
+}

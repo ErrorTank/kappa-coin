@@ -3,7 +3,7 @@ const {cryptoHash, sign} = require("../../utils/crypto-utils");
 const createTransaction = (data) => {
     let {senderWallet, receiverWallet, amount, status = 'pending', description = ""} = data;
     let timestamp = Date.now();
-    let hash = cryptoHash(timestamp + amount + senderWallet.address + receiverWallet.address + description);
+    let hash = cryptoHash(timestamp + description + senderWallet.address);
     let signature = sign(senderWallet.keyPair.privateKey, hash);
     return {
         getData: () => ({

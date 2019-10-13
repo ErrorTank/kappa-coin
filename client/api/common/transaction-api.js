@@ -15,5 +15,7 @@ export const transactionApi = {
         };
         return authenApi.get(`/transactions/pending${urlUtils.buildParams(params)}`)
     },
-
+    getValidTransactions(){
+        return authenApi.get(`/transactions/pending/valid`)
+    }
 };

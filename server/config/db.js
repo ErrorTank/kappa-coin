@@ -8,7 +8,7 @@ const loadDbInstances = () => {
     let User = require("../db/model/user");
     let Wallet = require("../db/model/wallet");
     require("../db/model/pool");
-
+    require("../db/model/chain");
     // new User({
     //     email: "cc@gmail.com",
     //     fullname: "Kappa Clone 3",

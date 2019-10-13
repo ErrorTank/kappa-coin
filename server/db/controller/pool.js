@@ -6,7 +6,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const {ApplicationError} = require("../../utils/error/error-types");
 const omit = require("lodash/omit");
 const pick = require("lodash/pick");
-
+const {isValidTransaction} = require("../../utils/transaction-utils");
 
 const getPendingTransaction = ({skip, take, keyword, sortKey, sortValue}) => {
     let querySteps = [];
@@ -46,8 +46,13 @@ const getPendingTransaction = ({skip, take, keyword, sortKey, sortValue}) => {
 
 };
 
+const getValidTransactions = () => {
+  return Pool.find().then(data => data.filter(isValidTransaction))
+};
+
 
 module.exports = {
     getPendingTransaction,
+    getValidTransactions
 
 };

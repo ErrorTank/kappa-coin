@@ -21,7 +21,6 @@ const createBlock = (info) => {
 };
 
 
-
 module.exports = {
     BlockModel: {
         createdAt: {type: Date, default: Date.now()},
@@ -37,9 +36,17 @@ module.exports = {
             type: String,
 
         },
+        reward: {
+            type: Number,
+            default: 0
+        },
+        minedBy: {
+            type: ObjectId,
+            ref: "User"
+        },
         nonce: {
-          type: Number,
-          default: 0
+            type: Number,
+            default: 0
         },
         data: {
             type: [TransactionModel],

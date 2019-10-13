@@ -18,8 +18,7 @@ module.exports = (db, namespacesIO) => {
     router.post("/exchange/create-transaction", authMiddleware, (req, res, next) => {
         return createPendingTransaction({...req.body}).then((data) => {
             updateWallet(data.input.address, {pendingSpent: calculatePendingSpent(data, data.input.address)}).then((wallet) => {
-                console.log("cac")
-                namespacesIO.poolTracker.emit("update-wallet", wallet)
+                namespacesIO.poolTracker.to(req.query.socketID).emit("update-wallet", wallet)
             } );
             getPendingTransaction({skip: 0, take: 50}).then((data) => namespacesIO.poolTracker.emit("new-pending-transaction", data));
             return res.status(200).json(data);
