@@ -5,20 +5,21 @@ const loadDbInstances = () => {
 
 
 
-    require("../db/model/user");
-    require("../db/model/wallet");
+    let User = require("../db/model/user");
+    let Wallet = require("../db/model/wallet");
     require("../db/model/pool");
+
     // new User({
-    //     email: "kappa@gmail.com",
-    //     fullname: "Kappa Clone 2",
+    //     email: "cc@gmail.com",
+    //     fullname: "Kappa Clone 3",
     //     password: "123123qwe",
     //     createdAt: Date.now(),
     //     updatedAt: Date.now()
     // }).save();
     // new Wallet({
-    //     address: "e4bc7fd47d2f6e2762b0628b4d7eed7cc5d81e5a0cd1e818c6e846b4383f0d4a",
+    //
     //     balance: 100,
-    //     owner: "5d9edb84a9a8332b18b1fa20",
+    //     owner: "5da2a701a2a4a920684d084d",
     //
     // }).save();
 

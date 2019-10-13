@@ -7,6 +7,7 @@ const {ApplicationError} = require("../../utils/error/error-types");
 const omit = require("lodash/omit");
 const pick = require("lodash/pick");
 const {createTransaction} = require("../model/transaction");
+const {calculatePendingTransaction} = require("../../utils/crypto-utils");
 
 
 const checkReceiverAddress = ({sender, address}) => {
@@ -26,13 +27,24 @@ const checkReceiverAddress = ({sender, address}) => {
 
 };
 
+
 const createPendingTransaction = (payload) => {
-    let pendingTransaction = createTransaction(payload);
-    let poolInstance = new Pool(pendingTransaction.getData());
-    return poolInstance.save().then(data => {
-        //TODO: socket
-        return data;
-    });
+    let pendingTransaction = createTransaction(payload).getData();
+    return Pool.findOne({"input.address": pendingTransaction.input.address}).lean()
+        .then(data => {
+            if (data) {
+                let actualTransaction = calculatePendingTransaction(data, pendingTransaction, pendingTransaction.input.address);
+                return actualTransaction ? Pool.findOneAndUpdate({_id: ObjectId(data._id)}, {
+                    ...actualTransaction,
+                    updatedAt: Date.now()
+                }, {new: true}).lean() : Promise.reject(new ApplicationError("refuse_transaction", {hash: data.hash}))
+            }
+            let poolInstance = new Pool(pendingTransaction);
+            return poolInstance.save().then(data => {
+                return data;
+            });
+        });
+
 
 };
 

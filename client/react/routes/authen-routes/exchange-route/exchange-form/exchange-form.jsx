@@ -15,14 +15,24 @@ import {appModal} from "../../../../common/modal/modals";
 import {customHistory} from "../../../routes";
 import {Badge} from "../../../../common/badge/badge";
 
-const CreatePendingTransactionSuccess = ({data}) => {
+const CreatePendingTransactionSuccess = ({data, success}) => {
     return (
-        <div className="content">
+        <div className={classnames("content", {fail: !success})}>
             <p className="icon">
-                <i className="far fa-check-circle"></i>
+                {success ? (
+                    <i className="far fa-check-circle"></i>
+                ) : (
+                    <i className="far fa-times-circle"></i>
+                )
+
+                }
+
             </p>
             <p className="sub">
-             Your transaction has been successful created!
+                {success ? "Your transaction has been successful created!" : "Your transaction has been refused to update!"
+
+                }
+
             </p>
             <div className="details">
                 <div className="detail">
@@ -38,7 +48,7 @@ const CreatePendingTransactionSuccess = ({data}) => {
                 </div>
             </div>
             <div className="more-info">
-                Your transaction will be proceeded in next several minutes. You will receive notification(s) about anything relevant to this exchange.
+                Cannot updated your transaction due to total spent amount exceeds your current balance!
             </div>
         </div>
     )
@@ -113,6 +123,11 @@ export class ExchangeForm extends KComponent {
 
     };
 
+    resetForm = () => {
+        this.setState({...this.initialState});
+        this.form.resetData();
+    }
+
     handleCreateTransaction = () => {
         this.setState({proceeding: true});
         let {wallet} = this.props;
@@ -128,14 +143,28 @@ export class ExchangeForm extends KComponent {
             description
         };
         exchangeApi.createPendingTransaction(sentPayload).then((data) => {
-            this.setState({...this.initialState});
-            this.form.resetData();
+            this.resetForm();
             appModal.confirm({
                 title: "Notification",
                 className: "create-pending-transaction",
                 text: (
                     <CreatePendingTransactionSuccess
                         data={data}
+                        success={true}
+                    />
+                ),
+                btnText: "My transactions",
+                cancelText: "Close"
+            }).then(isNavigate => isNavigate && customHistory.push("/my-transactions"))
+        }).catch((err) => {
+            this.resetForm();
+            appModal.confirm({
+                title: "Notification",
+                className: "create-pending-transaction",
+                text: (
+                    <CreatePendingTransactionSuccess
+                        data={err.extra}
+                        success={false}
                     />
                 ),
                 btnText: "My transactions",

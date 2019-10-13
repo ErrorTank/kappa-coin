@@ -6,7 +6,6 @@ import {formatMoney} from "../../../../common/utils/common";
 import moment from "moment"
 import {transactionApi} from "../../../../api/common/transaction-api";
 import {SearchInput} from "../../../common/search-input/search-input";
-import io from 'socket.io-client';
 
 export default class PoolRoute extends React.Component {
     constructor(props) {
@@ -80,8 +79,8 @@ export default class PoolRoute extends React.Component {
                                                 createHandlers: (socket, utils) => [
                                                     {
                                                         name: "new-pending-transaction",
-                                                        handler: ({list, total}) => {
-                                                            if(!this.state.keyword)
+                                                        handler: ({list, total}, state) => {
+                                                            if(!this.state.keyword && state.page === 0)
                                                                 utils.setState({list, total});
                                                         }
                                                     },
@@ -91,7 +90,7 @@ export default class PoolRoute extends React.Component {
                                             filter={{
                                                 keyword
                                             }}
-                                            maxItem={100000}
+                                            maxItem={5}
                                             columns={this.columns}
                                             rowLinkTo={(e, row) => `/transaction/${row._id}`}
                                             rowTrackBy={(row, i) => row._id}

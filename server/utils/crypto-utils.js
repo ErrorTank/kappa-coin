@@ -1,6 +1,7 @@
 const EC = require('elliptic').ec;
 const ec = new EC('secp256k1');
 import sha256 from "crypto-js/sha256";
+import omit from "lodash/omit"
 
 const splitSignatureToRS = (signatureStr) => {
     // const m = signature.match(/([a-f\d]{64})/gi);
@@ -24,6 +25,31 @@ const sign = (privateKey, data) => {
 
 const cryptoHash = data => sha256(data).toString();
 
+const calculatePendingTransaction = (previous, latest, senderAddress) => {
+    let actualTransaction = {...previous};
+    let rootBalance = previous.input.amount;
+
+    let latestOutputMapAddress = Object.keys(latest.outputMap).filter(address => address !== senderAddress);
+    let previousOutputMapAddress = Object.keys(previous.outputMap).filter(address => address !== senderAddress);
+    for(let address of latestOutputMapAddress){
+        if(previousOutputMapAddress.includes(address)){
+            actualTransaction.outputMap[address] += latest.outputMap[address];
+
+        }else{
+            actualTransaction.outputMap[address] = latest.outputMap[address];
+        }
+
+    }
+    let actualTotalSpent = Object.values(omit(actualTransaction.outputMap, senderAddress)).reduce((total, cur) => total + cur, 0);
+
+    if(actualTotalSpent > rootBalance) return false;
+
+    actualTransaction.outputMap[senderAddress] = rootBalance - actualTotalSpent;
+
+    return actualTransaction;
+
+};
+
 //Testing
 // const test = ec.keyFromPrivate("238f831621304f30764ed0b062947468db6ff039ae1e73a50bb722147967be8d", "hex");
 // let temp = test.sign("cac");
@@ -31,4 +57,4 @@ const cryptoHash = data => sha256(data).toString();
 // var signature = temp.r.toString("hex") + temp.s.toString("hex");
 // console.log(signature)
 // console.log(test2.verify("cac", splitSignatureToRS(signature)))
-module.exports = { ec, cryptoHash, sign, verifySignature};
+module.exports = { ec, cryptoHash, sign, verifySignature, calculatePendingTransaction};

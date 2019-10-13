@@ -30,7 +30,7 @@ export class CommonDataTable extends React.Component {
             this.socket.on('connect', () => {
                 console.log(this.socket.id);
                 for(let h of handlers){
-                    this.socket.on(h.name, h.handler)
+                    this.socket.on(h.name, () => h.handler(data, {...this.state}))
                 }
 
             });
