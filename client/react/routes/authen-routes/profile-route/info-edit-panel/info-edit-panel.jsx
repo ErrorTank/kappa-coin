@@ -96,7 +96,7 @@ export class InfoEditPanel extends KComponent {
                             <CommonInput
                                 className="pt-0 edit-input"
                                 error={error}
-                                id={"email"}
+                                id={"fullname"}
                                 onKeyDown={onEnter}
                                 type={"text"}
                                 label={"Username"}

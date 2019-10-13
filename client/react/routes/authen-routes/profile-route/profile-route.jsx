@@ -5,13 +5,14 @@ import {MainLayout} from "../../../layout/main-layout/main-layout";
 import {Avatar} from "../../../common/avatar/avatar";
 import {pronounce} from "../../../../common/utils/common";
 import {userApi} from "../../../../api/common/user-api";
-import {userInfo} from "../../../../common/states/common";
+import {userInfo, walletInfo} from "../../../../common/states/common";
 import moment from "moment"
 import {InfoEditPanel} from "./info-edit-panel/info-edit-panel";
 import {WalletEditPanel} from "./wallet-edit-panel/wallet-edit-panel";
 import {customHistory} from "../../routes";
+import {KComponent} from "../../../common/k-component";
 
-export default class ProfileRoute extends React.Component{
+export default class ProfileRoute extends KComponent{
     constructor(props){
         super(props);
         this.state={
@@ -21,6 +22,12 @@ export default class ProfileRoute extends React.Component{
             statistic: null
         };
         userApi.getDetailUserInfo(userInfo.getState()._id).then(data => this.setState({...data, loading: false}))
+        this.onUnmount(walletInfo.onChange((newState, oldState) => {
+
+            this.setState({wallet: newState});
+
+
+        })) ;
     };
 
     componentWillReceiveProps(nextProps, nextContext) {

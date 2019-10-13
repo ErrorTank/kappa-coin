@@ -1,5 +1,6 @@
 import React from "react";
 import {Copiable} from "../../../../common/copiable/copiable";
+import {formatMoney} from "../../../../../common/utils/common";
 
 export class WalletEditPanel extends React.Component {
     constructor(props) {
@@ -12,13 +13,28 @@ export class WalletEditPanel extends React.Component {
             label: (
                 <>
                     <i className="fas fa-money-check"></i>
-                    Balance
+                    Total Balance
                 </>
             ),
             render: ({balance}) => {
                 return (
                     <div className="balance">
-                        {balance} <span>KAP</span>
+                        {formatMoney(balance, 2)} <span>KAP</span>
+                    </div>
+                )
+            }
+        },
+        {
+            label: (
+                <>
+                    <i className="fas fa-ellipsis-h"></i>
+                    Pending Spent
+                </>
+            ),
+            render: ({pendingSpent}) => {
+                return (
+                    <div className="balance">
+                        {formatMoney(pendingSpent, 2)} <span>KAP</span>
                     </div>
                 )
             }
