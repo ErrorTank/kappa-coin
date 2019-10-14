@@ -15,7 +15,7 @@ export function generatePair() {
 
 export const calculateHash = ({data, nonce, difficulty}) => {
     let timeStamp = Date.now();
-    return SHA256(data.map(each => each.id).concat([nonce, timeStamp, difficulty]).join(" ")).toString();
+    return SHA256(data.map(each => each.hash).concat([nonce, timeStamp, difficulty]).join(" ")).toString();
 };
 
 export function sign(message, privateKey) {

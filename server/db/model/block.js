@@ -2,16 +2,17 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Schema.Types.ObjectId;
 const {TransactionModel} = require("./transaction");
-const {calculateBlockHash} = require("../../utils/crypto-utils");
+const {calculateBlockHash, calculateMerkelRoot} = require("../../utils/crypto-utils");
 
 const createBlock = (info) => {
     let {previousHash = "", data = [], nonce = 0, minedRate = process.env.MINE_RATE.toString(), isGenesis = true, hash, difficulty = process.env.INIT_DIFFICULTY, reward = process.env.REWARD, minedBy = mongoose.Types.ObjectId(), blockNo = 0} = info;
     let timestamp = Date.now();
     hash = hash || calculateBlockHash({data, nonce, difficulty, timestamp});
+    let rootHash = calculateMerkelRoot(data.map((each) => each.hash));
     return {
         getData: () => ({
             previousHash,
-            data: data.map((each) => each.hash),
+            data: [...data],
             nonce,
             minedRate,
             isGenesis,
@@ -20,7 +21,8 @@ const createBlock = (info) => {
             minedBy,
             timestamp,
             blockNo,
-            difficulty
+            difficulty,
+            rootHash
         })
     }
 };

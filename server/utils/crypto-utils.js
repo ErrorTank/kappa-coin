@@ -26,7 +26,7 @@ const sign = (privateKey, data) => {
 const cryptoHash = data => sha256(data).toString();
 
 const calculateBlockHash = ({data, nonce, difficulty, timestamp}) => {
-    return sha256(data.map(each => each.id).concat([nonce, timestamp, difficulty]).join(" ")).toString();
+    return sha256(data.map(each => each.hash).concat([nonce, timestamp, difficulty]).join(" ")).toString();
 };
 
 const calculatePendingTransaction = (previous, latest, senderAddress) => {
@@ -53,8 +53,33 @@ const calculatePendingTransaction = (previous, latest, senderAddress) => {
     return actualTransaction;
 
 };
-const calculatePendingSpent = (transaction, senderAddress) => Object.values(omit(transaction.outputMap, senderAddress)).reduce((total, cur) => total + cur, 0);
 
+let hashPair = (hash1, hash2) => {
+    return sha256(hash1 + hash2).toString();
+};
+let splitArray = arr => {
+    let arrClone = [...arr];
+    if (arrClone.length % 2 !== 0) {
+        arrClone.push(arrClone[arrClone.length - 1]);
+
+    }
+    let returned = [];
+    for (let i = 0; i < arrClone.length - 1; i += 2) {
+        returned.push([arrClone[i], arrClone[i + 1]]);
+    }
+    return returned;
+};
+
+const calculatePendingSpent = (transaction, senderAddress) => Object.values(omit(transaction.outputMap, senderAddress)).reduce((total, cur) => total + cur, 0);
+let calculateMerkelRoot = (trans) => {
+    if (trans.length === 0) {
+        return null;
+    }
+    if (trans.length === 1) {
+        return trans[0];
+    }
+    return calculateMerkelRoot(splitArray(trans.map(each => each)).map(([h1, h2]) => hashPair(h1, h2)));
+};
 //Testing
 // const test = ec.keyFromPrivate("238f831621304f30764ed0b062947468db6ff039ae1e73a50bb722147967be8d", "hex");
 // let temp = test.sign("cac");
@@ -62,4 +87,4 @@ const calculatePendingSpent = (transaction, senderAddress) => Object.values(omit
 // var signature = temp.r.toString("hex") + temp.s.toString("hex");
 // console.log(signature)
 // console.log(test2.verify("cac", splitSignatureToRS(signature)))
-module.exports = { ec, cryptoHash, sign, verifySignature, calculatePendingTransaction, calculatePendingSpent, calculateBlockHash};
+module.exports = { ec, cryptoHash, sign, verifySignature, calculatePendingTransaction, calculatePendingSpent, calculateBlockHash, calculateMerkelRoot};
