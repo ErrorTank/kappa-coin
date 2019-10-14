@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require("mongoose");
 const {authorization, createAuthToken} = require("../authorization/auth");
-const {getBlockchainOverview, addNewBlock, getRecentBlock, calculateAssociateWalletsBalance, adjustDifficulty} = require("../db/controller/chain");
+const {getBlockchainOverview, addNewBlock, getRecentBlock, calculateAssociateWalletsBalance, adjustDifficulty, rewardMiner} = require("../db/controller/chain");
 const {removeTxns} = require("../db/controller/pool");
 const {getPublicKey, getPrivateKey} = require("../authorization/keys/keys");
 const {createBlock} = require("../db/model/block");
@@ -45,12 +45,20 @@ module.exports = (db, namespacesIO) => {
 
             .then(({block}) => {
                 let {data} = block;
-                return calculateAssociateWalletsBalance(data).then(associates => ({block, associates}))
+                return calculateAssociateWalletsBalance(data).then(associates => {
+                    //todo real time update wallet
+                    return {block, associates};
+                })
             })
             .then(data => {
-                console.log(previousBlock.timestamp)
-                console.log(newBlock.timestamp)
+
                 return adjustDifficulty(previousBlock.timestamp, newBlock.timestamp, newBlock.difficulty).then((blockchain) => ({...data, blockchain}))
+            })
+            .then((data) => {
+                return rewardMiner(minedBy).then((wallet) => {
+                    namespacesIO.poolTracker.to(req.query.socketID).emit("update-wallet", wallet);
+                    return data;
+                })
             })
             .then((data) => {
                 namespacesIO.chainTracker.emit("new-chain-info", {

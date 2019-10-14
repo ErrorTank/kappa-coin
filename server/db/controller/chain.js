@@ -32,7 +32,7 @@ const addNewBlock = (blockData) => {
         })
         .then(() => {
             let blockInstance = new Chain({...blockData});
-            return blockInstance.save().then((data) => data)
+            return blockInstance.save().then((data) => data.toObject())
         })
 };
 
@@ -49,13 +49,14 @@ const calculateAssociateWalletsBalance = async (txns) => {
         let senderLost = 0 - receiverAddresses.reduce((total, cur) => total + Number(txn.outputMap[cur]), 0);
 
         let tasks = [
-            Wallet.findOneAndUpdate({address}, {$inc: {balance: senderLost}, $set: {pendingSpent: 0}}, {new: true}),
+            Wallet.findOneAndUpdate({address}, {$inc: {balance: senderLost}, $set: {pendingSpent: 0}}, {new: true}).lean(),
             ...receiverAddresses.map(add => {
                 let receiveAmount = txn.outputMap[add];
 
-                return Wallet.findOneAndUpdate({address: add}, {$inc: {balance: Number(receiveAmount)}}, {new: true})
+                return Wallet.findOneAndUpdate({address: add}, {$inc: {balance: Number(receiveAmount)}}, {new: true}).lean()
             })
         ];
+
         let records = await Promise.all(tasks);
         for (let record of records) {
             associates[record.address] = true;
@@ -69,14 +70,14 @@ const adjustDifficulty = (prevTimestamp, newTimestamp, currentDifficulty) => {
     console.log((new Date(newTimestamp).getTime() - new Date(prevTimestamp).getTime()))
     if (Number(currentDifficulty) < 2) {
         console.log("dit")
-        return BlockchainSchema.findOneAndUpdate({_id: ObjectId(process.env.BLOCKCHAIN_ID)}, {$set: {difficulty: 2}}, {new: true})
+        return BlockchainSchema.findOneAndUpdate({_id: ObjectId(process.env.BLOCKCHAIN_ID)}, {$set: {difficulty: 2}}, {new: true}).lean()
     }
     if ((new Date(newTimestamp).getTime() - new Date(prevTimestamp).getTime()) > Number(process.env.MINE_RATE)) {
         console.log("dit2")
-        return BlockchainSchema.findOneAndUpdate({_id: ObjectId(process.env.BLOCKCHAIN_ID)}, {$inc: {difficulty: -1}}, {new: true})
+        return BlockchainSchema.findOneAndUpdate({_id: ObjectId(process.env.BLOCKCHAIN_ID)}, {$inc: {difficulty: -1}}, {new: true}).lean()
     }
     console.log("dit3")
-    return BlockchainSchema.findOneAndUpdate({_id: ObjectId(process.env.BLOCKCHAIN_ID)}, {$inc: {difficulty: 1}}, {new: true})
+    return BlockchainSchema.findOneAndUpdate({_id: ObjectId(process.env.BLOCKCHAIN_ID)}, {$inc: {difficulty: 1}}, {new: true}).lean()
 };
 
 const adjustDifficulty2 = (prevTimestamp, newTimestamp, currentDifficulty) => {
@@ -93,11 +94,16 @@ const adjustDifficulty2 = (prevTimestamp, newTimestamp, currentDifficulty) => {
     return BlockchainSchema.findOneAndUpdate({_id: ObjectId(process.env.BLOCKCHAIN_ID)}, {$inc: {difficulty: 1}}, {new: true})
 };
 
+const rewardMiner = (minderID) => {
+  return  Wallet.findOneAndUpdate({owner: ObjectId(minderID)}, {$inc: {balance: Number(process.env.REWARD)}}, {new: true}).lean();
+};
+
 module.exports = {
     adjustDifficulty,
     getBlockchainOverview,
     addNewBlock,
     getRecentBlock,
     calculateAssociateWalletsBalance,
-    adjustDifficulty2
+    adjustDifficulty2,
+    rewardMiner
 };

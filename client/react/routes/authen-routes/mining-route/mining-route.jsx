@@ -16,6 +16,76 @@ import {userInfo} from "../../../../common/states/common";
 const momentDurationFormatSetup = require("moment-duration-format");
 momentDurationFormatSetup(moment);
 import io from "socket.io-client";
+import {appModal} from "../../../common/modal/modals";
+import {customHistory} from "../../routes";
+import classnames from "classnames";
+import {Badge} from "../../../common/badge/badge";
+
+const NewBlockModal = ({data, success}) => {
+    return (
+        <div className={classnames("content", {fail: !success})}>
+            <p className="icon">
+                {success ? (
+                    <i className="far fa-check-circle"></i>
+                ) : (
+                    <i className="far fa-times-circle"></i>
+                )
+
+                }
+
+            </p>
+            <p className="sub">
+                {success ? "Congratulation! You has created a new block" : "Your transaction has been refused to update!"
+
+                }
+
+            </p>
+            <div className="details">
+                <div className="detail">
+                    <span className="label">Block No:</span>
+                    <span className="value">{data.blockNo + 1}</span>
+                </div>
+                <div className="detail">
+                    <span className="label">Nonce:</span>
+                    <span className="value">{data.nonce}</span>
+                </div>
+
+                <div className="detail">
+                    <span className="label">Block hash:</span>
+                    <span className="hash">{data.hash}</span>
+                </div>
+                <div className="detail">
+                    <span className="label">Merkle hash:</span>
+                    <span className="hash">{data.rootHash}</span>
+                </div>
+                <div className="detail">
+                    <span className="label">Last block hash:</span>
+                    <span className="hash">{data.previousHash}</span>
+                </div>
+                <div className="detail">
+                    <span className="label">Mined at:</span>
+                    <span className="value">{moment(data.timestamp).format("HH:mm:ss MMM DD YYYY")}</span>
+                </div>
+                <div className="detail">
+                    <span className="label">Txns includes:</span>
+                    <span className="value">{data.data.length} txns</span>
+                </div>
+                <div className="detail">
+                    <span className="label">Reward</span>
+                    <Badge
+                        content={(
+                            <span className="reward">{data.reward} <img src={"./assets/image/kappa.png"}/></span>
+                        )}
+                        style="success"
+                    />
+                </div>
+            </div>
+            <div className="more-info">
+
+            </div>
+        </div>
+    )
+}
 
 export default class MiningRoute extends React.Component {
     constructor(props) {
@@ -44,7 +114,7 @@ export default class MiningRoute extends React.Component {
             this.socket.on("new-chain-info", (data) => {
                 console.log("new-chain-info")
                 console.log(data);
-                this.setState({chain: {...this.state.chain, latestBlock: data.block}});
+                this.setState({chain: {...this.state.chain, ...data}});
             })
         });
         chainApi.getBlockchainOverview().then(chain => this.setState({chain}));
@@ -73,19 +143,32 @@ export default class MiningRoute extends React.Component {
                     await this.foundBlockEmit();
                     await wait(4000);
                 })
-                .then(() => {
+                .then(async () => {
                     if(this.state.error){
                         return Promise.reject();
 
                     }
+                    this.setState({step: this.steps[6]});
+                    await wait(2000);
                     return chainApi.addNewBlock(this.getNewMinedBlock())
 
                 })
-                .then(async () => {
-
-
-                    this.setState({step: this.steps[6]});
+                .then(async (newBlock) => {
                     await wait(2000);
+                    this.setState({...this.initState});
+                    appModal.confirm({
+                        title: "Notification",
+                        className: "new-block-modal",
+                        text: (
+                            <NewBlockModal
+                                data={newBlock}
+                                success={true}
+                            />
+                        ),
+                        btnText: "My wallet",
+                        cancelText: "Close"
+                    }).then(isNavigate => isNavigate && customHistory.push("/profile#wallet"))
+
                 })
                 .catch(async (err) => {
                     console.log(err)

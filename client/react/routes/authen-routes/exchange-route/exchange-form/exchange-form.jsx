@@ -48,7 +48,8 @@ const CreatePendingTransactionSuccess = ({data, success}) => {
                 </div>
             </div>
             <div className="more-info">
-                Cannot updated your transaction due to total spent amount exceeds your current balance!
+                {success ? "Your transaction will be proceeded in next several minutes. You will receive notification(s) about anything relevant to this exchange." : "Cannot updated your transaction due to total spent amount exceeds your current balance!"}
+
             </div>
         </div>
     )

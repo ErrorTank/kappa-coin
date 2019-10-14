@@ -1,3 +1,245 @@
+.new-block-modal{
+  width 500px
+  .reward{
+    font-size 15px
+    img{
+      height 25px
+      display inline
+    }
+  }
+  .content{
+    &.fail{
+      .icon{
+        i{
+          color danger
+        }
+      }
+    }
+    .icon{
+      text-align center
+      i{
+        color success
+        font-size 60px
+      }
+    }
+    .sub{
+      margin-top 8px
+      text-align center
+      font-size 14px
+    }
+    .more-info{
+      margin-top 15px
+    }
+    .details{
+      margin-top 15px
+      .detail{
+        white-space pre-wrap
+        word-wrap break-word
+        margin-top 8px
+        .label{
+          font-weight 550
+          color #0d3578
+          display inline-block
+          margin-right 10px
+        }
+        .hash{
+          text-decoration underline
+          color tikiblue
+        }
+        .value{
+          color #1a1a1a
+        }
+
+      }
+    }
+  }
+}
+
+.exchange-form{
+  width 580px
+  padding 30px
+  margin auto
+  color #6c757e
+  .form-footer{
+    padding-top 25px
+    text-align right
+    border-top 1px solid grey
+    .proceed-btn{
+      padding 8px 30px
+      font-size 16px
+      background-color tikiblue
+      transition background-color 0.1s ease
+      color white
+      position relative
+
+      &:disabled{
+        pointer-events none
+      }
+      &:hover{
+        background-color darken(tikiblue, 25%)
+      }
+    }
+  }
+  .form-header{
+    color rgb(13, 53, 120);
+    font-size 22px
+    font-weight 550
+    i{
+      margin-right 10px
+    }
+    margin-bottom 30px
+  }
+  .form-body{
+    .amount{
+      overflow hidden
+      .custom-err{
+        font-size 13px
+        margin-top 5px
+
+        color danger
+      }
+      .currency-name{
+        color rgb(13, 53, 120);
+        position absolute
+        right 10px
+        top 50%
+        font-weight 550
+
+        font-size 16px
+        transform translateY(-50%)
+      }
+      .amount-input{
+        display inline-block
+        vertical-align top
+        input{
+          padding-right 45px !important
+
+        }
+        width calc(50% - 15px)
+        .usd-input{
+          label{
+            opacity 0
+          }
+        }
+      }
+      .amount-separate{
+        width 30px
+        display inline-block
+        text-align center
+        padding-bottom 6px
+        vertical-align bottom
+      }
+    }
+    .receiver-info{
+      .section{
+        margin-top 16px
+        .label{
+          font-size 18px
+          color #6c757e
+          display inline-block
+          width 30%
+          padding-right 10px
+          vertical-align top
+        }
+        .value{
+          color #0d3578
+          font-size 17px
+          font-weight 550
+          display inline-block
+          width 70%
+          padding-left 10px
+          vertical-align top
+        }
+      }
+    }
+    .send-input{
+      margin-top 16px
+      label{
+        font-size 18px !important
+        color #6c757e
+      }
+      input
+      textarea
+      {
+        font-size 16px !important
+        padding 8px 15px  !important
+      }
+
+    }
+    .checking{
+      font-size 20px
+      font-weight 550
+      text-align center
+      padding 60px 0
+    }
+    .fr{
+      .usd-rate-tooltip{
+        .tooltip-content{
+          width 160px !important
+        }
+      }
+      .separate{
+        width 30px
+        display inline-block
+      }
+      .value-present{
+        display inline-block
+        vertical-align top
+        label{
+          font-size 18px
+          i{
+            font-size 20px
+
+            color rgb(13, 53, 120)
+          }
+        }
+        .value{
+
+          .coin-name{
+            vertical-align middle
+            display inline-block
+            font-size 16px
+            font-weight 550
+            color rgb(13, 53, 120);
+
+          }
+          .link{
+            .address{
+              white-space nowrap
+              text-overflow ellipsis
+              overflow hidden
+            }
+            color tikiblue
+            font-size 15px
+            cursor pointer
+            &:hover{
+              color darken(tikiblue, 20%)
+              text-decoration underline
+            }
+          }
+          img{
+            display inline-block
+            vertical-align middle
+            height 30px
+            margin-right 8px
+          }
+        }
+        &:first-of-type{
+          width 170px
+          .value{
+            border 1px solid grey
+            border-radius 4px
+            padding 8px 15px
+          }
+        }
+        &:last-of-type{
+          width calc(100% - 200px)
+        }
+      }
+    }
+  }
+}
+
 .mining-route{
   .mining-interface{
     margin-top 50px
