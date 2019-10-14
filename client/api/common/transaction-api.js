@@ -13,9 +13,9 @@ export const transactionApi = {
             sortValue: value,
             keyword: keyword || null
         };
-        return authenApi.get(`/transactions/pending${urlUtils.buildParams(params)}`)
+        return offlineApi.get(`/transactions/pending${urlUtils.buildParams(params)}`)
     },
     getValidTransactions(){
-        return authenApi.get(`/transactions/pending/valid`)
+        return offlineApi.get(`/transactions/pending/valid`)
     }
 };

@@ -7,6 +7,7 @@ export class BlockchainOverview extends React.Component{
         };
     };
     render(){
+        let {chain} = this.props;
         return(
             <div className="blockchain-overview border-box">
                 <div className="panel col-4">
@@ -22,7 +23,7 @@ export class BlockchainOverview extends React.Component{
                 <div className="panel col-4">
                     <div className="upper">
                         <p className="label">Difficulty</p>
-                        <p className="value">10</p>
+                        <p className="value">{chain.difficulty}</p>
                     </div>
                     <div className="lower">
                         <p className="label">Pending Txns</p>

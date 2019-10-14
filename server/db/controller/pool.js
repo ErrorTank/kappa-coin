@@ -47,7 +47,9 @@ const getPendingTransaction = ({skip, take, keyword, sortKey, sortValue}) => {
 };
 
 const getValidTransactions = () => {
-  return Pool.find().then(data => data.filter(isValidTransaction))
+  return Pool.find().then(data => {
+      return data.filter(isValidTransaction)
+  })
 };
 
 

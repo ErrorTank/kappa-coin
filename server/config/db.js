@@ -7,8 +7,13 @@ const loadDbInstances = () => {
 
     let User = require("../db/model/user");
     let Wallet = require("../db/model/wallet");
+    let Blockchain = require("../db/model/blockchain-info");
     require("../db/model/pool");
     require("../db/model/chain");
+    // new Blockchain({
+    //     difficulty: process.env.INIT_DIFFICULTY,
+    //     name: process.env.BLOCKCHAIN_NAME
+    // }).save();
     // new User({
     //     email: "cc@gmail.com",
     //     fullname: "Kappa Clone 3",
