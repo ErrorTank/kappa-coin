@@ -17,7 +17,7 @@ export class BlockchainOverview extends React.Component{
                     </div>
                     <div className="lower">
                         <p className="label">Latest Block</p>
-                        <p className="value">1000 <span className="unit">(13.2s)</span></p>
+                        <p className="value">{chain.latestBlock.blockNo + 1} <span className="unit">({!chain.latestBlock.isGenesis ? Number((chain.latestBlock.minedRate) / 1000) + "s": "Genesis block"})</span></p>
                     </div>
                 </div>
                 <div className="panel col-4">

@@ -10,7 +10,17 @@ const appNamespaces = [
             console.log(socket.id + " is disconnect to /pending-transaction")
         },
         handlers: "./namespaces/pending-transaction/handlers/index"
-    }
+    },
+    {
+        path: "/mine-block",
+        onConnect: (socket, context) => {
+            console.log(socket.id + " is connect to /mine-block")
+        },
+        onDisconnect: (socket, context) => {
+            console.log(socket.id + " is disconnect to /mine-block")
+        },
+        handlers: "./namespaces/mine-block/handlers/index"
+    },
 ];
 
 const configIO = (nspIO, context) => {
@@ -33,8 +43,10 @@ const createNamespaceIO = (server, context) => {
         handlers
     }));
     const poolTracker = configIO(namespacesIO[0], context);
+    const chainTracker = configIO(namespacesIO[1], context);
     return {
-        poolTracker
+        poolTracker,
+        chainTracker
     }
 };
 

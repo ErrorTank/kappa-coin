@@ -15,6 +15,7 @@ import {userInfo} from "../../../../common/states/common";
 
 const momentDurationFormatSetup = require("moment-duration-format");
 momentDurationFormatSetup(moment);
+import io from "socket.io-client";
 
 export default class MiningRoute extends React.Component {
     constructor(props) {
@@ -32,8 +33,30 @@ export default class MiningRoute extends React.Component {
             chain: null,
             ...this.initState
         };
+
+        this.socket = io(process.env.APP_URI + "mine-block");
+        this.socket.on('connect', () => {
+            console.log(this.socket.id);
+            this.socket.on("new-block-found", () => {
+                console.log("new-block-found")
+                this.setState({error: true});
+            })
+            this.socket.on("new-chain-info", (data) => {
+                console.log("new-chain-info")
+                console.log(data);
+                this.setState({chain: {...this.state.chain, latestBlock: data.block}});
+            })
+        });
         chainApi.getBlockchainOverview().then(chain => this.setState({chain}));
     };
+
+    componentWillUnmount() {
+        this.socket && this.socket.disconnect();
+    }
+
+    getNewMinedBlock = () => {
+        return {...pick(this.state, ["txns", "nonce", "counter"]), minedBy: userInfo.getState()._id, difficulty: this.state.chain.difficulty};
+    }
 
     startMiningProcess = async () => {
         this.setState({step: this.steps[1]});
@@ -45,14 +68,27 @@ export default class MiningRoute extends React.Component {
         if (txns.length) {
             this.setState({step: this.steps[4]});
             this.startMining()
-                .then(() => chainApi.addNewBlock({...pick(this.state, ["txns", "nonce", "counter"]), minedBy: userInfo.getState()._id, difficulty: this.state.chain.difficulty}))
                 .then(async () => {
                     this.setState({step: this.steps[5]});
-                    await wait(2000);
+                    await this.foundBlockEmit();
+                    await wait(4000);
+                })
+                .then(() => {
+                    if(this.state.error){
+                        return Promise.reject();
+
+                    }
+                    return chainApi.addNewBlock(this.getNewMinedBlock())
+
+                })
+                .then(async () => {
+
+
                     this.setState({step: this.steps[6]});
                     await wait(2000);
                 })
-                .catch(async () => {
+                .catch(async (err) => {
+                    console.log(err)
                     this.setState({step: this.steps[7]});
                     await wait(2000);
                 });
@@ -65,8 +101,7 @@ export default class MiningRoute extends React.Component {
     };
 
     startMining = async () => {
-        let {chain, txns,} = this.state;
-        let {difficulty} = chain;
+
         let nonce = 0;
         let hash, timestamp;
         this.interval = setInterval(() => {
@@ -74,18 +109,27 @@ export default class MiningRoute extends React.Component {
             this.setState({counter: counter + 1});
         }, 1000);
         do {
+            let {chain, txns,} = this.state;
+            let {difficulty} = chain;
             nonce++;
             timestamp = Date.now();
             hash = calculateHash({data: [...txns], nonce, difficulty});
             await wait(0);
             this.setState({hash, timestamp, nonce,});
-            if (this.state.error)
+            if (this.state.error){
+                clearInterval(this.interval);
                 throw new Error();
-        } while (hexToBinary(hash).substring(0, difficulty) !== "0".repeat(difficulty));
+            }
+
+        } while (hexToBinary(hash).substring(0, this.state.chain.difficulty) !== "0".repeat(this.state.chain.difficulty));
         clearInterval(this.interval);
 
-        return;
+        return
     };
+
+    foundBlockEmit = () => new Promise((resolve, reject) => {
+        this.socket.emit("new-block-found", this.getNewMinedBlock(), () => resolve());
+    });
 
     steps = [
         {

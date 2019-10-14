@@ -39,6 +39,9 @@ module.exports = {
             type: String,
             default: ""
         },
+        rootHash: {
+            type: String,
+        },
         hash: {
             type: String,
 

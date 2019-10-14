@@ -1,13 +1,14 @@
-const {calculateBlockHash} = require("./crypto-utils");
+const {calculateBlockHash, calculateMerkelRoot} = require("./crypto-utils");
 const {isValidTransaction} = require("./transaction-utils");
 
 const isBlockValid = block => {
-    let {timestamp, isGenesis, previousHash, reward, nonce, difficulty, data, hash} = block;
+    let {timestamp, isGenesis, previousHash, reward, nonce, difficulty, data, hash, rootHash} = block;
     const isValidBasicBlock = hash === calculateBlockHash({data,timestamp: new Date(timestamp).getTime(), difficulty, nonce});
+
     if(isGenesis === true){
-        return nonce === 0 && data.length === 0 && previousHash === "" && reward === process.env.REWARD && isValidBasicBlock;
+        return nonce === 0 && data.length === 0 && previousHash === "" && rootHash === null && reward === Number(process.env.REWARD) && isValidBasicBlock;
     }
-    return isValidBasicBlock && data.filter(isValidTransaction).length === data.length;
+    return isValidBasicBlock && data.filter(isValidTransaction).length === data.length && calculateMerkelRoot(data.map(each => each.hash)) === rootHash;
 
 };
 
