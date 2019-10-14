@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
+const {createBlock} = require("../db/model/block")
 
 const loadDbInstances = () => {
 
@@ -7,12 +8,18 @@ const loadDbInstances = () => {
 
     let User = require("../db/model/user");
     let Wallet = require("../db/model/wallet");
+    let Chain = require("../db/model/chain");
     let Blockchain = require("../db/model/blockchain-info");
     require("../db/model/pool");
-    require("../db/model/chain");
+    //
+    // let genesisBlock = createBlock({
+    //
+    // });
+    // new Chain(genesisBlock.getData()).save();
     // new Blockchain({
     //     difficulty: process.env.INIT_DIFFICULTY,
-    //     name: process.env.BLOCKCHAIN_NAME
+    //     name: process.env.BLOCKCHAIN_NAME,
+    //     reward: process.env.REWARD
     // }).save();
     // new User({
     //     email: "cc@gmail.com",

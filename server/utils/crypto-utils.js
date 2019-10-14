@@ -25,6 +25,10 @@ const sign = (privateKey, data) => {
 
 const cryptoHash = data => sha256(data).toString();
 
+const calculateBlockHash = ({data, nonce, difficulty, timestamp}) => {
+    return sha256(data.map(each => each.id).concat([nonce, timestamp, difficulty]).join(" ")).toString();
+};
+
 const calculatePendingTransaction = (previous, latest, senderAddress) => {
     let actualTransaction = {...previous};
     let rootBalance = previous.input.amount;
@@ -58,4 +62,4 @@ const calculatePendingSpent = (transaction, senderAddress) => Object.values(omit
 // var signature = temp.r.toString("hex") + temp.s.toString("hex");
 // console.log(signature)
 // console.log(test2.verify("cac", splitSignatureToRS(signature)))
-module.exports = { ec, cryptoHash, sign, verifySignature, calculatePendingTransaction, calculatePendingSpent};
+module.exports = { ec, cryptoHash, sign, verifySignature, calculatePendingTransaction, calculatePendingSpent, calculateBlockHash};

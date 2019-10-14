@@ -5,7 +5,8 @@ const {BlockModel} = require("./block");
 
 const blockchainSchema = new Schema({
     difficulty: Number,
-    name: String
+    name: String,
+    reward: Number
 });
 
 

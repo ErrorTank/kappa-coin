@@ -10,6 +10,9 @@ import {wait} from "../../../../common/utils";
 import {calculateHash} from "../../../../common/crypto";
 import {chainApi} from "../../../../api/common/chain-api";
 import hexToBinary from "hex-to-binary"
+import pick from "lodash/pick"
+import {userInfo} from "../../../../common/states/common";
+
 const momentDurationFormatSetup = require("moment-duration-format");
 momentDurationFormatSetup(moment);
 
@@ -23,7 +26,7 @@ export default class MiningRoute extends React.Component {
             txns: [],
             step: this.steps[0],
             counter: 0,
-
+            error: null
         };
         this.state = {
             chain: null,
@@ -41,16 +44,18 @@ export default class MiningRoute extends React.Component {
         await wait(2000);
         if (txns.length) {
             this.setState({step: this.steps[4]});
-            this.startMining().then(async () => {
-                this.setState({step: this.steps[5]});
-                await wait(2000);
-                this.setState({step: this.steps[6]});
-                await wait(2000);
-
-            }).catch(async () => {
-                this.setState({step: this.steps[7]});
-                await wait(2000);
-            });
+            this.startMining()
+                .then(() => chainApi.addNewBlock({...pick(this.state, ["txns", "nonce", "counter"]), minedBy: userInfo.getState()._id, difficulty: this.state.chain.difficulty}))
+                .then(async () => {
+                    this.setState({step: this.steps[5]});
+                    await wait(2000);
+                    this.setState({step: this.steps[6]});
+                    await wait(2000);
+                })
+                .catch(async () => {
+                    this.setState({step: this.steps[7]});
+                    await wait(2000);
+                });
 
         } else {
             this.setState({step: this.steps[3]});
@@ -73,10 +78,12 @@ export default class MiningRoute extends React.Component {
             timestamp = Date.now();
             hash = calculateHash({data: [...txns], nonce, difficulty});
             await wait(0);
-            this.setState({hash, timestamp, nonce, });
+            this.setState({hash, timestamp, nonce,});
+            if (this.state.error)
+                throw new Error();
         } while (hexToBinary(hash).substring(0, difficulty) !== "0".repeat(difficulty));
         clearInterval(this.interval);
-        throw "cc";
+
         return;
     };
 
@@ -148,7 +155,7 @@ export default class MiningRoute extends React.Component {
                     <p className="sub">Adding new block...</p>
                 </div>
             )
-        },{
+        }, {
             key: "fail",
             uiTitle: "Failed!",
             mineRender: () => (
@@ -231,13 +238,14 @@ export default class MiningRoute extends React.Component {
                                                         <p className="not-mine">Not mined yet</p>
                                                     ) : ["preparing1", "preparing3"].includes(key) ? (
                                                         <LoadingInline/>
-                                                    ): txns.length ? (
+                                                    ) : txns.length ? (
                                                         <>
                                                             {txns.map((tran, i) => (
                                                                 <div className="tran"
                                                                      key={tran._id}
                                                                 >
-                                                                    <span className="label">Transaction#{i + 1} Hash: </span>
+                                                                    <span
+                                                                        className="label">Transaction#{i + 1} Hash: </span>
                                                                     <span className="value">{tran.hash}</span>
                                                                 </div>
                                                             ))}

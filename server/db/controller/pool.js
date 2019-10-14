@@ -52,9 +52,13 @@ const getValidTransactions = () => {
   })
 };
 
+const removeTxns = (txnsHashes) => {
+    return Pool.deleteMany({hash: {$in: txnsHashes}})
+};
 
 module.exports = {
     getPendingTransaction,
-    getValidTransactions
+    getValidTransactions,
+    removeTxns
 
 };
