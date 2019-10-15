@@ -63,7 +63,8 @@ module.exports = (db, namespacesIO) => {
                 return rewardMiner(minedBy).then((wallet) => {
                     namespacesIO.poolTracker.to(req.query.socketID).emit("update-wallet", wallet);
                     namespacesIO.poolTracker.emit("update-wallet-individuals", data.associates);
-                    getPendingTransaction({skip: 0, take: 50}).then((data) => namespacesIO.poolTracker.emit("new-pool", data));
+                    getPendingTransaction({skip: 0, take: 5}).then((data) => namespacesIO.poolTracker.emit("new-pool", data));
+                    getBlocks({skip: 0, take: 5}).then((data) => namespacesIO.chainTracker.emit("new-chain", data));
                     return data;
                 })
             })

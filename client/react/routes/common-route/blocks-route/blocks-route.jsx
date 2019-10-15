@@ -19,7 +19,6 @@ export default class BlocksRoute extends React.Component {
     };
 
 
-
     columns = [
         {
             label: "Block",
@@ -89,18 +88,18 @@ export default class BlocksRoute extends React.Component {
                                     </div>
                                     <div className="data-table-wrapper">
                                         <CommonDataTable
-                                            // realTimeConfig={{
-                                            //     uri: process.env.APP_URI + "mine-block",
-                                            //     createHandlers: (socket, utils) => [
-                                            //         {
-                                            //             name: "new-pool",
-                                            //             handler: ({list, total}, state) => {
-                                            //                 if(!this.state.keyword && state.page === 0)
-                                            //                     utils.setState({list, total});
-                                            //             }
-                                            //         },
-                                            //     ]
-                                            // }}
+                                            realTimeConfig={{
+                                                uri: process.env.APP_URI + "mine-block",
+                                                createHandlers: (socket, utils) => [
+                                                    {
+                                                        name: "new-chain",
+                                                        handler: ({list, total}, state) => {
+                                                            if(!this.state.keyword && state.page === 0)
+                                                                utils.setState({list, total});
+                                                        }
+                                                    },
+                                                ]
+                                            }}
                                             api={api}
                                             filter={{
                                                 keyword
