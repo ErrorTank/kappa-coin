@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require("mongoose");
 const {authorization, createAuthToken} = require("../authorization/auth");
-const {getBlockchainOverview, addNewBlock, getRecentBlock, calculateAssociateWalletsBalance, adjustDifficulty, rewardMiner, getBlocks} = require("../db/controller/chain");
+const {getBlockchainOverview, addNewBlock, getRecentBlock, calculateAssociateWalletsBalance, adjustDifficulty, rewardMiner, getBlocks, validateChain} = require("../db/controller/chain");
 const {removeTxns, getPendingTransaction} = require("../db/controller/pool");
 const {getPublicKey, getPrivateKey} = require("../authorization/keys/keys");
 const {createBlock} = require("../db/model/block");
@@ -78,6 +78,12 @@ module.exports = (db, namespacesIO) => {
                 //     latestBlock: {...data.block}
                 // });
                 return res.status(200).json(data.block);
+        }).catch(err => next(err));
+    });
+
+    router.get("/chain/validate", (req, res, next) => {
+        return validateChain().then((data) => {
+            return res.status(200).json({valid: data});
         }).catch(err => next(err));
     });
     return router;

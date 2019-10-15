@@ -14,10 +14,27 @@ export default class BlocksRoute extends React.Component {
         super(props);
         this.state = {
             keyword: "",
+            checking: true,
+            valid: true
         };
+
+
+        this.autoCheck = setInterval(this.validateChain, 10000);
 
     };
 
+    componentDidMount() {
+        this.validateChain();
+    }
+
+    validateChain = () => {
+        this.setState({checking: true});
+        chainApi.validateChain().then(({valid}) => this.setState({valid, checking: false}));
+    };
+
+    componentWillUnmount() {
+        clearInterval(this.autoCheck);
+    }
 
     columns = [
         {
@@ -42,7 +59,7 @@ export default class BlocksRoute extends React.Component {
         }, {
             label: "Miner",
             cellDisplay: (block) => {
-                console.log(block)
+
                 return (
 
                     <p className="link-text">{block.minedBy ? block.minedBy.fullname : "GENESIS"}</p>
@@ -67,7 +84,7 @@ export default class BlocksRoute extends React.Component {
 
             return list;
         });
-        let {keyword} = this.state;
+        let {keyword, valid, checking} = this.state;
         return (
             <PageTitle
                 title={"All Blocks"}
@@ -85,6 +102,15 @@ export default class BlocksRoute extends React.Component {
                                             onSearch={(keyword) => this.setState({keyword})}
                                             value={keyword}
                                         />
+                                        <div className="auto-validate">
+                                            {checking ?
+                                                <span className="checking">Checking...</span>
+                                                : valid ?
+                                                    <span className="checking valid"><i className="far fa-check-circle"></i> Chain is valid  <i className="fas fa-sync-alt force" onClick={this.validateChain}></i></span>
+                                                    :
+                                                    <span className="checking in-valid"><i className="far fa-times-circle"></i> Chain is invalid <i className="fas fa-sync-alt force" onClick={this.validateChain}></i></span>
+                                            }
+                                        </div>
                                     </div>
                                     <div className="data-table-wrapper">
                                         <CommonDataTable

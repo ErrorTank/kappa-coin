@@ -1,0 +1,32 @@
+.pool-route{
+  .auto-validate{
+    text-align left
+    font-weight 550
+
+    .checking{
+      font-size 15px
+      color #6c757e
+      i{
+        font-size 26px !important
+
+        &.force{
+          color #6c757e !important
+          cursor pointer
+          margin-left 10px
+        }
+      }
+      &.valid{
+        color success
+        i{
+          color success
+        }
+      }
+      &.in-valid{
+        color danger
+        i{
+          color danger
+        }
+      }
+    }
+  }
+}

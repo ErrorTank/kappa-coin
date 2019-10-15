@@ -22,5 +22,8 @@ export const chainApi = {
             keyword: keyword || null
         };
         return offlineApi.get(`/blocks${urlUtils.buildParams(params)}`)
+    },
+    validateChain(){
+        return offlineApi.get("/chain/validate")
     }
 };

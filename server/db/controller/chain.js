@@ -151,5 +151,6 @@ module.exports = {
     calculateAssociateWalletsBalance,
     adjustDifficulty2,
     rewardMiner,
-    getBlocks
+    getBlocks,
+    validateChain
 };
