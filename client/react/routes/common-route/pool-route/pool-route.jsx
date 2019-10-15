@@ -14,10 +14,7 @@ export default class PoolRoute extends React.Component {
         this.state = {
             keyword: "",
         };
-
     };
-
-
 
     columns = [
         {

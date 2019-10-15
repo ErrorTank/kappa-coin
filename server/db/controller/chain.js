@@ -69,14 +69,11 @@ const calculateAssociateWalletsBalance = async (txns) => {
 const adjustDifficulty = (prevTimestamp, newTimestamp, currentDifficulty) => {
     console.log((new Date(newTimestamp).getTime() - new Date(prevTimestamp).getTime()))
     if (Number(currentDifficulty) < 2) {
-        console.log("dit")
         return BlockchainSchema.findOneAndUpdate({_id: ObjectId(process.env.BLOCKCHAIN_ID)}, {$set: {difficulty: 2}}, {new: true}).lean()
     }
     if ((new Date(newTimestamp).getTime() - new Date(prevTimestamp).getTime()) > Number(process.env.MINE_RATE)) {
-        console.log("dit2")
         return BlockchainSchema.findOneAndUpdate({_id: ObjectId(process.env.BLOCKCHAIN_ID)}, {$inc: {difficulty: -1}}, {new: true}).lean()
     }
-    console.log("dit3")
     return BlockchainSchema.findOneAndUpdate({_id: ObjectId(process.env.BLOCKCHAIN_ID)}, {$inc: {difficulty: 1}}, {new: true}).lean()
 };
 
@@ -98,6 +95,54 @@ const rewardMiner = (minderID) => {
   return  Wallet.findOneAndUpdate({owner: ObjectId(minderID)}, {$inc: {balance: Number(process.env.REWARD)}}, {new: true}).lean();
 };
 
+const getBlocks = ({skip, take, keyword, sortKey, sortValue}) => {
+    let querySteps = [];
+
+    if (keyword) {
+        querySteps.push({
+            $match: {
+                $or: [
+                    {"hash": keyword},
+                    {"rootHash": keyword},
+
+                ]
+            }
+        })
+    }
+    querySteps = querySteps.concat([
+        {
+            $lookup: {
+                from: "users",
+                localField: "minedBy",
+                foreignField: "_id",
+                as: "minedBy"
+            }
+        },
+        {
+            $addFields: {
+                "minedBy": {
+                    $arrayElemAt: ["$minedBy", 0]
+                }
+            }
+        },
+        {$sort: {"timestamp": -1}}, {
+            $facet: {
+                list: [{$skip: Number(skip)}, {$limit: Number(take)}],
+                count: [{$count: 'total'}]
+            }
+        }
+    ]);
+
+    return Chain.aggregate(querySteps).then(data => {
+
+        return {
+            list: data[0].list,
+            total: data[0].list.length ? data[0].count[0].total : 0
+        }
+    })
+
+};
+
 module.exports = {
     adjustDifficulty,
     getBlockchainOverview,
@@ -105,5 +150,6 @@ module.exports = {
     getRecentBlock,
     calculateAssociateWalletsBalance,
     adjustDifficulty2,
-    rewardMiner
+    rewardMiner,
+    getBlocks
 };

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require("mongoose");
 const {authorization, createAuthToken} = require("../authorization/auth");
-const {getBlockchainOverview, addNewBlock, getRecentBlock, calculateAssociateWalletsBalance, adjustDifficulty, rewardMiner} = require("../db/controller/chain");
+const {getBlockchainOverview, addNewBlock, getRecentBlock, calculateAssociateWalletsBalance, adjustDifficulty, rewardMiner, getBlocks} = require("../db/controller/chain");
 const {removeTxns, getPendingTransaction} = require("../db/controller/pool");
 const {getPublicKey, getPrivateKey} = require("../authorization/keys/keys");
 const {createBlock} = require("../db/model/block");
@@ -15,7 +15,11 @@ module.exports = (db, namespacesIO) => {
             return res.status(200).json(data);
         }).catch(err => next(err));
     });
-
+    router.get("/blocks", (req, res, next) => {
+        return getBlocks({...req.query}).then((data) => {
+            return res.status(200).json(data);
+        }).catch(err => next(err));
+    });
     router.post("/chain/new-block", authMiddleware ,async (req, res, next) => {
         let {txns, nonce, counter, minedBy, difficulty} = req.body;
         const previousBlock = await getRecentBlock();
@@ -68,6 +72,10 @@ module.exports = (db, namespacesIO) => {
                     ...data.blockchain,
                     latestBlock: {...data.block}
                 });
+                // namespacesIO.chainTracker.emit("new-chain-info", {
+                //     ...data.blockchain,
+                //     latestBlock: {...data.block}
+                // });
                 return res.status(200).json(data.block);
         }).catch(err => next(err));
     });

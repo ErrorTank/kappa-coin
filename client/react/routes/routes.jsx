@@ -15,6 +15,7 @@ const HomeRoute = lazy(delayLoad(() => import("./common-route/home-route/home-ro
 const LoginRoute = lazy(delayLoad(() => import("./guest-route/login-route/login-route")));
 const ExchangeRoute = lazy(delayLoad(() => import("./authen-routes/exchange-route/exchange-route")));
 const PoolRoute = lazy(delayLoad(() => import("./common-route/pool-route/pool-route")));
+const BlocksRoute = lazy(delayLoad(() => import("./common-route/blocks-route/blocks-route")));
 
 export class MainRoute extends React.Component {
     constructor(props) {
@@ -36,6 +37,7 @@ export class MainRoute extends React.Component {
                             <AuthenRoute exact path="/exchange" component={ExchangeRoute}/>
                             <AuthenRoute exact path="/mining" component={MiningRoute}/>
                             <WithLocationRoute exact path="/pool" render={props => <PoolRoute {...props}/>}/>
+                            <WithLocationRoute exact path="/blocks" render={props => <BlocksRoute {...props}/>}/>
                         </Switch>
                     </Suspense>
                 </Router>
