@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const {authorization, createAuthToken} = require("../authorization/auth");
 const {getBlockchainOverview, addNewBlock, getRecentBlock, calculateAssociateWalletsBalance, adjustDifficulty, rewardMiner} = require("../db/controller/chain");
-const {removeTxns} = require("../db/controller/pool");
+const {removeTxns, getPendingTransaction} = require("../db/controller/pool");
 const {getPublicKey, getPrivateKey} = require("../authorization/keys/keys");
 const {createBlock} = require("../db/model/block");
 
@@ -59,6 +59,7 @@ module.exports = (db, namespacesIO) => {
                 return rewardMiner(minedBy).then((wallet) => {
                     namespacesIO.poolTracker.to(req.query.socketID).emit("update-wallet", wallet);
                     namespacesIO.poolTracker.emit("update-wallet-individuals", data.associates);
+                    getPendingTransaction({skip: 0, take: 50}).then((data) => namespacesIO.poolTracker.emit("new-pool", data));
                     return data;
                 })
             })

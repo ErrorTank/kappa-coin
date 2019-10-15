@@ -79,7 +79,7 @@ export default class PoolRoute extends React.Component {
                                                 uri: process.env.APP_URI + "pending-transaction",
                                                 createHandlers: (socket, utils) => [
                                                     {
-                                                        name: "new-pending-transaction",
+                                                        name: "new-pool",
                                                         handler: ({list, total}, state) => {
                                                             if(!this.state.keyword && state.page === 0)
                                                                 utils.setState({list, total});
