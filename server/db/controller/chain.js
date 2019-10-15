@@ -63,7 +63,7 @@ const calculateAssociateWalletsBalance = async (txns) => {
         }
 
     }
-    return associates;
+    return Object.keys(associates);
 };
 
 const adjustDifficulty = (prevTimestamp, newTimestamp, currentDifficulty) => {

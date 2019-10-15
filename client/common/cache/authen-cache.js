@@ -38,8 +38,16 @@ export const authenCache = (() => {
               walletSocket.on("connect", () => {
 
                 walletSocket.on("update-wallet", wallet => {
-
                   walletInfo.setState(wallet);
+                });
+                walletSocket.on("update-wallet-individuals", (addresses) => {
+                  if(addresses.includes(walletInfo.getState().address)){
+                    userApi.getWalletInfo(userInfo.getState()._id).then((wallet) => {
+
+                      walletInfo.setState(wallet);
+                    })
+                  }
+
                 });
               });
               return resolve(Promise.all([userInfo.setState(user), walletInfo.setState(wallet)]));

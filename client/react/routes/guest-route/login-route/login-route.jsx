@@ -48,6 +48,15 @@ export default class LoginRoute extends KComponent {
             walletSocket.on("update-wallet", wallet => {
                 walletInfo.setState({wallet});
             });
+            walletSocket.on("update-wallet-individuals", (addresses) => {
+                if(addresses.includes(walletInfo.getState().address)){
+                    userApi.getWalletInfo(userInfo.getState()._id).then((wallet) => {
+                        console.log(wallet)
+                        walletInfo.setState(wallet);
+                    })
+                }
+
+            });
             return Promise.all([userInfo.setState({...user}), walletInfo.setState({...wallet})]).then(() => customHistory.push("/"));
         }).catch(err => this.setState({loading: false, error: err.message}));
     };

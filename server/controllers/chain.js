@@ -47,6 +47,7 @@ module.exports = (db, namespacesIO) => {
                 let {data} = block;
                 return calculateAssociateWalletsBalance(data).then(associates => {
                     //todo real time update wallet
+
                     return {block, associates};
                 })
             })
@@ -57,6 +58,7 @@ module.exports = (db, namespacesIO) => {
             .then((data) => {
                 return rewardMiner(minedBy).then((wallet) => {
                     namespacesIO.poolTracker.to(req.query.socketID).emit("update-wallet", wallet);
+                    namespacesIO.poolTracker.emit("update-wallet-individuals", data.associates);
                     return data;
                 })
             })

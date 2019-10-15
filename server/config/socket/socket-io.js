@@ -2,6 +2,7 @@
 
 const appNamespaces = [
     {
+        key: "poolTracker",
         path: "/pending-transaction",
         onConnect: (socket, context) => {
             console.log(socket.id + " is connect to /pending-transaction")
@@ -12,6 +13,7 @@ const appNamespaces = [
         handlers: "./namespaces/pending-transaction/handlers/index"
     },
     {
+        key: "chainTracker",
         path: "/mine-block",
         onConnect: (socket, context) => {
             console.log(socket.id + " is connect to /mine-block")
@@ -36,18 +38,18 @@ const configIO = (nspIO, context) => {
 
 const createNamespaceIO = (server, context) => {
     const io = require('socket.io')(server);
-    const namespacesIO = appNamespaces.map(({path, onConnect, onDisconnect, handlers}) => ({
+    const namespacesIO = appNamespaces.map(({path, onConnect, onDisconnect, handlers, key}) => ({
         io: io.of(path),
         onConnect,
         onDisconnect,
-        handlers
+        handlers,
+        key
     }));
-    const poolTracker = configIO(namespacesIO[0], context);
-    const chainTracker = configIO(namespacesIO[1], context);
-    return {
-        poolTracker,
-        chainTracker
-    }
+
+    return namespacesIO.reduce((result, cur) => {
+        result[cur.key] = configIO(cur, context);
+        return result;
+    }, {})
 };
 
 module.exports = {createNamespaceIO};
