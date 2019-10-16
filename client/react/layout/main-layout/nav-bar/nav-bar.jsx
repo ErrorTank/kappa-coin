@@ -101,7 +101,7 @@ export class Navbar extends React.Component {
                 <div className="container">
                     <div className="wrapper">
                         <div className="brand">
-                            <img src="./assets/image/kappa.png"/>
+                            <img src="/assets/image/kappa.png"/>
                             <span>KappaCoin</span>
                         </div>
                         <div className="navs">

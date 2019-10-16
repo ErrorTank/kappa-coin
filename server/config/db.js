@@ -11,6 +11,7 @@ const loadDbInstances = () => {
     let Chain = require("../db/model/chain");
     let Blockchain = require("../db/model/blockchain-info");
     require("../db/model/pool");
+
     //
     // let genesisBlock = createBlock({
     //

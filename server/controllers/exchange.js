@@ -19,6 +19,8 @@ module.exports = (db, namespacesIO) => {
         return createPendingTransaction({...req.body}).then((data) => {
             updateWallet(data.input.address, {pendingSpent: calculatePendingSpent(data, data.input.address)}).then((wallet) => {
                 namespacesIO.poolTracker.to(req.query.socketID).emit("update-wallet", wallet)
+                namespacesIO.poolTracker.emit("transaction-update", data.hash);
+
             } );
             getPendingTransaction({skip: 0, take: 50}).then((data) => namespacesIO.poolTracker.emit("new-pool", data));
             return res.status(200).json(data);

@@ -17,5 +17,8 @@ export const transactionApi = {
     },
     getValidTransactions(){
         return offlineApi.get(`/transactions/pending/valid`)
+    },
+    getTransactionDetails(txnID){
+        return offlineApi.get(`/transaction/${txnID}/details`)
     }
 };

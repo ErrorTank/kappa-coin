@@ -1,4 +1,4 @@
-const User = require("../model/user");
+const Chain = require("../model/chain");
 const Wallet = require("../model/wallet");
 const Pool = require("../model/pool");
 const mongoose = require("mongoose");
@@ -56,9 +56,16 @@ const removeTxns = (txnsHashes) => {
     return Pool.deleteMany({hash: {$in: txnsHashes}})
 };
 
+const getTransaction = txnID => {
+    let returnedData = data =>  ({txn: data.data, block: data.hash ?  omit(data, "data") : null});
+    return Pool.findOne({hash: txnID}).lean()
+        .then(data1 => data1 ? returnedData({data: data1}) : Chain.findOne({"data.hash": txnID}).lean().then((data2) => data2 ? returnedData({...data2, data: data2.data.find(each => each.hash === txnID)}) : null))
+};
+
 module.exports = {
     getPendingTransaction,
     getValidTransactions,
-    removeTxns
+    removeTxns,
+    getTransaction
 
 };

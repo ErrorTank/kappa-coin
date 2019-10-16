@@ -1,0 +1,72 @@
+.info-row-panel{
+  min-height 300px
+  position relative
+  padding 0 15px
+  .info-row{
+    color #1a1a1a
+    font-size 15px
+    padding 12px 0
+    border-bottom 1px solid grey
+    .hash{
+      font-weight 550
+      background-color #f4f4f4
+      border-radius 3px
+      padding 5px 6px
+      i{
+        margin-left 10px
+
+      }
+    }
+    .address{
+      i{
+        color #1a1a1a
+        margin-left 10px
+      }
+      p{
+        display inline-block
+        vertical-align middle
+      }
+
+    }
+    .link-text{
+      max-width 500px
+      white-space nowrap
+      overflow hidden
+      cursor pointer
+      text-overflow ellipsis
+      color tikiblue
+      &:hover{
+        color darken(tikiblue, 15%)
+      }
+
+    }
+    &:last-child{
+      border-bottom none
+    }
+    & > .label
+    & > .value
+    {
+      display inline-block
+      vertical-align top
+
+    }
+    & > .label{
+      width 200px !important
+      color #0d3578
+      font-weight 550
+
+    }
+    & > .value{
+      width calc(100% - 200px)
+    }
+  }
+  .loading-inline{
+    .overlay{
+      background-color white
+      i{
+        font-size 50px
+        color #1a1a1a
+      }
+    }
+  }
+}

@@ -21,7 +21,11 @@ module.exports = (db, namespacesIO) => {
         }).catch(err => next(err));
     });
     router.post("/chain/new-block", authMiddleware ,async (req, res, next) => {
-        let {txns, nonce, counter, minedBy, difficulty} = req.body;
+        let {txns: oldTxns, nonce, counter, minedBy, difficulty} = req.body;
+        let txns = oldTxns.map(each => {
+            each.status = "proceed";
+            return each;
+        } );
         const previousBlock = await getRecentBlock();
         const newBlock = createBlock({
             previousHash: previousBlock.hash,

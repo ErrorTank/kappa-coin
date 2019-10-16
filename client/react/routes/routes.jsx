@@ -9,6 +9,8 @@ import {AuthenRoute, GuestRoute} from "./route-types/authen-routes";
 import {OverlayLoading} from "../common/overlay-loading";
 import {delayLoad} from "../../common/utils";
 
+
+const TxnRoute = lazy(delayLoad(() => import("./common-route/txn-route/txn-route")));
 const MiningRoute = lazy(delayLoad(() => import("./authen-routes/mining-route/mining-route")));
 const ProfileRoute = lazy(delayLoad(() => import("./authen-routes/profile-route/profile-route")));
 const HomeRoute = lazy(delayLoad(() => import("./common-route/home-route/home-route")));
@@ -37,6 +39,7 @@ export class MainRoute extends React.Component {
                             <AuthenRoute exact path="/exchange" component={ExchangeRoute}/>
                             <AuthenRoute exact path="/mining" component={MiningRoute}/>
                             <WithLocationRoute exact path="/pool" render={props => <PoolRoute {...props}/>}/>
+                            <WithLocationRoute exact path="/txn/:txnID" render={props => <TxnRoute {...props}/>}/>
                             <WithLocationRoute exact path="/blocks" render={props => <BlocksRoute {...props}/>}/>
                         </Switch>
                     </Suspense>
