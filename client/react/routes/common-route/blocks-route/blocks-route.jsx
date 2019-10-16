@@ -132,7 +132,7 @@ export default class BlocksRoute extends React.Component {
                                             }}
                                             maxItem={5}
                                             columns={this.columns}
-                                            rowLinkTo={(e, row) => `/block/${row._id}`}
+                                            rowLinkTo={(e, row) => `/block/${row.hash}`}
                                             rowTrackBy={(row, i) => row._id}
                                             emptyNotify={"There are no matching blocks"}
                                         />

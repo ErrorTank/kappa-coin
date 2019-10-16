@@ -90,7 +90,7 @@ export default class PoolRoute extends React.Component {
                                             }}
                                             maxItem={5}
                                             columns={this.columns}
-                                            rowLinkTo={(e, row) => `/transaction/${row._id}`}
+                                            rowLinkTo={(e, row) => `/transaction/${row.hash}`}
                                             rowTrackBy={(row, i) => row._id}
                                             emptyNotify={"There are no matching transactions"}
                                         />
