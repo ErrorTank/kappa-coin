@@ -2,15 +2,17 @@ import React from "react";
 import {MainLayout} from "../../../layout/main-layout/main-layout";
 import {PageTitle} from "../../../common/page-title/page-title";
 import {InfoRowPanel} from "../../../common/info-row-panel/info-row-panel";
-import {transactionApi} from "../../../../api/common/transaction-api";
 import {customHistory} from "../../routes";
 import {Copiable} from "../../../common/copiable/copiable";
 import {Badge} from "../../../common/badge/badge";
 import moment from "moment";
 import {KComponent} from "../../../common/k-component";
-import io from "socket.io-client";
+import {chainApi} from "../../../../api/common/chain-api";
+import {pronounce} from "../../../../common/utils/common";
+const momentDurationFormatSetup = require("moment-duration-format");
+momentDurationFormatSetup(moment);
 
-export default class TxnRoute extends KComponent {
+export default class BlockRoute extends KComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -19,29 +21,10 @@ export default class TxnRoute extends KComponent {
 
         };
         this.fetchInfo();
-
-        this.socket1 = io(process.env.APP_URI + "mine-block");
-        this.socket2 = io(process.env.APP_URI + "pending-transaction");
-
-        this.socket1.on('connect', () => {
-            this.socket1.on("new-chain-info", (data) => {
-                if(data.latestBlock.data.find(each => each.hash === this.props.match.params.txnID)){
-                    this.fetchInfo();
-                }
-            })
-        });
-        this.socket2.on('connect', () => {
-            this.socket2.on("transaction-update", (hash) => {
-
-                if(hash === this.props.match.params.txnID){
-                    this.fetchInfo();
-                }
-            });
-        });
     };
 
     fetchInfo = () => {
-        transactionApi.getTransactionDetails(this.props.match.params.txnID).then((info) => {
+        chainApi.getBlockDetails(this.props.match.params.blockID).then((info) => {
             if (!info) {
                 customHistory.push("/");
                 return;
@@ -50,20 +33,20 @@ export default class TxnRoute extends KComponent {
         });
     };
 
-    componentWillUnmount() {
-        this.socket1 && this.socket1.disconnect();
-        this.socket2 && this.socket2.disconnect();
-    }
 
     displays = [
+        {
+            label: "#",
+            display: data => <p>{data.blockNo + 1}</p>
+        },
         {
             label: "Hash",
             display: data => (
                 <Copiable
-                    getCopyValue={() => data.txn.hash}
+                    getCopyValue={() => data.hash}
                 >
                     <div className="hash">
-                        {data.txn.hash}
+                        {data.hash}
                         <i className="fas fa-copy"></i>
                     </div>
 
@@ -72,20 +55,36 @@ export default class TxnRoute extends KComponent {
 
             )
         }, {
-            label: "Status",
+            label: "Previous hash",
             display: data => (
-                <Badge
-                    content={data.txn.status === "pending" ? "Pending" : "Proceed"}
-                    style={data.txn.status === "pending" ? "danger" : "success"}
-                />
+                <Copiable
+                    getCopyValue={() => data.previousHash}
+                >
+                    <div className="hash">
+                        {data.hash}
+                        <i className="fas fa-copy"></i>
+                    </div>
+
+                </Copiable>
+
+
             )
         }, {
-            label: "Block",
+            label: "Nonce",
             display: data => (
-                <p className="link-text d-inline-block" onClick={() => customHistory.push(`/block/${data.block.hash}`)}>{data.block.blockNo + 1}</p>
-            ),
-            condition: data => data.block
-        }, {
+                <p>{data.nonce}</p>
+            )
+        },{
+            label: "Reward",
+            display: data => (
+                <p>{data.reward}</p>
+            )
+        },{
+            label: "Mined rate",
+            display: data => (
+                <p>In {moment.duration(Number(data.minedRate)).asSeconds()} {pronounce("second", Number(data.minedRate) / 1000, "s")}</p>
+            )
+        },  {
             label: "Timestamp",
             display: data => (
                 <p>{moment(data.txn.timestamp).format("HH:mm:ss MMM DD YYYY")}</p>
@@ -145,13 +144,13 @@ export default class TxnRoute extends KComponent {
         let {info, loading} = this.state;
         return (
             <PageTitle
-                title={`Transaction ${this.props.match.params.txnID}`}
+                title={`Block ${this.props.match.params.blockID}`}
             >
                 <MainLayout>
-                    <div className="txn-route">
+                    <div className="block-route">
                         <div className="container">
                             <div className="big-wrapper">
-                                <p className="route-title">Transaction Details</p>
+                                <p className="route-title">Block Details</p>
                                 <InfoRowPanel
                                     info={info}
                                     displays={this.displays}

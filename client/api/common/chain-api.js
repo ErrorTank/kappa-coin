@@ -25,5 +25,9 @@ export const chainApi = {
     },
     validateChain(){
         return offlineApi.get("/chain/validate")
+    },
+
+    getBlockDetails(blockID){
+        return offlineApi.get(`/block/${blockID}/details`)
     }
 };
