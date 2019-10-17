@@ -143,6 +143,15 @@ const getBlocks = ({skip, take, keyword, sortKey, sortValue}) => {
 
 };
 
+const getBlockDetail = (blockID) => {
+    return Chain.findOne({hash: blockID}).populate("minedBy").lean().then((data) => {
+
+        return data.minedBy ? Wallet.findOne({owner: ObjectId(data.minedBy._id)}).lean().then((wallet) => {
+            return {...data, minedBy: {...data.minedBy, wallet}}
+        }) : data;
+    });
+};
+
 module.exports = {
     adjustDifficulty,
     getBlockchainOverview,
@@ -152,5 +161,6 @@ module.exports = {
     adjustDifficulty2,
     rewardMiner,
     getBlocks,
-    validateChain
+    validateChain,
+    getBlockDetail
 };

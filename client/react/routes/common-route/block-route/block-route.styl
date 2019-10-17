@@ -1,26 +1,51 @@
 
-.txn-route{
-  .to-addresses{
-    .addresses{
+.block-route{
+  .no-limit{
+    overflow visible !important
+    text-overflow initial !important
+    max-width none !important
+  }
+  .reward{
+    span{
+      color #6c757e
+      font-size 13px
+    }
+  }
+  .mined-by{
+    & > span{
+      .name{
+        font-weight 550
+      }
+      &.first-of-type{
+        overflow hidden
+        max-width 250px
+        text-overflow ellipsis
+      }
+      vertical-align middle
+      display inline-block
+    }
+
+  }
+  .data{
+    .txns{
       margin-top 20px
-      .info{
+      .txn-info{
         padding 6px 0
-        .label{
-          display inline-block
-          width 200px
-          text-overflow ellipsis
-          color tikiblue
-          overflow hidden
-          vertical-align middle
-        }
-        .value{
+        p{
           display inline-block
           vertical-align middle
-          margin-left 10px
-          font-weight 550
-          .unit{
-            color #6c757e
-            font-size 12px
+          &.label{
+            color #1a1a1a
+            font-weight 550
+            width 25px
+            margin-left 15px
+
+          }
+          &.value{
+            width calc(100% - 40px)
+            max-width none !important
+            overflow hidden
+            text-overflow ellipsis
           }
         }
       }

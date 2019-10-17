@@ -15,10 +15,10 @@ export default class TxnRoute extends KComponent {
         super(props);
         this.state = {
             info: null,
-            loading: true,
+            updating: false,
 
         };
-        this.fetchInfo();
+        this.fetchInfo(props.match.params.txnID);
 
         this.socket1 = io(process.env.APP_URI + "mine-block");
         this.socket2 = io(process.env.APP_URI + "pending-transaction");
@@ -26,7 +26,7 @@ export default class TxnRoute extends KComponent {
         this.socket1.on('connect', () => {
             this.socket1.on("new-chain-info", (data) => {
                 if(data.latestBlock.data.find(each => each.hash === this.props.match.params.txnID)){
-                    this.fetchInfo();
+                    this.fetchInfo(this.props.match.params.txnID);
                 }
             })
         });
@@ -34,19 +34,19 @@ export default class TxnRoute extends KComponent {
             this.socket2.on("transaction-update", (hash) => {
 
                 if(hash === this.props.match.params.txnID){
-                    this.fetchInfo();
+                    this.fetchInfo(this.props.match.params.txnID);
                 }
             });
         });
     };
 
-    fetchInfo = () => {
-        transactionApi.getTransactionDetails(this.props.match.params.txnID).then((info) => {
+    fetchInfo = (txnID) => {
+        transactionApi.getTransactionDetails(txnID).then((info) => {
             if (!info) {
                 customHistory.push("/");
                 return;
             }
-            this.setState({info, loading: false})
+            this.setState({info})
         });
     };
 

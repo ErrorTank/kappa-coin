@@ -9,6 +9,7 @@ import moment from "moment";
 import {KComponent} from "../../../common/k-component";
 import {chainApi} from "../../../../api/common/chain-api";
 import {pronounce} from "../../../../common/utils/common";
+
 const momentDurationFormatSetup = require("moment-duration-format");
 momentDurationFormatSetup(moment);
 
@@ -17,26 +18,35 @@ export default class BlockRoute extends KComponent {
         super(props);
         this.state = {
             info: null,
-            loading: true,
+
 
         };
-        this.fetchInfo();
+        this.fetchInfo(props.match.params.blockID);
     };
 
-    fetchInfo = () => {
-        chainApi.getBlockDetails(this.props.match.params.blockID).then((info) => {
+    fetchInfo = (blockID) => {
+
+        chainApi.getBlockDetails(blockID).then((info) => {
             if (!info) {
                 customHistory.push("/");
                 return;
             }
-            this.setState({info, loading: false})
+            this.setState({info})
         });
     };
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.match.params.blockID !== this.props.match.params.blockID) {
+            this.setState({info: null});
+            this.fetchInfo(nextProps.match.params.blockID);
+
+        }
+    }
 
 
     displays = [
         {
-            label: "#",
+            label: "Block height(#)",
             display: data => <p>{data.blockNo + 1}</p>
         },
         {
@@ -55,13 +65,13 @@ export default class BlockRoute extends KComponent {
 
             )
         }, {
-            label: "Previous hash",
+            label: "Merkle hash",
             display: data => (
                 <Copiable
-                    getCopyValue={() => data.previousHash}
+                    getCopyValue={() => data.rootHash}
                 >
                     <div className="hash">
-                        {data.hash}
+                        {data.rootHash}
                         <i className="fas fa-copy"></i>
                     </div>
 
@@ -70,38 +80,13 @@ export default class BlockRoute extends KComponent {
 
             )
         }, {
-            label: "Nonce",
-            display: data => (
-                <p>{data.nonce}</p>
-            )
-        },{
-            label: "Reward",
-            display: data => (
-                <p>{data.reward}</p>
-            )
-        },{
-            label: "Mined rate",
-            display: data => (
-                <p>In {moment.duration(Number(data.minedRate)).asSeconds()} {pronounce("second", Number(data.minedRate) / 1000, "s")}</p>
-            )
-        },  {
-            label: "Timestamp",
-            display: data => (
-                <p>{moment(data.txn.timestamp).format("HH:mm:ss MMM DD YYYY")}</p>
-            ),
-        }, {
-            label: "Last updated",
-            display: data => (
-                <p>{moment(data.txn.updatedAt).fromNow()}</p>
-            ),
-        },
-        {
-            label: "From",
+            label: "Previous hash",
             display: data => (
                 <div className="address">
-                    <p className="link-text">{data.txn.input.address}</p>
+                    <p className="link-text no-limit"
+                       onClick={() => customHistory.push(`/block/${data.previousHash}`)}>{data.previousHash}</p>
                     <Copiable
-                        getCopyValue={() => data.txn.input.address}
+                        getCopyValue={() => data.previousHash}
                     >
 
                         <i className="fas fa-copy"></i>
@@ -110,34 +95,54 @@ export default class BlockRoute extends KComponent {
                 </div>
 
 
+            )
+        }, {
+            label: "Nonce",
+            display: data => (
+                <p>{data.nonce}</p>
+            )
+        }, {
+            label: "Mined by",
+            display: data => (
+                <div className="mined-by">
+                    <span className="link-text">{data.minedBy.wallet.address}</span><span><span
+                    className="name">({data.minedBy.fullname})</span> In {moment.duration(Number(data.minedRate)).asSeconds()} {pronounce("second", Number(data.minedRate) / 1000, "s")}</span>
+                </div>
+
+            )
+        }, {
+            label: "Reward",
+            display: data => (
+                <p className="reward">{data.reward} <span>KAP</span></p>
+            )
+        }, {
+            label: "Timestamp",
+            display: data => (
+                <p>{moment(data.timestamp).format("HH:mm:ss MMM DD YYYY")}</p>
             ),
         },
         {
-            label: "To",
+            label: "Data",
             display: data => {
-
                 return (
-                    <div className="to-addresses">
-                        <p>{Object.keys(data.txn.outputMap).length - 1} found</p>
-                        <div className="addresses">
-                            {Object.keys(data.txn.outputMap).filter(each => each !== data.txn.input.address).map((each) => (
-                                <div className="info" key={each}>
-                                    <span className="label">{each}</span>
-                                    :
-                                    <span className="value">{data.txn.outputMap[each]} <span className="unit">KAP</span></span>
-                                </div>
-                            ))}
-                        </div>
+                    <div className="data">
+                        <p>{data.data.length} found</p>
+                        {data.data.length && (
+                            <div className="txns">
+                                {data.data.map((each, i) => (
+                                    <div className="txn-info" key={each.hash}>
+                                        <p className="label">{i+1}.</p>
+                                        <p className="value link-text" onClick={() => customHistory.push(`/txn/${each.hash}`)}>{each.hash}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
                     </div>
                 )
             },
         },
-        {
-            label: "Description",
-            display: data => (
-                <p>{data.txn.description}</p>
-            ),
-        },
+
     ];
 
     render() {
