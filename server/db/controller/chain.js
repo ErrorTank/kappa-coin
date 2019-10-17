@@ -1,6 +1,7 @@
 const BlockchainSchema = require("../model/blockchain-info");
 const Chain = require("../model/chain");
 const Wallet = require("../model/wallet");
+const Pool = require("../model/pool");
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const {ApplicationError} = require("../../utils/error/error-types");
@@ -9,10 +10,11 @@ const pick = require("lodash/pick");
 const {isChainValid} = require("../../utils/chain-utils");
 
 const getBlockchainOverview = () => {
-    return Promise.all([BlockchainSchema.findById(process.env.BLOCKCHAIN_ID).lean(), getRecentBlock()]).then(([data, latestBlock]) => {
+    return Promise.all([BlockchainSchema.findById(process.env.BLOCKCHAIN_ID).lean(), getRecentBlock(), Pool.countDocuments({})]).then(([data, latestBlock, count]) => {
         return {
             ...data,
-            latestBlock
+            latestBlock,
+            pendingCount: count
         }
     });
 };

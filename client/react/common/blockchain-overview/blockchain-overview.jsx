@@ -27,7 +27,7 @@ export class BlockchainOverview extends React.Component{
                     </div>
                     <div className="lower">
                         <p className="label">Pending Txns</p>
-                        <p className="value">100</p>
+                        <p className="value">{chain.pendingCount}</p>
                     </div>
                 </div>
                 <div className="panel col-4">

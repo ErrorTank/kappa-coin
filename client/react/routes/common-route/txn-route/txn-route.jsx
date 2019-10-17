@@ -26,6 +26,7 @@ export default class TxnRoute extends KComponent {
         this.socket1.on('connect', () => {
             this.socket1.on("new-chain-info", (data) => {
                 if(data.latestBlock.data.find(each => each.hash === this.props.match.params.txnID)){
+                    this.setState({updating: true});
                     this.fetchInfo(this.props.match.params.txnID);
                 }
             })
@@ -34,6 +35,7 @@ export default class TxnRoute extends KComponent {
             this.socket2.on("transaction-update", (hash) => {
 
                 if(hash === this.props.match.params.txnID){
+                    this.setState({updating: true});
                     this.fetchInfo(this.props.match.params.txnID);
                 }
             });
@@ -46,7 +48,7 @@ export default class TxnRoute extends KComponent {
                 customHistory.push("/");
                 return;
             }
-            this.setState({info})
+            this.setState({info, updating: false})
         });
     };
 
@@ -142,7 +144,7 @@ export default class TxnRoute extends KComponent {
     ];
 
     render() {
-        let {info, loading} = this.state;
+        let {info, updating} = this.state;
         return (
             <PageTitle
                 title={`Transaction ${this.props.match.params.txnID}`}
@@ -152,6 +154,9 @@ export default class TxnRoute extends KComponent {
                         <div className="container">
                             <div className="big-wrapper">
                                 <p className="route-title">Transaction Details</p>
+                                {updating && (
+                                    <p className="updating">Updating...</p>
+                                )}
                                 <InfoRowPanel
                                     info={info}
                                     displays={this.displays}
