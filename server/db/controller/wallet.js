@@ -8,6 +8,7 @@ const {ApplicationError} = require("../../utils/error/error-types");
 const sortBy = require("lodash/sortBy");
 const reverse = require("lodash/reverse");
 const pick = require("lodash/pick");
+const slice = require("lodash/slice");
 const {createTransaction} = require("../model/transaction");
 const {calculatePendingTransaction} = require("../../utils/crypto-utils");
 
@@ -65,11 +66,7 @@ const getUserTransactions = (walletID, {skip, take, keyword, sortKey, sortValue}
             "input.address": walletID,
         }
     });
-    querySteps2.push({
-        $match: {
-            "data.input.address": walletID
-        }
-    });
+
     if (keyword) {
         let kwSearchOutput = `outputMap.${keyword}`;
         let kwSearchOutput2 = `data.outputMap.${keyword}`;
@@ -104,7 +101,7 @@ const getUserTransactions = (walletID, {skip, take, keyword, sortKey, sortValue}
     querySteps = querySteps.concat([
         {
             $facet: {
-                list: [{$skip: Number(skip)}, {$limit: Number(take)}],
+                list: [{$skip: 0}],
                 count: [{$count: 'total'}]
             }
         }
@@ -121,8 +118,14 @@ const getUserTransactions = (walletID, {skip, take, keyword, sortKey, sortValue}
             $unwind: "$data"
         },
         {
+            $match: {
+                "data.input.address": walletID
+            }
+        },
+
+        {
             $facet: {
-                list: [{$skip: Number(skip)}, {$limit: Number(take)}],
+                list: [{$skip: 0}],
                 count: [{$count: 'total'}]
             }
         }
@@ -138,7 +141,7 @@ const getUserTransactions = (walletID, {skip, take, keyword, sortKey, sortValue}
         returnedList = returnedList.concat(data2[0].list.map((each) => each.data));
         returnedTotal = returnedTotal + data2[0].list.length ? data2[0].count[0].total : 0;
         return {
-            list: reverse(sortBy(returnedList, each => new Date(each.updatedAt).getTime())),
+            list: slice(reverse(sortBy(returnedList, each => new Date(each.updatedAt).getTime())), Number(skip), Number(skip + take)),
             total: returnedTotal
         }
     })

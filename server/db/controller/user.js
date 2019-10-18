@@ -1,5 +1,6 @@
 const User = require("../model/user");
 const Wallet = require("../model/wallet");
+const Chain = require("../model/chain");
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const {ApplicationError} = require("../../utils/error/error-types");
@@ -72,18 +73,37 @@ const getDetailUserInfo = (userID) => {
     return Promise.all([
         User.findById(ObjectId(userID)).lean(),
         Wallet.findOne({owner: ObjectId(userID)}).lean(),
+        Chain.aggregate([
+            {
+                $match: {
+                    minedBy: ObjectId(userID)
+                }
+            },
+        ]),
 
-    ]).then(([info, wallet]) => {
+    ]).then(([info, wallet, data]) => {
 
-        return {
-            info,
-            wallet,
-            statistic: {
-                minedBlocks: 10,
-                proceedTransactions: 10,
-                profit: 19.2
+        return Chain.aggregate([
+            {
+                $match: {
+                    "data.input.address": wallet.address
+                },
+
+            },
+
+        ]).then((data2) => {
+
+            return {
+                info,
+                wallet,
+                statistic: {
+                    minedBlocks: data.length,
+                    proceedTransactions: data2.length,
+                    profit: data.length * 3
+                }
             }
-        }
+        });
+
     })
 };
 
