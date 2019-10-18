@@ -68,6 +68,9 @@ module.exports = (db, namespacesIO) => {
                     namespacesIO.poolTracker.to(req.query.socketID).emit("update-wallet", wallet);
                     namespacesIO.poolTracker.emit("update-wallet-individuals", data.associates);
                     getPendingTransaction({skip: 0, take: 5}).then((data) => namespacesIO.poolTracker.emit("new-pool", data));
+                    namespacesIO.poolTracker.emit("new-my-transactions", {
+                        txnsInputAddress: txns.map(each => each.input.address),
+                    });
                     getBlocks({skip: 0, take: 5}).then((data) => namespacesIO.chainTracker.emit("new-chain", data));
                     return data;
                 })
