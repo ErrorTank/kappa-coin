@@ -83,6 +83,7 @@ export default class MyTransactions extends React.Component {
                                     </div>
                                     <div className="data-table-wrapper">
                                         <CommonDataTable
+                                            totalText={total => `You have a total of ${total} txns`}
                                             realTimeConfig={{
                                                 uri: process.env.APP_URI + "pending-transaction",
                                                 createHandlers: (socket, utils) => [

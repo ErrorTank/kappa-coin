@@ -116,14 +116,14 @@ export class CommonDataTable extends React.Component {
     };
 
     render() {
-        let {columns, className, rowTrackBy = (row, i) => i, onClickRow, rowLinkTo, rowClassName, emptyNotify = "Empty table."} = this.props;
+        let {columns, className, rowTrackBy = (row, i) => i, onClickRow, rowLinkTo, rowClassName, emptyNotify = "Empty table.", totalText} = this.props;
         let {list, page, total, loading} = this.state;
 
         return (
             <div className="common-data-table">
                 {list && (
                     <div className="summary">
-                        A total of {total} pending txns found
+                        {totalText(total)}
                     </div>
                 )}
                 {list != null && (

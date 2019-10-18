@@ -72,6 +72,7 @@ export default class PoolRoute extends React.Component {
                                     </div>
                                     <div className="data-table-wrapper">
                                         <CommonDataTable
+                                            totalText={total => `A total of ${total} pending txns found`}
                                             realTimeConfig={{
                                                 uri: process.env.APP_URI + "pending-transaction",
                                                 createHandlers: (socket, utils) => [

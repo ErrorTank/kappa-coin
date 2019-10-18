@@ -114,6 +114,7 @@ export default class BlocksRoute extends React.Component {
                                     </div>
                                     <div className="data-table-wrapper">
                                         <CommonDataTable
+                                            totalText={total => `A total of ${total} blocks found`}
                                             realTimeConfig={{
                                                 uri: process.env.APP_URI + "mine-block",
                                                 createHandlers: (socket, utils) => [
