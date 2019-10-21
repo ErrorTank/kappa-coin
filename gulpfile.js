@@ -37,12 +37,17 @@ const startServer = async () => {
 
 gulp.task("dev", () => {
     return startServer().then(() => {
-        stylusCompiler.watch(process.env.STATIC_DIR || "build");
+        return stylusCompiler.watch(process.env.STATIC_DIR || "build");
+
+    }).then(() => {
         if (!/^win/.test(process.platform)) { // linux
-            spawn("webpack", ["--watch"], {stdio: "inherit"});
+            return spawn("webpack", ["--watch"], {stdio: "inherit"});
         } else {
-            spawn('cmd', ['/s', "/c", "webpack", "--w"], {stdio: "inherit"});
+            return spawn('cmd', ['/s', "/c", "webpack", "--w"], {stdio: "inherit"});
         }
+    }).then(() => {
+        return require("./scripts/copy-assets");
+
     });
 
 });
@@ -54,6 +59,6 @@ gulp.task("prod", () => {
         } else {
             return spawn('cmd', ['/s', "/c", "webpack", "--config ./webpack.prod.config.js"], {stdio: "inherit"});
         }
-    }));
+    })).then(() => require("./scripts/copy-assets"));
 });
 
