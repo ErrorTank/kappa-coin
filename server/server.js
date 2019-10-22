@@ -6,6 +6,7 @@ const fs = require("fs");
 const path = require("path");
 const app = configExpressServer({useCors: true});
 const {initDb} = require("./config/db");
+const createPubSub = require("./config/pubsub");
 const {createNamespaceIO} = require("./config/socket/socket-io");
 
 initDb().then(db => {
@@ -29,10 +30,17 @@ initDb().then(db => {
         app
     );
     const namespacesIO = createNamespaceIO(server, {db});
+    const pubsub = createPubSub(namespacesIO);
+    const syncBlockchainData = () => {
+
+    };
     app.use("/", routerConfig(db, namespacesIO));
     app.use(require("./utils/error/error-handlers"));
 
     server.listen(Port, () => {
+        if(!process.env.IS_DEFAULT){
+
+        }
         console.log(`Server running on port: ${Port}`)
     });
 }).catch(err => {
