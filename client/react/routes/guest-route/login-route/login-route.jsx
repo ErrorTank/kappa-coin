@@ -44,7 +44,7 @@ export default class LoginRoute extends KComponent {
         userApi.login({email, password}).then(data => {
             let {user, token, wallet} = data;
             authenCache.setAuthen(token, {expires: 30});
-            let walletSocket = appInstances.setInstance("walletSocket", io( process.env.APP_URI + "pending-transaction"));
+            let walletSocket = appInstances.setInstance("walletSocket", io( document.location.origin + "/pending-transaction"));
             walletSocket.on("update-wallet", wallet => {
                 walletInfo.setState({wallet});
             });

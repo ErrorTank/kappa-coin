@@ -74,7 +74,7 @@ export default class PoolRoute extends React.Component {
                                         <CommonDataTable
                                             totalText={total => `A total of ${total} pending txns found`}
                                             realTimeConfig={{
-                                                uri: process.env.APP_URI + "pending-transaction",
+                                                uri: document.location.origin + "/pending-transaction",
                                                 createHandlers: (socket, utils) => [
                                                     {
                                                         name: "new-pool",

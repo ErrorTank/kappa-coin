@@ -104,7 +104,7 @@ export default class MiningRoute extends React.Component {
             ...this.initState
         };
 
-        this.socket = io(process.env.APP_URI + "mine-block");
+        this.socket = io(document.location.origin + "/mine-block");
         this.socket.on('connect', () => {
             console.log(this.socket.id);
             this.socket.on("new-block-found", () => {

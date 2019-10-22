@@ -33,7 +33,7 @@ export const authenCache = (() => {
             if (!user)
               reject();
             else {
-              let walletSocket = appInstances.setInstance("walletSocket", io( process.env.APP_URI + "pending-transaction"));
+              let walletSocket = appInstances.setInstance("walletSocket", io( document.location.origin + "/pending-transaction"));
 
               walletSocket.on("connect", () => {
 

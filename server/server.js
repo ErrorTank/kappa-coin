@@ -5,11 +5,12 @@ const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const app = configExpressServer({useCors: true});
-const initDb = require("./config/db");
+const {initDb} = require("./config/db");
 const {createNamespaceIO} = require("./config/socket/socket-io");
 
 initDb().then(db => {
 
+    const Port = process.env.IS_DEFAULT === "true" ?  Number(process.env.PORT) : Number(process.env.PORT)  + Math.ceil(Math.random() * 1000);
     let server = https.createServer(
         {
             key: fs.readFileSync(
@@ -31,8 +32,8 @@ initDb().then(db => {
     app.use("/", routerConfig(db, namespacesIO));
     app.use(require("./utils/error/error-handlers"));
 
-    server.listen(process.env.PORT, () => {
-        console.log(`Server running on port: ${process.env.PORT}`)
+    server.listen(Port, () => {
+        console.log(`Server running on port: ${Port}`)
     });
 }).catch(err => {
     console.error("Unable to connect to db:",err);

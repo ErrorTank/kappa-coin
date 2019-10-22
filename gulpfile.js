@@ -13,7 +13,7 @@ const stylusCompiler = {
     }
 };
 
-const startServer = async () => {
+const startServer = async (env) => {
     return nodemon({
         script: './server/server.js',
         ext: 'js',
@@ -29,14 +29,30 @@ const startServer = async () => {
             "dist/*",
             "uploads/*"
         ],
-        env: {'NODE_ENV': 'development'},
+        env,
         stdout: true,
         exec: "babel-node"
     })
 };
 
 gulp.task("dev", () => {
-    return startServer().then(() => {
+    return startServer({'NODE_ENV': 'development', 'IS_DEFAULT': "true"}).then(() => {
+        return stylusCompiler.watch(process.env.STATIC_DIR || "build");
+
+    }).then(() => {
+        if (!/^win/.test(process.platform)) { // linux
+            return spawn("webpack", ["--watch"], {stdio: "inherit"});
+        } else {
+            return spawn('cmd', ['/s', "/c", "webpack", "--w"], {stdio: "inherit"});
+        }
+    }).then(() => {
+        return require("./scripts/copy-assets");
+
+    });
+
+});
+gulp.task("devPeer", () => {
+    return startServer({'NODE_ENV': 'development'}).then(() => {
         return stylusCompiler.watch(process.env.STATIC_DIR || "build");
 
     }).then(() => {

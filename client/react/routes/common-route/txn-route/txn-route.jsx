@@ -20,8 +20,8 @@ export default class TxnRoute extends KComponent {
         };
         this.fetchInfo(props.match.params.txnID);
 
-        this.socket1 = io(process.env.APP_URI + "mine-block");
-        this.socket2 = io(process.env.APP_URI + "pending-transaction");
+        this.socket1 = io(document.location.origin + "/mine-block");
+        this.socket2 = io(document.location.origin + "/pending-transaction");
 
         this.socket1.on('connect', () => {
             this.socket1.on("new-chain-info", (data) => {

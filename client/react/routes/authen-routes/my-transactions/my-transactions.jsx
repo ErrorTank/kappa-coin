@@ -85,7 +85,7 @@ export default class MyTransactions extends React.Component {
                                         <CommonDataTable
                                             totalText={total => `You have a total of ${total} txns`}
                                             realTimeConfig={{
-                                                uri: process.env.APP_URI + "pending-transaction",
+                                                uri: document.location.origin + "/pending-transaction",
                                                 createHandlers: (socket, utils) => [
                                                     {
                                                         name: "new-my-transactions",

@@ -3,13 +3,13 @@ import {apiFactory} from "./api-factory/api-config";
 
 
 const authenApiConfig = {
-    hostURL: "https://localhost:10000/api",
+    hostURL: `${document.location.origin}/api`,
 
 
 };
 
 const offlineApiConfig = {
-    hostURL: "https://localhost:10000/api"
+    hostURL: `${document.location.origin}/api`
 };
 
 

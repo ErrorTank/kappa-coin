@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "gulp dev",
+    "dev-peer": "gulp devPeer",
     "wp": "webpack --watch",
     "prod": "gulp prod",
     "start": "nodemon server/server.js --ext js --exec babel-node --ignore react",
@@ -31,6 +32,7 @@
     "@babel/preset-env": "^7.4.3",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.5",
+    "cross-env": "^6.0.3",
     "css-loader": "^0.28.11",
     "fs-extra": "^8.1.0",
     "gulp": "4.0.1",

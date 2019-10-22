@@ -116,7 +116,7 @@ export default class BlocksRoute extends React.Component {
                                         <CommonDataTable
                                             totalText={total => `A total of ${total} blocks found`}
                                             realTimeConfig={{
-                                                uri: process.env.APP_URI + "mine-block",
+                                                uri: document.location.origin + "/mine-block",
                                                 createHandlers: (socket, utils) => [
                                                     {
                                                         name: "new-chain",
