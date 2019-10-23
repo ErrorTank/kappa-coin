@@ -52,7 +52,7 @@ const configs = [
 
 const initDb = () => {
     let status = [];
-    console.log(process.env.IS_DEFAULT)
+
     for (let dbConfig of configs) {
         status.push(mongoose.connect(dbConfig.url, {useNewUrlParser: true, useCreateIndex: true})
             .then(() => {

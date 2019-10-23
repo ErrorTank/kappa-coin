@@ -11,12 +11,18 @@ const authMiddleware = authorization(getPublicKey(), {expiresIn: "1 day", algori
 
 module.exports = (db, namespacesIO) => {
     router.get("/chain/overview", (req, res, next) => {
+        console.log("dasdas")
         return getBlockchainOverview().then((data) => {
             return res.status(200).json(data);
         }).catch(err => next(err));
     });
     router.get("/blocks", (req, res, next) => {
         return getBlocks({...req.query}).then((data) => {
+            return res.status(200).json(data);
+        }).catch(err => next(err));
+    });
+    router.get("/all-blocks", (req, res, next) => {
+        return getBlocks({...req.query}, true).then((data) => {
             return res.status(200).json(data);
         }).catch(err => next(err));
     });

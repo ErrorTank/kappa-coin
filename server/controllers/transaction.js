@@ -15,8 +15,14 @@ module.exports = () => {
 
     });
 
+    router.get("/transactions/pending/all",  (req, res, next) => {
+        return getPendingTransaction({...req.query}, true).then((data) => {
+            return res.status(200).json(data);
+        }).catch(err => next(err));
+
+    });
+
     router.get("/transactions/wallet/:walletID", authMiddleware ,  (req, res, next) => {
-        console.log(req.param.walletID)
         return getUserTransactions(req.params.walletID, {...req.query}).then((data) => {
             return res.status(200).json(data);
         }).catch(err => next(err));

@@ -18,6 +18,7 @@ const createPubSub = (namespacesIO) => {
             });
         });
     };
+
     return {
         broadcast({data, channel}){
             publish({

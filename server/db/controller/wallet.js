@@ -48,10 +48,7 @@ const createPendingTransaction = (payload) => {
             }
             let poolInstance = new Pool(pendingTransaction);
             return poolInstance.save().then(data => {
-                console.log(data);
                 return data;
-
-
             });
         });
 

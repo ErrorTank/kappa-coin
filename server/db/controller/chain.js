@@ -97,7 +97,10 @@ const rewardMiner = (minderID) => {
   return  Wallet.findOneAndUpdate({owner: ObjectId(minderID)}, {$inc: {balance: Number(process.env.REWARD)}}, {new: true}).lean();
 };
 
-const getBlocks = ({skip, take, keyword, sortKey, sortValue}) => {
+const getBlocks = ({skip, take, keyword, sortKey, sortValue}, getAll = false) => {
+    if(getAll){
+        return Chain.find({}).lean()
+    }
     let querySteps = [];
 
     if (keyword) {
@@ -154,6 +157,10 @@ const getBlockDetail = (blockID) => {
     });
 };
 
+const updateBlockchainDetail = () => {
+  return BlockchainSchema.updateOne()
+};
+
 module.exports = {
     adjustDifficulty,
     getBlockchainOverview,
@@ -164,5 +171,6 @@ module.exports = {
     rewardMiner,
     getBlocks,
     validateChain,
-    getBlockDetail
+    getBlockDetail,
+    updateBlockchainDetail
 };

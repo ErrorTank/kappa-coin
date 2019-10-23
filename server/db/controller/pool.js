@@ -8,7 +8,10 @@ const omit = require("lodash/omit");
 const pick = require("lodash/pick");
 const {isValidTransaction} = require("../../utils/transaction-utils");
 
-const getPendingTransaction = ({skip, take, keyword, sortKey, sortValue}) => {
+const getPendingTransaction = ({skip, take, keyword, sortKey, sortValue}, getAll = false) => {
+    if(getAll){
+        return Pool.find({}).lean()
+    }
     let querySteps = [];
 
     if (keyword) {

@@ -9,6 +9,7 @@ const app = configExpressServer({useCors: true});
 const {initDb} = require("./config/db");
 const createPubSub = require("./config/pubsub");
 const {createNamespaceIO} = require("./config/socket/socket-io");
+const {updateBlockchainDetail} = require("./db/controller/chain");
 
 initDb().then(db => {
 
@@ -33,12 +34,23 @@ initDb().then(db => {
     const namespacesIO = createNamespaceIO(server, {db});
     const pubsub = createPubSub(namespacesIO);
     const syncBlockchainData = () => {
-        request({ url: `${ROOT_NODE_ADDRESS}/api/blocks` }, (error, response, body) => {
-            if (!error && response.statusCode === 200) {
-                const rootChain = JSON.parse(body);
 
-                console.log('replace chain on a sync with', rootChain);
-                blockchain.replaceChain(rootChain);
+        request({ url: `${process.env.APP_URI}api/chain/overview` }, (error, response, body) => {
+            if (!error && response.statusCode === 200) {
+                console.log('update latest blockchain info', JSON.parse(body));
+
+            }
+        });
+        request({ url: `${process.env.APP_URI}api/all-blocks` }, (error, response, body) => {
+            if (!error && response.statusCode === 200) {
+                console.log('update latest chain info', JSON.parse(body));
+
+            }
+        });
+        request({ url: `${process.env.APP_URI}api/transactions/pending/all` }, (error, response, body) => {
+            if (!error && response.statusCode === 200) {
+                console.log('update latest pool info', JSON.parse(body));
+
             }
         });
     };
@@ -46,8 +58,9 @@ initDb().then(db => {
     app.use(require("./utils/error/error-handlers"));
 
     server.listen(Port, () => {
-        if(!process.env.IS_DEFAULT){
+        if(process.env.IS_DEFAULT !== "true"){
 
+            syncBlockchainData();
         }
         console.log(`Server running on port: ${Port}`)
     });
