@@ -4,6 +4,7 @@ const routerConfig = require("./config/routes");
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
+const request = require("request");
 const app = configExpressServer({useCors: true});
 const {initDb} = require("./config/db");
 const createPubSub = require("./config/pubsub");
@@ -32,7 +33,14 @@ initDb().then(db => {
     const namespacesIO = createNamespaceIO(server, {db});
     const pubsub = createPubSub(namespacesIO);
     const syncBlockchainData = () => {
+        request({ url: `${ROOT_NODE_ADDRESS}/api/blocks` }, (error, response, body) => {
+            if (!error && response.statusCode === 200) {
+                const rootChain = JSON.parse(body);
 
+                console.log('replace chain on a sync with', rootChain);
+                blockchain.replaceChain(rootChain);
+            }
+        });
     };
     app.use("/", routerConfig(db, namespacesIO));
     app.use(require("./utils/error/error-handlers"));
