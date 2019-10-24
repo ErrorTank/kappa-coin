@@ -30,8 +30,11 @@ export const authenCache = (() => {
         } else {
           userApi.getInfo().then(({user, wallet}) => {
 
-            if (!user)
+            if (!user){
+
               reject();
+            }
+
             else {
               let walletSocket = appInstances.setInstance("walletSocket", io( document.location.origin + "/pending-transaction"));
 
@@ -54,7 +57,10 @@ export const authenCache = (() => {
 
             }
 
-          }).catch(err => reject());
+          }).catch(err => {
+
+            reject()
+          });
 
         }
       });

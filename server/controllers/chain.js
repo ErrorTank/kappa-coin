@@ -11,7 +11,7 @@ const authMiddleware = authorization(getPublicKey(), {expiresIn: "1 day", algori
 
 module.exports = (db, namespacesIO) => {
     router.get("/chain/overview", (req, res, next) => {
-        console.log("dasdas")
+        console.log("hehehe")
         return getBlockchainOverview().then((data) => {
             return res.status(200).json(data);
         }).catch(err => next(err));

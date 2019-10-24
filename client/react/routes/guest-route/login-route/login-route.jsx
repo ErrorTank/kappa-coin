@@ -14,6 +14,7 @@ import {appInstances} from "../../../../common/instance";
 import io from "socket.io-client";
 
 export default class LoginRoute extends KComponent {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -73,7 +74,7 @@ export default class LoginRoute extends KComponent {
 
     render() {
         const canLogin = !this.form.getInvalidPaths().length && !this.state.error && !this.state.loading;
-
+        console.log("cc")
         return (
             <PageTitle
                 title={"Login"}

@@ -10,7 +10,7 @@ const {createAuthToken} = require("../../authorization/auth");
 const {getPrivateKey, getPublicKey} = require("../../authorization/keys/keys");
 
 const regularLogin = ({email, password}) => {
-
+    console.log(email)
     return User.findOne({email}).lean()
         .then(data => {
             if (!data) {

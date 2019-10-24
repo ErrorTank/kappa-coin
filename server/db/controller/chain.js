@@ -11,6 +11,8 @@ const {isChainValid} = require("../../utils/chain-utils");
 
 const getBlockchainOverview = () => {
     return Promise.all([BlockchainSchema.findById(process.env.BLOCKCHAIN_ID).lean(), getRecentBlock(), Pool.countDocuments({})]).then(([data, latestBlock, count]) => {
+
+        console.log(data);
         return {
             ...data,
             latestBlock,
@@ -157,8 +159,8 @@ const getBlockDetail = (blockID) => {
     });
 };
 
-const updateBlockchainDetail = () => {
-  return BlockchainSchema.updateOne()
+const updateBlockchainDetail = ({_id, ...data}) => {
+  return BlockchainSchema.findOneAndUpdate({_id: ObjectId(_id)}, data)
 };
 
 module.exports = {

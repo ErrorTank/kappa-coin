@@ -18,6 +18,7 @@ export class GuestRoute extends KComponent {
 
   render() {
     let {render, component: Component, ...rest} = this.props;
+
     return (
       <Route
         {...rest}
@@ -39,6 +40,7 @@ export const AuthenRoute = ({component: Component, excludeRoles = null, ...rest}
   let getComp = (props) => {
     let info = userInfo.getState();
     if (!authenCache.getAuthen()) {
+
       return (
         <Redirect to={{pathname: "/"}}/>
       )

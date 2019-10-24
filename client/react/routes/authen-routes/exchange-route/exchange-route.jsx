@@ -30,6 +30,7 @@ export default class ExchangeRoute extends KComponent {
 
     render() {
         let {loading, wallet, } = this.state;
+        console.log(wallet)
         return (
             <PageTitle
                 title={"Exchange Cryptocurrency"}

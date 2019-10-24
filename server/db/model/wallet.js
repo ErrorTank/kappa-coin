@@ -1,4 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const {appDb} = require("../../config/db");
+const db = appDb();
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Schema.Types.ObjectId;
 const {ec} = require("../../utils/crypto-utils");
@@ -43,6 +45,6 @@ walletSchema.pre("save", function (next) {
     next();
 });
 
-const Wallet = mongoose.model("Wallet", walletSchema);
+const Wallet = db.model("Wallet", walletSchema);
 
 module.exports = Wallet;

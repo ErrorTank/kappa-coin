@@ -106,10 +106,14 @@ export class Navbar extends React.Component {
                         </div>
                         <div className="navs">
                             {this.navs.map((each) => {
+
                                 return (
                                     <Dropdown
                                         className={classnames("each-nav", {active: !each.cannotActive ? each.url ? each.url === customHistory.location.pathname : each.dropdownItems.map(i => i.url).includes(customHistory.location.pathname) : false})}
-                                        onClick={() => (each.url && (each.dropdownCond ? !each.dropdownCond() : true)) && customHistory.push(each.url)}
+                                        onClick={() => {
+
+                                            if(each.url && (each.dropdownCond ? !each.dropdownCond() : true)) customHistory.push(each.url)
+                                        }}
                                         key={each.url || JSON.stringify(each.dropdownItems)}
                                         content={(
                                             <>

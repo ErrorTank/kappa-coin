@@ -2,71 +2,71 @@ const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const {createBlock} = require("../db/model/block")
 
-const configs = [
-    {
-        url: process.env.DB_HOST + "ecommerce",
-        load: () => {
+const appDbUrl = process.env.LOCAL_HOST + "app";
+let resolve1 = null;
+let resolve2 = null;
+let promise1 = (() => new Promise((resolve) => {
+    resolve1 = resolve;
+}))();
+let promise2 = (() => new Promise((resolve) => {
+    resolve2 = resolve;
+}))();
+let appDb = mongoose.createConnection(appDbUrl, {useNewUrlParser: true, useCreateIndex: true}, () => {
 
-            let User = require("../db/model/user");
-            let Wallet = require("../db/model/wallet");
-            // new User({
-            //     email: "cc@gmail.com",
-            //     fullname: "Kappa Clone 3",
-            //     password: "123123qwe",
-            //     createdAt: Date.now(),
-            //     updatedAt: Date.now()
-            // }).save();
-            // new Wallet({
-            //
-            //     balance: 100,
-            //     owner: "5d9edb84a9a8332b18b1fa20",
-            //
-            // }).save();
-            console.log('\x1b[36m%s\x1b[32m', "Load all central instances successfully!");
-        }
-    }, {
-        url: process.env.IS_DEFAULT ? process.env.LOCAL_HOST + "user1" : process.env.LOCAL_HOST + "user2",
-        load: () => {
-
-            let Chain = require("../db/model/chain");
-            let Blockchain = require("../db/model/blockchain-info");
-            require("../db/model/pool");
-
-            //
-            // let genesisBlock = createBlock({
-            //
-            // });
-            // new Chain(genesisBlock.getData()).save();
-            // new Blockchain({
-            //     difficulty: process.env.INIT_DIFFICULTY,
-            //     name: process.env.BLOCKCHAIN_NAME,
-            //     reward: process.env.REWARD
-            // }).save();
+    console.log('\x1b[36m%s\x1b[32m', "Load all central instances successfully!");
+    console.log('\x1b[36m%s\x1b[32m', "Connect to mongoDB successfully!", appDbUrl);
+    resolve1();
+});
 
 
-            console.log('\x1b[36m%s\x1b[32m', "Load all decentral instances successfully!");
-        }
-    },
-];
+const userDbUrl = process.env.IS_DEFAULT ? process.env.LOCAL_HOST + "user1" : process.env.LOCAL_HOST + "user2";
+let userDb =  mongoose.createConnection(userDbUrl, {useNewUrlParser: true, useCreateIndex: true}, () => {
 
 
-const initDb = () => {
-    let status = [];
+    console.log('\x1b[36m%s\x1b[32m', "Load all decentral instances successfully!");
+    console.log('\x1b[36m%s\x1b[32m', "Connect to mongoDB successfully!", userDbUrl);
+    resolve2()
+});
 
-    for (let dbConfig of configs) {
-        status.push(mongoose.connect(dbConfig.url, {useNewUrlParser: true, useCreateIndex: true})
-            .then(() => {
-                dbConfig.load();
-                console.log('\x1b[36m%s\x1b[32m', "Connect to mongoDB successfully!", dbConfig.url);
-                return Promise.resolve();
-            }).catch(err => {
-                    console.log("Cannot connect to mongoDB: \n" + dbConfig.url, err);
-                    return Promise.reject();
-                }
-            ))
-    }
-    return Promise.all(status)
+module.exports = {
+    init: () => Promise.all([
+        promise1,
+        promise2
+    ]).then(() => {
 
-};
+        let User = require("../db/model/user");
+        let Wallet = require("../db/model/wallet");
+        // new User({
+        //     email: "kappa@gmail.com",
+        //     fullname: "Kappa Clone 2",
+        //     password: "123123qwe",
+        //     createdAt: Date.now(),
+        //     updatedAt: Date.now()
+        // }).save();
+        // new Wallet({
+        //
+        //     balance: 100,
+        //     owner: "5db10e7341698d1134719a5c",
+        //
+        // }).save();
+        let Chain = require("../db/model/chain");
+        let Blockchain = require("../db/model/blockchain-info");
+        require("../db/model/pool");
 
-module.exports = {initDb};
+        //
+        // let genesisBlock = createBlock({
+        //
+        // });
+        // new Chain(genesisBlock.getData()).save();
+        // new Blockchain({
+        //     difficulty: process.env.INIT_DIFFICULTY,
+        //     name: process.env.BLOCKCHAIN_NAME,
+        //     reward: process.env.REWARD,
+        //     _id: ObjectId("5db129b8b0a1450750b108d3")
+        // }).save();
+        return;
+    }),
+    appDb: () => appDb,
+    userDb: () => userDb
+}
+

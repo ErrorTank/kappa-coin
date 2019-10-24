@@ -132,11 +132,10 @@ const getUserTransactions = (walletID, {skip, take, keyword, sortKey, sortValue}
         Pool.aggregate(querySteps),
         Chain.aggregate(querySteps2)
     ]).then(([data1, data2]) => {
-
         let returnedList = data1[0].list;
         let returnedTotal = data1[0].list.length ? data1[0].count[0].total : 0;
         returnedList = returnedList.concat(data2[0].list.map((each) => each.data));
-        returnedTotal = returnedTotal + data2[0].list.length ? data2[0].count[0].total : 0;
+        returnedTotal = returnedTotal + (data2[0].list.length ? data2[0].count[0].total : 0);
         return {
             list: slice(reverse(sortBy(returnedList, each => new Date(each.updatedAt).getTime())), Number(skip), Number(skip + take)),
             total: returnedTotal

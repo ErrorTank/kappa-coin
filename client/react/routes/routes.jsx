@@ -26,6 +26,7 @@ export class MainRoute extends React.Component {
     };
 
     render() {
+        console.log("Cac")
         return (
             <div id="main-route">
                 <ModalsRegistry/>
@@ -35,7 +36,7 @@ export class MainRoute extends React.Component {
                     <Suspense fallback={<OverlayLoading/>}>
                         <Switch>
                             <WithLocationRoute exact path="/" render={props => (<HomeRoute {...props}/>)}/>
-                            <GuestRoute exact path="/login" component={LoginRoute}/>
+                            <GuestRoute exact path="/login" render={props => <LoginRoute {...props}/>}/>
                             <AuthenRoute exact path="/my-transactions" component={MyTransactions}/>
                             <AuthenRoute exact path="/profile" component={ProfileRoute}/>
                             <AuthenRoute exact path="/exchange" component={ExchangeRoute}/>
