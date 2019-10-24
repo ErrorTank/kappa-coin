@@ -11,6 +11,9 @@ let promise1 = (() => new Promise((resolve) => {
 let promise2 = (() => new Promise((resolve) => {
     resolve2 = resolve;
 }))();
+
+
+
 let appDb = mongoose.createConnection(appDbUrl, {useNewUrlParser: true, useCreateIndex: true}, () => {
 
     console.log('\x1b[36m%s\x1b[32m', "Load all central instances successfully!");
@@ -28,45 +31,47 @@ let userDb =  mongoose.createConnection(userDbUrl, {useNewUrlParser: true, useCr
     resolve2()
 });
 
+
 module.exports = {
-    init: () => Promise.all([
-        promise1,
-        promise2
-    ]).then(() => {
+    init: () => {
+        return Promise.all([
+            promise1,
+            promise2
+        ]).then(() => {
+            require("../db/model/user")(appDb);
+            require("../db/model/wallet")(appDb);
+            // new User({
+            //     email: "ncq998@gmail.com",
+            //     fullname: "Kappa Clone 3",
+            //     password: "123123qwe",
+            //     createdAt: Date.now(),
+            //     updatedAt: Date.now()
+            // }).save();
+            // new Wallet({
+            //
+            //     balance: 100,
+            //     owner: "5db13e19fb547a354c508e9f",
+            //
+            // }).save();
+            require("../db/model/chain")(userDb);
+            require("../db/model/blockchain-info")(userDb);
+            require("../db/model/pool")(userDb);
 
-        let User = require("../db/model/user");
-        let Wallet = require("../db/model/wallet");
-        // new User({
-        //     email: "ncq998@gmail.com",
-        //     fullname: "Kappa Clone 3",
-        //     password: "123123qwe",
-        //     createdAt: Date.now(),
-        //     updatedAt: Date.now()
-        // }).save();
-        // new Wallet({
-        //
-        //     balance: 100,
-        //     owner: "5db13e19fb547a354c508e9f",
-        //
-        // }).save();
-        let Chain = require("../db/model/chain");
-        let Blockchain = require("../db/model/blockchain-info");
-        require("../db/model/pool");
-
-        //
-        // let genesisBlock = createBlock({
-        //
-        // });
-        // new Chain(genesisBlock.getData()).save();
-        // new Blockchain({
-        //     difficulty: process.env.INIT_DIFFICULTY,
-        //     name: process.env.BLOCKCHAIN_NAME,
-        //     reward: process.env.REWARD,
-        //     _id: ObjectId(process.env.BLOCKCHAIN_ID)
-        // }).save();
-        return;
-    }),
-    appDb: () => appDb,
-    userDb: () => userDb
-}
+            //
+            // let genesisBlock = createBlock({
+            //
+            // });
+            // new Chain(genesisBlock.getData()).save();
+            // new Blockchain({
+            //     difficulty: process.env.INIT_DIFFICULTY,
+            //     name: process.env.BLOCKCHAIN_NAME,
+            //     reward: process.env.REWARD,
+            //     _id: ObjectId(process.env.BLOCKCHAIN_ID)
+            // }).save();
+            return null;
+        });
+    },
+    appDb,
+    userDb
+};
 

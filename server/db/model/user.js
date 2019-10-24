@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const {appDb} = require("../../config/db");
-const db = appDb();
 
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Schema.Types.ObjectId;
@@ -26,6 +24,6 @@ const userSchema = new Schema({
 });
 
 
-const User = db.model("User", userSchema);
 
-module.exports = User;
+
+module.exports = (appDb) => appDb.model("User", userSchema);

@@ -1,7 +1,8 @@
-const BlockchainSchema = require("../model/blockchain-info");
-const Chain = require("../model/chain");
-const Wallet = require("../model/wallet");
-const Pool = require("../model/pool");
+const BlockchainSchema = require("../model/blockchain-info")(require("../../config/db").userDb);
+const Chain = require("../model/chain")(require("../../config/db").userDb);
+const Wallet = require("../model/wallet")(require("../../config/db").appDb);
+const User = require("../model/user")(require("../../config/db").appDb);
+const Pool = require("../model/pool")(require("../../config/db").userDb);
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const {ApplicationError} = require("../../utils/error/error-types");
@@ -120,21 +121,7 @@ const getBlocks = ({skip, take, keyword, sortKey, sortValue}, getAll = false) =>
         })
     }
     querySteps = querySteps.concat([
-        {
-            $lookup: {
-                from: "users",
-                localField: "minedBy",
-                foreignField: "_id",
-                as: "minedBy"
-            }
-        },
-        {
-            $addFields: {
-                "minedBy": {
-                    $arrayElemAt: ["$minedBy", 0]
-                }
-            }
-        },
+
         {$sort: {"timestamp": -1}}, {
             $facet: {
                 list: [{$skip: Number(skip)}, {$limit: Number(take)}],
@@ -144,22 +131,28 @@ const getBlocks = ({skip, take, keyword, sortKey, sortValue}, getAll = false) =>
     ]);
 
     return Chain.aggregate(querySteps).then(data => {
+        const promises = data[0].list.map(each => User.findById(each.minedBy).lean());
+        return Promise.all(promises).then((users) => {
+            return {
+                list: data[0].list.map((each, i) => ({...each, minedBy: users[i]})),
+                total: data[0].list.length ? data[0].count[0].total : 0
+            }
+        });
 
-        return {
-            list: data[0].list,
-            total: data[0].list.length ? data[0].count[0].total : 0
-        }
     })
 
 };
 
 const getBlockDetail = (blockID) => {
-    return Chain.findOne({hash: blockID}).populate("minedBy").lean().then((data) => {
+    return Chain.findOne({hash: blockID}).populate("minedBy", "", User).lean()
+
+        .then((data) => {
 
         return data.minedBy ? Wallet.findOne({owner: ObjectId(data.minedBy._id)}).lean().then((wallet) => {
             return {...data, minedBy: {...data.minedBy, wallet}}
         }) : data;
     });
+
 };
 
 const updateBlockchainDetail = ({_id, ...data}) => {
