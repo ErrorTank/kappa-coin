@@ -9,10 +9,11 @@ const {createBlock} = require("../db/model/block");
 
 const authMiddleware = authorization(getPublicKey(), {expiresIn: "1 day", algorithm: ["RS256"]});
 
-module.exports = (db, namespacesIO) => {
+module.exports = (db, namespacesIO, pubsub) => {
     router.get("/chain/overview", (req, res, next) => {
-        console.log("hehehe")
+
         return getBlockchainOverview().then((data) => {
+            // console.log(data)
             return res.status(200).json(data);
         }).catch(err => next(err));
     });
@@ -25,6 +26,13 @@ module.exports = (db, namespacesIO) => {
         return getBlocks({...req.query}, true).then((data) => {
             return res.status(200).json(data);
         }).catch(err => next(err));
+    });
+    router.post("/block/found", (req, res, next) => {
+        pubsub.broadcast({
+            data: req.body,
+            channel: "BLOCK_FOUND"
+        });
+        return res.status(200).json();
     });
     router.post("/chain/new-block", authMiddleware ,async (req, res, next) => {
         let {txns: oldTxns, nonce, counter, minedBy, difficulty} = req.body;
@@ -73,11 +81,15 @@ module.exports = (db, namespacesIO) => {
                 return rewardMiner(minedBy).then((wallet) => {
                     namespacesIO.poolTracker.to(req.query.socketID).emit("update-wallet", wallet);
                     namespacesIO.poolTracker.emit("update-wallet-individuals", data.associates);
+                    pubsub.broadcast({data: data.associates, channel: "MY_WALLET"})
                     getPendingTransaction({skip: 0, take: 5}).then((data) => namespacesIO.poolTracker.emit("new-pool", data));
+                    getPendingTransaction({skip: 0, take: 5}, true).then((data) => pubsub.broadcast({data, channel: "TRANSACTION"}));
                     namespacesIO.poolTracker.emit("new-my-transactions", {
                         txnsInputAddress: txns.map(each => each.input.address),
                     });
+                    pubsub.broadcast({data: txns.map(each => each.input.address), channel: "MY_TRANSACTIONS"})
                     getBlocks({skip: 0, take: 5}).then((data) => namespacesIO.chainTracker.emit("new-chain", data));
+                    getBlocks({skip: 0, take: 5}, true).then((data) => pubsub.broadcast({data, channel: "BLOCKCHAIN"}));
                     return data;
                 })
             })
@@ -86,6 +98,10 @@ module.exports = (db, namespacesIO) => {
                     ...data.blockchain,
                     latestBlock: {...data.block}
                 });
+                pubsub.broadcast({data: {
+                        ...data.blockchain,
+                        latestBlock: {...data.block}
+                    }, channel: "BLOCKCHAIN_INFO"});
                 // namespacesIO.chainTracker.emit("new-chain-info", {
                 //     ...data.blockchain,
                 //     latestBlock: {...data.block}

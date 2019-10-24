@@ -37,8 +37,8 @@ module.exports = {
         let User = require("../db/model/user");
         let Wallet = require("../db/model/wallet");
         // new User({
-        //     email: "kappa@gmail.com",
-        //     fullname: "Kappa Clone 2",
+        //     email: "ncq998@gmail.com",
+        //     fullname: "Kappa Clone 3",
         //     password: "123123qwe",
         //     createdAt: Date.now(),
         //     updatedAt: Date.now()
@@ -46,7 +46,7 @@ module.exports = {
         // new Wallet({
         //
         //     balance: 100,
-        //     owner: "5db10e7341698d1134719a5c",
+        //     owner: "5db13e19fb547a354c508e9f",
         //
         // }).save();
         let Chain = require("../db/model/chain");
@@ -62,7 +62,7 @@ module.exports = {
         //     difficulty: process.env.INIT_DIFFICULTY,
         //     name: process.env.BLOCKCHAIN_NAME,
         //     reward: process.env.REWARD,
-        //     _id: ObjectId("5db129b8b0a1450750b108d3")
+        //     _id: ObjectId(process.env.BLOCKCHAIN_ID)
         // }).save();
         return;
     }),

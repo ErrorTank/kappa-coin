@@ -53,7 +53,10 @@ const calculateAssociateWalletsBalance = async (txns) => {
         let senderLost = 0 - receiverAddresses.reduce((total, cur) => total + Number(txn.outputMap[cur]), 0);
 
         let tasks = [
-            Wallet.findOneAndUpdate({address}, {$inc: {balance: senderLost}, $set: {pendingSpent: 0}}, {new: true}).lean(),
+            Wallet.findOneAndUpdate({address}, {
+                $inc: {balance: senderLost},
+                $set: {pendingSpent: 0}
+            }, {new: true}).lean(),
             ...receiverAddresses.map(add => {
                 let receiveAmount = txn.outputMap[add];
 
@@ -96,11 +99,11 @@ const adjustDifficulty2 = (prevTimestamp, newTimestamp, currentDifficulty) => {
 };
 
 const rewardMiner = (minderID) => {
-  return  Wallet.findOneAndUpdate({owner: ObjectId(minderID)}, {$inc: {balance: Number(process.env.REWARD)}}, {new: true}).lean();
+    return Wallet.findOneAndUpdate({owner: ObjectId(minderID)}, {$inc: {balance: Number(process.env.REWARD)}}, {new: true}).lean();
 };
 
 const getBlocks = ({skip, take, keyword, sortKey, sortValue}, getAll = false) => {
-    if(getAll){
+    if (getAll) {
         return Chain.find({}).lean()
     }
     let querySteps = [];
@@ -160,7 +163,13 @@ const getBlockDetail = (blockID) => {
 };
 
 const updateBlockchainDetail = ({_id, ...data}) => {
-  return BlockchainSchema.findOneAndUpdate({_id: ObjectId(_id)}, data)
+    return BlockchainSchema.findOneAndUpdate({_id: ObjectId(_id)}, data, {new: true}).then((c) => console.log(c))
+};
+
+const replaceChain = (newChain) => {
+    return Chain.deleteMany({}).then(() =>{
+        return Chain.insertMany(newChain)
+    })
 };
 
 module.exports = {
@@ -174,5 +183,6 @@ module.exports = {
     getBlocks,
     validateChain,
     getBlockDetail,
-    updateBlockchainDetail
+    updateBlockchainDetail,
+    replaceChain
 };

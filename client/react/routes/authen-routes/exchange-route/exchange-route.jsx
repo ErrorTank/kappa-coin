@@ -19,8 +19,6 @@ export default class ExchangeRoute extends KComponent {
         };
 
         this.onUnmount(walletInfo.onChange((newState, oldState) => {
-
-
             this.setState({wallet: newState});
 
 

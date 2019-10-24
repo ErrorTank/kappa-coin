@@ -31,7 +31,7 @@ const getPendingTransaction = ({skip, take, keyword, sortKey, sortValue}, getAll
         })
     }
     querySteps = querySteps.concat([
-        {$sort: {"input.timestamp": -1}},
+        {$sort: {"updatedAt": -1}},
         {
             $facet: {
                 list: [{$skip: Number(skip)}, {$limit: Number(take)}],
@@ -66,10 +66,17 @@ const getTransaction = txnID => {
         .then(data1 => data1 ? returnedData({data: data1}) : Chain.findOne({"data.hash": txnID}).lean().then((data2) => data2 ? returnedData({...data2, data: data2.data.find(each => each.hash === txnID)}) : null))
 };
 
+const replacePool = (pool) => {
+    return Pool.deleteMany({}).then(() =>{
+        return Pool.insertMany(pool)
+    })
+};
+
 module.exports = {
     getPendingTransaction,
     getValidTransactions,
     removeTxns,
-    getTransaction
+    getTransaction,
+    replacePool
 
 };

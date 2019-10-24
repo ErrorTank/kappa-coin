@@ -9,7 +9,7 @@ const sortBy = require("lodash/sortBy");
 const reverse = require("lodash/reverse");
 const pick = require("lodash/pick");
 const slice = require("lodash/slice");
-const {createTransaction} = require("../model/transaction");
+
 const {calculatePendingTransaction} = require("../../utils/crypto-utils");
 
 
@@ -35,8 +35,8 @@ const updateWallet = (address, update) => {
 }
 
 
-const createPendingTransaction = (payload) => {
-    let pendingTransaction = createTransaction(payload).getData();
+const createPendingTransaction = (pendingTransaction) => {
+
     return Pool.findOne({"input.address": pendingTransaction.input.address}).lean()
         .then(data => {
             if (data) {

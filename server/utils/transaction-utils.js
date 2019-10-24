@@ -5,6 +5,7 @@ const isValidTransaction = (transaction) => {
     let {signature, address, timestamp} = input;
     console.log(hash)
     console.log(cryptoHash(new Date(timestamp).getTime() + description + address))
+    console.log(signature)
     console.log(verifySignature(address, signature, hash))
     return cryptoHash(new Date(timestamp).getTime() + description + address) === hash && verifySignature(address, signature, hash)
 };

@@ -29,5 +29,8 @@ export const chainApi = {
 
     getBlockDetails(blockID){
         return offlineApi.get(`/block/${blockID}/details`)
+    },
+    newBlockFound(data){
+        return authenApi.post(`/block/found`, data)
     }
 };
