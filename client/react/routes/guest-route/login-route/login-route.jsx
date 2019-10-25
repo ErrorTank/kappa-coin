@@ -74,13 +74,13 @@ export default class LoginRoute extends KComponent {
 
     render() {
         const canLogin = !this.form.getInvalidPaths().length && !this.state.error && !this.state.loading;
-        console.log("cc")
+
         return (
             <PageTitle
                 title={"Login"}
             >
                 <MainLayout>
-                    <div className="login-route">
+                    <div className="register-route">
                         <div className="container">
                             <div className="login-wrapper">
                                 <p className="login-title-1">
@@ -139,6 +139,11 @@ export default class LoginRoute extends KComponent {
                                             />
                                         )}
                                     </button>
+                                    <p className="suggest"
+                                       onClick={() => customHistory.push("/sign-up")}
+                                    >
+                                        Don't have an account?<span className="link"> Click to Sign Up</span>
+                                    </p>
                                 </div>
                             </div>
                         </div>

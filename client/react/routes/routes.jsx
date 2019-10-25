@@ -16,6 +16,7 @@ const MiningRoute = lazy(delayLoad(() => import("./authen-routes/mining-route/mi
 const ProfileRoute = lazy(delayLoad(() => import("./authen-routes/profile-route/profile-route")));
 const HomeRoute = lazy(delayLoad(() => import("./common-route/home-route/home-route")));
 const LoginRoute = lazy(delayLoad(() => import("./guest-route/login-route/login-route")));
+const SignupRoute = lazy(delayLoad(() => import("./guest-route/sign-up-route/sign-up-route.jsx")));
 const ExchangeRoute = lazy(delayLoad(() => import("./authen-routes/exchange-route/exchange-route")));
 const PoolRoute = lazy(delayLoad(() => import("./common-route/pool-route/pool-route")));
 const BlocksRoute = lazy(delayLoad(() => import("./common-route/blocks-route/blocks-route")));
@@ -37,6 +38,7 @@ export class MainRoute extends React.Component {
                         <Switch>
                             <WithLocationRoute exact path="/" render={props => (<HomeRoute {...props}/>)}/>
                             <GuestRoute exact path="/login" render={props => <LoginRoute {...props}/>}/>
+                            <GuestRoute exact path="/sign-up" render={props => <SignupRoute {...props}/>}/>
                             <AuthenRoute exact path="/my-transactions" component={MyTransactions}/>
                             <AuthenRoute exact path="/profile" component={ProfileRoute}/>
                             <AuthenRoute exact path="/exchange" component={ExchangeRoute}/>
