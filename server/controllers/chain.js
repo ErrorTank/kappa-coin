@@ -6,6 +6,7 @@ const {getBlockchainOverview, addNewBlock, getRecentBlock, calculateAssociateWal
 const {removeTxns, getPendingTransaction} = require("../db/controller/pool");
 const {getPublicKey, getPrivateKey} = require("../authorization/keys/keys");
 const {createBlock} = require("../db/model/block");
+const omit = require("lodash/omit");
 
 const authMiddleware = authorization(getPublicKey(), {expiresIn: "1 day", algorithm: ["RS256"]});
 
@@ -28,11 +29,14 @@ module.exports = (db, namespacesIO, pubsub) => {
         }).catch(err => next(err));
     });
     router.post("/block/found", (req, res, next) => {
+
         pubsub.broadcast({
             data: req.body,
             channel: "BLOCK_FOUND"
         });
-        return res.status(200).json();
+        return removeTxns(req.body.txns.map(each => each.hash))
+            .then(() => res.status(200).json())
+
     });
     router.post("/chain/new-block", authMiddleware ,async (req, res, next) => {
         let {txns: oldTxns, nonce, counter, minedBy, difficulty} = req.body;
@@ -55,8 +59,8 @@ module.exports = (db, namespacesIO, pubsub) => {
         // [addNewBlock(newBlock), removeTxns(txns.map(each => each.hash))]
         return addNewBlock(newBlock)
             .then(block => {
-                return removeTxns(txns.map(each => each.hash))
-                    .then(() => ({block}))
+                return {block};
+
             })
             //04ee: 100; 0400: 100; 045c: 100
             //04ee 10 -> 0400
