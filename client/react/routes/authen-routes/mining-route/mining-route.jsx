@@ -210,15 +210,16 @@ export default class MiningRoute extends React.Component {
         return
     };
 
-    foundBlockEmit = () => new Promise((resolve, reject) => {
+
+    foundBlockEmit = () =>  {
         let data = this.getNewMinedBlock();
-        const promise = () => new Promise(resolve2 => {
-            return this.socket.emit("new-block-found", data, () => resolve2());
+        const promise = () => new Promise(resolve => {
+            return this.socket.emit("new-block-found", data, () => resolve());
         });
-        return Promise.all([promise(), chainApi.newBlockFound(data)]);
+        return Promise.all([promise(), chainApi.newBlockFound(data)]).catch(err => console.log(err));
 
 
-    });
+    };
 
     steps = [
         {

@@ -29,11 +29,11 @@ module.exports = (db, namespacesIO, pubsub) => {
         }).catch(err => next(err));
     });
     router.post("/block/found", (req, res, next) => {
-
         pubsub.broadcast({
             data: req.body,
             channel: "BLOCK_FOUND"
         });
+
         return removeTxns(req.body.txns.map(each => each.hash))
             .then(() => res.status(200).json())
 
