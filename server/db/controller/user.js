@@ -144,7 +144,7 @@ const signup = ({email, password, fullname}) => {
             const newUser = new User({email, password, fullname, createdAt: Date.now(), updatedAt: Date.now()});
             return newUser.save().then(user => {
                 let realUser = user.toObject();
-                const newWallet = new Wallet({balance: 100, owner: realUser._id});
+                const newWallet = new Wallet({balance: 100, owner: realUser._id, createdAt: Date.now(), updatedAt: Date.now()});
                 return newWallet.save().then(wallet => ({
                     wallet: wallet.toObject(),
                     user: omit(realUser, "password")

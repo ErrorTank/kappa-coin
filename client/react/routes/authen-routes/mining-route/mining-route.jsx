@@ -129,6 +129,14 @@ export default class MiningRoute extends React.Component {
     }
 
     startMiningProcess = async () => {
+        this.setState({step: this.steps[8]});
+        await wait(2000);
+        let result = await chainApi.validateChain();
+        if(!result.valid){
+
+            this.setState({step: this.steps[9]});
+            return ;
+        }
         this.setState({step: this.steps[1]});
         let txns = await transactionApi.getValidTransactions() || [];
         this.setState({txns});
@@ -303,6 +311,29 @@ export default class MiningRoute extends React.Component {
                     </button>
                 </div>
             )
+        },{
+            key: "preparing4",
+            uiTitle: "Validating",
+            mineRender: () => (
+                <div className="mine-loading">
+                    <i className="fas fa-sync-alt spin-icon spin"></i>
+                    <p className="sub">Validate current blockchain</p>
+                </div>
+            )
+        },{
+            key: "fail2",
+            uiTitle: "Failed!",
+            mineRender: () => (
+                <div className="mine-loading">
+                    <i className="fas fa-times-circle"></i>
+                    <p className="sub">Current blockchain is invalid</p>
+                    <button className="btn"
+                            onClick={() => this.setState({...this.initState})}
+                    >
+                        Try again
+                    </button>
+                </div>
+            )
         },
     ];
 
@@ -341,16 +372,16 @@ export default class MiningRoute extends React.Component {
                                                 <div className="info">
                                                     <p className="label">Nonce</p>
                                                     <p className="value">
-                                                        {key === "pending" ? "Not mined yet" : ["preparing1", "preparing3"].includes(key) ? "Loading..." : nonce}
+                                                        {key === "pending" ? "Not mined yet" : ["preparing1", "preparing3", "preparing4"].includes(key) ? "Loading..." : nonce}
                                                     </p>
                                                 </div>
                                                 <div className="info hash-info">
                                                     <p className="label">Hash</p>
-                                                    <p className="value">{key === "pending" ? "Not mined yet" : ["preparing1", "preparing3"].includes(key) ? "Loading..." : hash}</p>
+                                                    <p className="value">{key === "pending" ? "Not mined yet" : ["preparing1", "preparing3", "preparing4"].includes(key) ? "Loading..." : hash}</p>
                                                 </div>
                                                 <div className="info">
                                                     <p className="label">Timestamp</p>
-                                                    <p className="value">{key === "pending" ? "Not mined yet" : ["preparing1", "preparing3"].includes(key) ? "Loading..." : timestamp}</p>
+                                                    <p className="value">{key === "pending" ? "Not mined yet" : ["preparing1", "preparing3", "preparing4"].includes(key) ? "Loading..." : timestamp}</p>
                                                 </div>
                                             </div>
                                             <div className="panel mine-ui col-4">
@@ -370,7 +401,7 @@ export default class MiningRoute extends React.Component {
                                                     {}
                                                     {key === "pending" ? (
                                                         <p className="not-mine">Not mined yet</p>
-                                                    ) : ["preparing1", "preparing3"].includes(key) ? (
+                                                    ) : ["preparing1", "preparing3", "preparing4"].includes(key) ? (
                                                         <LoadingInline/>
                                                     ) : txns.length ? (
                                                         <>

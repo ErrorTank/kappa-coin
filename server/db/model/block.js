@@ -9,6 +9,7 @@ const createBlock = (info) => {
     let timestamp = Date.now();
     hash = hash || calculateBlockHash({data, nonce, difficulty, timestamp});
     let rootHash = calculateMerkelRoot(data.map((each) => each.hash));
+    let createdAt = Date.now()
     return {
         getData: () => ({
             previousHash,
@@ -22,7 +23,8 @@ const createBlock = (info) => {
             timestamp,
             blockNo,
             difficulty,
-            rootHash
+            rootHash,
+            createdAt
         })
     }
 };

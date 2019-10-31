@@ -5,6 +5,8 @@ const createTransaction = (data) => {
     let timestamp = Date.now();
     let hash = cryptoHash(timestamp + description + senderWallet.address);
     let signature = sign(senderWallet.keyPair.privateKey, hash);
+    let updatedAt = Date.now();
+    let createdAt = Date.now();
     return {
         getData: () => ({
             input: {
@@ -19,7 +21,9 @@ const createTransaction = (data) => {
             },
             hash,
             status,
-            description
+            description,
+            updatedAt,
+            createdAt
         })
     }
 };
