@@ -100,7 +100,7 @@ export class InfoEditPanel extends KComponent {
                                 onKeyDown={onEnter}
                                 type={"text"}
                                 label={"Username"}
-                                placeholder={"abc@xyz.com"}
+                                placeholder={"Enter fullname"}
                                 onChange={e => {
 
                                     this.setState({error: false});
@@ -119,7 +119,7 @@ export class InfoEditPanel extends KComponent {
                                         onKeyDown={onEnter}
                                         type={"text"}
                                         label={"Email"}
-                                        placeholder={"abc@xyz.com"}
+                                        placeholder={"Enter email"}
                                         onChange={e => {
 
                                             this.setState({error: false});
@@ -154,7 +154,7 @@ export class InfoEditPanel extends KComponent {
                                     this.setState({error: false});
                                     onChange(e);
                                 }}
-                                label={"Mật khẩu"}
+                                label={"Enter password"}
                                 {...others}
                             />
                         ), true)}

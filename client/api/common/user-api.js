@@ -9,6 +9,10 @@ export const userApi = {
         return offlineApi.post("/login", info);
 
     },
+    signup(info){
+        return offlineApi.post("/sign-up", info);
+
+    },
     getWalletInfo(userID){
         return authenApi.get(`/user/${userID}/wallet`);
     },

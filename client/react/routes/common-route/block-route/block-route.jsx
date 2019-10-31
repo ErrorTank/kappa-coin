@@ -65,6 +65,7 @@ export default class BlockRoute extends KComponent {
 
             )
         }, {
+            condition: data => data.minedBy,
             label: "Merkle hash",
             display: data => (
                 <Copiable
@@ -80,6 +81,7 @@ export default class BlockRoute extends KComponent {
 
             )
         }, {
+            condition: data => data.minedBy,
             label: "Previous hash",
             display: data => (
                 <div className="address">
@@ -102,6 +104,7 @@ export default class BlockRoute extends KComponent {
                 <p>{data.nonce}</p>
             )
         }, {
+            condition: data => data.minedBy,
             label: "Mined by",
             display: data => (
                 <div className="mined-by">
@@ -127,7 +130,7 @@ export default class BlockRoute extends KComponent {
                 return (
                     <div className="data">
                         <p>{data.data.length} found</p>
-                        {data.data.length && (
+                        {!!data.data.length && (
                             <div className="txns">
                                 {data.data.map((each, i) => (
                                     <div className="txn-info" key={each.hash}>

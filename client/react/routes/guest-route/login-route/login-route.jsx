@@ -103,7 +103,7 @@ export default class LoginRoute extends KComponent {
                                             onKeyDown={onEnter}
                                             type={"text"}
                                             label={"Email"}
-                                            placeholder={"abc@xyz.com"}
+                                            placeholder={"Enter email"}
                                             onChange={e => {
 
                                                 this.setState({error: ""});
@@ -124,7 +124,7 @@ export default class LoginRoute extends KComponent {
                                                 this.setState({error: ""});
                                                 onChange(e);
                                             }}
-                                            label={"Mật khẩu"}
+                                            label={"Enter password"}
                                             {...others}
                                         />
                                     ), true)}

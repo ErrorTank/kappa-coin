@@ -10,7 +10,7 @@ const {createAuthToken} = require("../../authorization/auth");
 const {getPrivateKey, getPublicKey} = require("../../authorization/keys/keys");
 
 const regularLogin = ({email, password}) => {
-    console.log(email)
+
     return User.findOne({email}).lean()
         .then(data => {
             if (!data) {
@@ -135,11 +135,39 @@ const getUserWallet = userID => {
     return Wallet.findOne({owner: ObjectId(userID)}).lean();
 };
 
+const signup = ({email, password, fullname}) => {
+    return User.findOne({email}).lean()
+        .then(data => {
+            if (data) {
+                return Promise.reject(new ApplicationError("existed"))
+            }
+            const newUser = new User({email, password, fullname, createdAt: Date.now(), updatedAt: Date.now()});
+            return newUser.save().then(user => {
+                let realUser = user.toObject();
+                const newWallet = new Wallet({balance: 100, owner: realUser._id});
+                return newWallet.save().then(wallet => ({
+                    wallet: wallet.toObject(),
+                    user: omit(realUser, "password")
+                }))
+            }).then(dataObj => {
+                return createAuthToken(pick(dataObj.user, ["_id", "email", "fullname"]), getPrivateKey(), {
+                    expiresIn: "30d",
+                    algorithm: "RS256"
+                }).then(token => ({
+                    token,
+                    ...dataObj
+                }))
+            })
+
+        })
+};
+
 module.exports = {
     regularLogin,
     getAuthUserInfo,
     getDetailUserInfo,
     checkEmailExisted,
     updateUserInfo,
-    getUserWallet
+    getUserWallet,
+    signup
 }

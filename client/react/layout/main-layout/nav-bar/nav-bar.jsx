@@ -27,9 +27,6 @@ export class Navbar extends React.Component {
             label: "Blockchain",
             dropdownItems: [
                 {
-                    label: "View Transactions",
-                    url: "/transactions"
-                }, {
                     label: "View Blocks",
                     url: "/blocks"
                 }, {
