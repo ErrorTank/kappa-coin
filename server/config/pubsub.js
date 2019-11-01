@@ -21,7 +21,10 @@ const createPubSub = (namespacesIO) => {
 
         switch(channel) {
             case CHANNELS.BLOCKCHAIN:
-                replaceChain(parsedMessage).then(() => getBlocks({skip: 0, take: 50}).then((data) => namespacesIO.chainTracker.emit("new-chain", data)));
+                replaceChain(parsedMessage).then(() => {
+                    getBlocks({skip: 0, take: 5}).then((data) => namespacesIO.chainTracker.emit("new-chain", data));
+                    getBlocks({skip: 0, take: 5}).then((data) => namespacesIO.chainTracker.emit("new-chain-overview", data));
+                });
                 break;
             case CHANNELS.BLOCKCHAIN_INFO:
                 updateBlockchainDetail({_id: parsedMessage._id, difficulty: parsedMessage.difficulty, name: parsedMessage.name, reward: parsedMessage.reward}).then(() => namespacesIO.chainTracker.emit("new-chain-info", parsedMessage));
@@ -30,7 +33,10 @@ const createPubSub = (namespacesIO) => {
                 namespacesIO.poolTracker.emit("update-wallet-individuals", parsedMessage);
                 break;
             case CHANNELS.TRANSACTION:
-                replacePool(parsedMessage).then(() => getPendingTransaction({skip: 0, take: 50}).then((data) => namespacesIO.poolTracker.emit("new-pool", data)));
+                replacePool(parsedMessage).then(() => {
+                    getPendingTransaction({skip: 0, take: 5}).then((data) => namespacesIO.poolTracker.emit("new-pool", data));
+                    getPendingTransaction({skip: 0, take: 5}).then((data) => namespacesIO.poolTracker.emit("new-pool-overview", data));
+                });
                 break;
             case CHANNELS.MY_TRANSACTIONS:
                 namespacesIO.poolTracker.emit("new-my-transactions", {
@@ -64,7 +70,6 @@ const createPubSub = (namespacesIO) => {
 
     return {
         broadcast({data, channel}){
-            console.log("lz me")
             publish({
                 channel,
                 message: JSON.stringify(data)

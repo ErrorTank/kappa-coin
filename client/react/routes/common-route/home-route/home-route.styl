@@ -1,0 +1,49 @@
+.home-route {
+  .overview-panel {
+    vertical-align top
+    display inline-block
+
+    &:first-child {
+      width 560px
+      margin-right 25px
+    }
+
+    &:last-child {
+      width calc(100% - 585px)
+    }
+
+    .block-display
+    .txn-display {
+      .inline-text{
+        span{
+          &:first-of-type{
+            font-weight 550
+          }
+          display inline-block
+          vertical-align middle
+        }
+      }
+      cursor pointer
+      padding 12px
+      &:hover{
+        background-color darken(white, 3%)
+      }
+      font-size 14px
+      color #4a4f55
+      .address{
+        max-width 100px
+      }
+      .link-text {
+        color tikiblue
+        overflow hidden
+        text-overflow ellipsis
+
+      }
+
+      .sub {
+        color #77838f !important
+        font-size 13px
+      }
+    }
+  }
+}

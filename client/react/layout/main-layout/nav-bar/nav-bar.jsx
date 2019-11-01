@@ -97,7 +97,7 @@ export class Navbar extends React.Component {
             <div className="nav-bar">
                 <div className="container">
                     <div className="wrapper">
-                        <div className="brand">
+                        <div className="brand" onClick={() => customHistory.push("/")}>
                             <img src="/assets/image/kappa.png"/>
                             <span>KappaCoin</span>
                         </div>

@@ -6,7 +6,7 @@ export const transactionApi = {
     getPendingTransactions(config){
         let {skip, take, filter, sort} = config;
         let {key, value} = sort || {};
-        let {keyword} = filter;
+        let {keyword} = filter || {};
         const params = {
             skip,
             take,

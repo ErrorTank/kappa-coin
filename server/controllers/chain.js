@@ -87,12 +87,14 @@ module.exports = (db, namespacesIO, pubsub) => {
                     namespacesIO.poolTracker.emit("update-wallet-individuals", data.associates);
                     pubsub.broadcast({data: data.associates, channel: "MY_WALLET"})
                     getPendingTransaction({skip: 0, take: 5}).then((data) => namespacesIO.poolTracker.emit("new-pool", data));
+                    getPendingTransaction({skip: 0, take: 5}).then((data) => namespacesIO.poolTracker.emit("new-pool-overview", data));
                     getPendingTransaction({skip: 0, take: 5}, true).then((data) => pubsub.broadcast({data, channel: "TRANSACTION"}));
                     namespacesIO.poolTracker.emit("new-my-transactions", {
                         txnsInputAddress: txns.map(each => each.input.address),
                     });
                     pubsub.broadcast({data: txns.map(each => each.input.address), channel: "MY_TRANSACTIONS"})
                     getBlocks({skip: 0, take: 5}).then((data) => namespacesIO.chainTracker.emit("new-chain", data));
+                    getBlocks({skip: 0, take: 5}).then((data) => namespacesIO.chainTracker.emit("new-chain-overview", data));
                     getBlocks({skip: 0, take: 5}, true).then((data) => pubsub.broadcast({data, channel: "BLOCKCHAIN"}));
                     return data;
                 })

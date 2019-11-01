@@ -30,7 +30,8 @@ module.exports = (db, namespacesIO, pubsub) => {
 
                 } );
 
-                getPendingTransaction({skip: 0, take: 50}).then((data) => namespacesIO.poolTracker.emit("new-pool", data));
+                getPendingTransaction({skip: 0, take: 5}).then((data) => namespacesIO.poolTracker.emit("new-pool", data));
+                getPendingTransaction({skip: 0, take: 5}).then((data) => namespacesIO.poolTracker.emit("new-pool-overview", data));
                 getPendingTransaction({}, true).then((data) => {
                     pubsub.broadcast({
                         channel: "TRANSACTION",

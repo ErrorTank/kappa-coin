@@ -121,7 +121,8 @@ export default class MiningRoute extends React.Component {
     };
 
     componentWillUnmount() {
-        this.socket && this.socket.disconnect();
+        this.socket1 && this.socket1.disconnect();
+        this.socket2 && this.socket2.disconnect();
     }
 
     getNewMinedBlock = () => {
@@ -130,10 +131,9 @@ export default class MiningRoute extends React.Component {
 
     startMiningProcess = async () => {
         this.setState({step: this.steps[8]});
-        await wait(2000);
         let result = await chainApi.validateChain();
+        await wait(2000);
         if(!result.valid){
-
             this.setState({step: this.steps[9]});
             return ;
         }
