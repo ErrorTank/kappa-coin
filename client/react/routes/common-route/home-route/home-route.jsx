@@ -80,7 +80,7 @@ export default class HomeRoute extends React.Component {
                                     <div className="mt-5">
                                         <div className="border-box overview-panel">
                                             <LatestDisplay
-                                                title={`Latest ${blocks.total} ${pronounce("block", blocks.total, "s")}`}
+                                                title={`Latest ${blocks.list.length} ${pronounce("block", blocks.total, "s")}`}
                                                 list={blocks.list}
                                                 getKey={data => data._id}
                                                 display={data => (
@@ -103,11 +103,16 @@ export default class HomeRoute extends React.Component {
                                                     </div>
                                                 )}
                                                 emptyNotify={"No blocks found"}
+                                                displayFooter={() => {
+                                                    return <p className={"more text-center inline-text"}><span className="link-text" onClick={() => customHistory.push("/blocks")}>View all blocks</span></p>
+                                                }}
+                                                total={blocks.total}
                                             />
                                         </div>
                                         <div className="border-box overview-panel">
                                             <LatestDisplay
-                                                title={`Latest ${txns.total} ${pronounce("txn", txns.total, "s")}`}
+                                                total={txns.total}
+                                                title={`Latest ${txns.list.length} ${pronounce("txn", txns.total, "s")}`}
                                                 list={txns.list}
                                                 getKey={data => data._id}
                                                 display={data => (
@@ -125,6 +130,9 @@ export default class HomeRoute extends React.Component {
                                                     </div>
                                                 )}
                                                 emptyNotify={"No txns found"}
+                                                displayFooter={() => {
+                                                    return <p className={"more text-center inline-text"}><span className="link-text" onClick={() => customHistory.push("/pool")}>View all transactions</span></p>
+                                                }}
                                             />
                                         </div>
                                     </div>

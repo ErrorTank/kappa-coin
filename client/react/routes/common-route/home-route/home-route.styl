@@ -11,18 +11,36 @@
     &:last-child {
       width calc(100% - 585px)
     }
+    .inline-text{
+      span{
+        &:first-of-type{
+          font-weight 550
+        }
+        display inline-block
+        vertical-align middle
+      }
+    }
+    .more{
+      font-size 14px
+      cursor pointer
+    }
+    .address{
+      max-width 100px
+    }
+    .link-text {
+      color tikiblue
+      overflow hidden
+      text-overflow ellipsis
 
+    }
+
+    .sub {
+      color #77838f !important
+      font-size 13px
+    }
     .block-display
     .txn-display {
-      .inline-text{
-        span{
-          &:first-of-type{
-            font-weight 550
-          }
-          display inline-block
-          vertical-align middle
-        }
-      }
+
       cursor pointer
       padding 12px
       &:hover{
@@ -30,20 +48,7 @@
       }
       font-size 14px
       color #4a4f55
-      .address{
-        max-width 100px
-      }
-      .link-text {
-        color tikiblue
-        overflow hidden
-        text-overflow ellipsis
 
-      }
-
-      .sub {
-        color #77838f !important
-        font-size 13px
-      }
     }
   }
 }

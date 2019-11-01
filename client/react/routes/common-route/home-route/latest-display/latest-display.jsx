@@ -7,7 +7,7 @@ export class LatestDisplay extends Component {
     }
 
     render() {
-        let {list, title, getKey, display, emptyNotify} = this.props;
+        let {list, title, getKey, display, emptyNotify, displayFooter, total} = this.props;
         return (
             <div className="latest-display">
                 <div className="ld-header">
@@ -24,6 +24,10 @@ export class LatestDisplay extends Component {
                         <p className="empty">{emptyNotify}</p>
                     )}
                 </div>
+                {total > 5 && (
+                    <div className="ld-footer">{displayFooter()}</div>
+                )}
+
             </div>
         );
     }
