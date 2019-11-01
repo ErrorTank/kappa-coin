@@ -38,26 +38,42 @@ module.exports = {
             promise1,
             promise2
         ]).then(() => {
-            require("../db/model/user")(appDb);
-            require("../db/model/wallet")(appDb);
+            const User = require("../db/model/user")(appDb);
+            const Wallet = require("../db/model/wallet")(appDb);
             // new User({
-            //     email: "ncq998@gmail.com",
-            //     fullname: "Kappa Clone 3",
+            //     email: "kappa1@gmail.com",
+            //     fullname: "Kappa Clone 1",
             //     password: "123123qwe",
             //     createdAt: Date.now(),
             //     updatedAt: Date.now()
-            // }).save();
-            // new Wallet({
+            // }).save().then(data => {
+            //     new Wallet({
             //
-            //     balance: 100,
-            //     owner: "5db13e19fb547a354c508e9f",
+            //         balance: 100,
+            //         owner: data.toObject()._id,
             //
-            // }).save();
-            require("../db/model/chain")(userDb);
-            require("../db/model/blockchain-info")(userDb);
+            //     }).save();
+            // });
+            // new User({
+            //     email: "kappa2@gmail.com",
+            //     fullname: "Kappa Clone 2",
+            //     password: "123123qwe",
+            //     createdAt: Date.now(),
+            //     updatedAt: Date.now()
+            // }).save().then(data => {
+            //     new Wallet({
+            //
+            //         balance: 100,
+            //         owner: data.toObject()._id,
+            //
+            //     }).save();
+            // });
+
+            const Chain = require("../db/model/chain")(userDb);
+            const Blockchain = require("../db/model/blockchain-info")(userDb);
             require("../db/model/pool")(userDb);
 
-            //
+
             // let genesisBlock = createBlock({
             //
             // });
